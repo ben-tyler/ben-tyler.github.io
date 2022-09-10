@@ -4384,6 +4384,136 @@ function _Browser_load(url)
 		}
 	}));
 }
+
+
+
+
+// STRINGS
+
+
+var _Parser_isSubString = F5(function(smallString, offset, row, col, bigString)
+{
+	var smallLength = smallString.length;
+	var isGood = offset + smallLength <= bigString.length;
+
+	for (var i = 0; isGood && i < smallLength; )
+	{
+		var code = bigString.charCodeAt(offset);
+		isGood =
+			smallString[i++] === bigString[offset++]
+			&& (
+				code === 0x000A /* \n */
+					? ( row++, col=1 )
+					: ( col++, (code & 0xF800) === 0xD800 ? smallString[i++] === bigString[offset++] : 1 )
+			)
+	}
+
+	return _Utils_Tuple3(isGood ? offset : -1, row, col);
+});
+
+
+
+// CHARS
+
+
+var _Parser_isSubChar = F3(function(predicate, offset, string)
+{
+	return (
+		string.length <= offset
+			? -1
+			:
+		(string.charCodeAt(offset) & 0xF800) === 0xD800
+			? (predicate(_Utils_chr(string.substr(offset, 2))) ? offset + 2 : -1)
+			:
+		(predicate(_Utils_chr(string[offset]))
+			? ((string[offset] === '\n') ? -2 : (offset + 1))
+			: -1
+		)
+	);
+});
+
+
+var _Parser_isAsciiCode = F3(function(code, offset, string)
+{
+	return string.charCodeAt(offset) === code;
+});
+
+
+
+// NUMBERS
+
+
+var _Parser_chompBase10 = F2(function(offset, string)
+{
+	for (; offset < string.length; offset++)
+	{
+		var code = string.charCodeAt(offset);
+		if (code < 0x30 || 0x39 < code)
+		{
+			return offset;
+		}
+	}
+	return offset;
+});
+
+
+var _Parser_consumeBase = F3(function(base, offset, string)
+{
+	for (var total = 0; offset < string.length; offset++)
+	{
+		var digit = string.charCodeAt(offset) - 0x30;
+		if (digit < 0 || base <= digit) break;
+		total = base * total + digit;
+	}
+	return _Utils_Tuple2(offset, total);
+});
+
+
+var _Parser_consumeBase16 = F2(function(offset, string)
+{
+	for (var total = 0; offset < string.length; offset++)
+	{
+		var code = string.charCodeAt(offset);
+		if (0x30 <= code && code <= 0x39)
+		{
+			total = 16 * total + code - 0x30;
+		}
+		else if (0x41 <= code && code <= 0x46)
+		{
+			total = 16 * total + code - 55;
+		}
+		else if (0x61 <= code && code <= 0x66)
+		{
+			total = 16 * total + code - 87;
+		}
+		else
+		{
+			break;
+		}
+	}
+	return _Utils_Tuple2(offset, total);
+});
+
+
+
+// FIND STRING
+
+
+var _Parser_findSubString = F5(function(smallString, offset, row, col, bigString)
+{
+	var newOffset = bigString.indexOf(smallString, offset);
+	var target = newOffset < 0 ? bigString.length : newOffset + smallString.length;
+
+	while (offset < target)
+	{
+		var code = bigString.charCodeAt(offset++);
+		code === 0x000A /* \n */
+			? ( col=1, row++ )
+			: ( col++, (code & 0xF800) === 0xD800 && offset++ )
+	}
+
+	return _Utils_Tuple3(newOffset, row, col);
+});
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$LT = {$: 'LT'};
 var $elm$core$List$cons = _List_cons;
@@ -5202,13 +5332,13 @@ var $elm$core$Task$perform = F2(
 	});
 var $elm$browser$Browser$document = _Browser_document;
 var $elm$browser$Browser$Dom$getViewport = _Browser_withWindow(_Browser_getViewport);
-var $author$project$LandingPage$Mario = F2(
+var $author$project$Mario$Mario = F2(
 	function (a, b) {
 		return {$: 'Mario', a: a, b: b};
 	});
-var $author$project$LandingPage$NotPressed = {$: 'NotPressed'};
-var $author$project$LandingPage$Right = {$: 'Right'};
-var $author$project$LandingPage$Standing = {$: 'Standing'};
+var $author$project$Mario$NotPressed = {$: 'NotPressed'};
+var $author$project$Mario$Right = {$: 'Right'};
+var $author$project$Mario$Standing = {$: 'Standing'};
 var $mdgriffith$elm_animator$Internal$Timeline$Timeline = function (a) {
 	return {$: 'Timeline', a: a};
 };
@@ -5243,10 +5373,11 @@ var $mdgriffith$elm_animator$Animator$init = function (first) {
 		});
 };
 var $author$project$LandingPage$init = {
-	gamepad: {duck: $author$project$LandingPage$NotPressed, jump: $author$project$LandingPage$NotPressed, left: $author$project$LandingPage$NotPressed, right: $author$project$LandingPage$NotPressed, run: $author$project$LandingPage$NotPressed},
+	dslContent: '',
+	gamepad: {duck: $author$project$Mario$NotPressed, jump: $author$project$Mario$NotPressed, left: $author$project$Mario$NotPressed, right: $author$project$Mario$NotPressed, run: $author$project$Mario$NotPressed},
 	guide: $mdgriffith$elm_animator$Animator$init('some guide'),
 	mario: $mdgriffith$elm_animator$Animator$init(
-		A2($author$project$LandingPage$Mario, $author$project$LandingPage$Standing, $author$project$LandingPage$Right)),
+		A2($author$project$Mario$Mario, $author$project$Mario$Standing, $author$project$Mario$Right)),
 	pressedKeys: _List_Nil,
 	vx: 0,
 	vy: 0,
@@ -6155,31 +6286,31 @@ var $elm$core$Platform$Sub$batch = _Platform_batch;
 var $elm$json$Json$Decode$andThen = _Json_andThen;
 var $elm$json$Json$Decode$field = _Json_decodeField;
 var $elm$json$Json$Decode$string = _Json_decodeString;
-var $author$project$LandingPage$Duck = {$: 'Duck'};
-var $author$project$LandingPage$GoLeft = {$: 'GoLeft'};
-var $author$project$LandingPage$GoRight = {$: 'GoRight'};
-var $author$project$LandingPage$Jump = {$: 'Jump'};
-var $author$project$LandingPage$Run = {$: 'Run'};
+var $author$project$Mario$Duck = {$: 'Duck'};
+var $author$project$Mario$GoLeft = {$: 'GoLeft'};
+var $author$project$Mario$GoRight = {$: 'GoRight'};
+var $author$project$Mario$Jump = {$: 'Jump'};
+var $author$project$Mario$Run = {$: 'Run'};
 var $elm$json$Json$Decode$fail = _Json_fail;
-var $author$project$LandingPage$toButton = function (string) {
+var $author$project$Mario$toButton = function (string) {
 	switch (string) {
 		case 'ArrowLeft':
-			return $elm$json$Json$Decode$succeed($author$project$LandingPage$GoLeft);
+			return $elm$json$Json$Decode$succeed($author$project$Mario$GoLeft);
 		case 'ArrowRight':
-			return $elm$json$Json$Decode$succeed($author$project$LandingPage$GoRight);
+			return $elm$json$Json$Decode$succeed($author$project$Mario$GoRight);
 		case ' ':
-			return $elm$json$Json$Decode$succeed($author$project$LandingPage$Jump);
+			return $elm$json$Json$Decode$succeed($author$project$Mario$Jump);
 		case 'ArrowDown':
-			return $elm$json$Json$Decode$succeed($author$project$LandingPage$Duck);
+			return $elm$json$Json$Decode$succeed($author$project$Mario$Duck);
 		case 'Shift':
-			return $elm$json$Json$Decode$succeed($author$project$LandingPage$Run);
+			return $elm$json$Json$Decode$succeed($author$project$Mario$Run);
 		default:
 			return $elm$json$Json$Decode$fail('Skip');
 	}
 };
-var $author$project$LandingPage$decodeButton = A2(
+var $author$project$Mario$decodeButton = A2(
 	$elm$json$Json$Decode$andThen,
-	$author$project$LandingPage$toButton,
+	$author$project$Mario$toButton,
 	A2($elm$json$Json$Decode$field, 'key', $elm$json$Json$Decode$string));
 var $elm$core$Platform$Sub$map = _Platform_map;
 var $elm$browser$Browser$AnimationManager$Delta = function (a) {
@@ -6768,46 +6899,46 @@ var $author$project$LandingPage$subscriptions = function (model) {
 				A3($mdgriffith$elm_animator$Animator$toSubscription, $author$project$LandingPage$Tick, model, $author$project$LandingPage$animator),
 				$elm$browser$Browser$Events$onResize($author$project$LandingPage$WindowSize),
 				$elm$browser$Browser$Events$onKeyDown(
-				A2($elm$json$Json$Decode$map, $author$project$LandingPage$Pressed, $author$project$LandingPage$decodeButton)),
+				A2($elm$json$Json$Decode$map, $author$project$LandingPage$Pressed, $author$project$Mario$decodeButton)),
 				$elm$browser$Browser$Events$onKeyUp(
-				A2($elm$json$Json$Decode$map, $author$project$LandingPage$Released, $author$project$LandingPage$decodeButton)),
+				A2($elm$json$Json$Decode$map, $author$project$LandingPage$Released, $author$project$Mario$decodeButton)),
 				$elm$browser$Browser$Events$onAnimationFrameDelta($author$project$LandingPage$Frame),
 				A2($elm$core$Platform$Sub$map, $author$project$LandingPage$KeyMsg, $ohanhi$keyboard$Keyboard$subscriptions)
 			]));
 };
-var $author$project$LandingPage$StartPressed = {$: 'StartPressed'};
-var $author$project$LandingPage$applyButtonToGamepad = F3(
+var $author$project$Mario$StartPressed = {$: 'StartPressed'};
+var $author$project$Mario$applyButtonToGamepad = F3(
 	function (button, pressed, gamepad) {
 		switch (button.$) {
 			case 'GoLeft':
 				return _Utils_update(
 					gamepad,
 					{
-						left: pressed ? $author$project$LandingPage$StartPressed : $author$project$LandingPage$NotPressed
+						left: pressed ? $author$project$Mario$StartPressed : $author$project$Mario$NotPressed
 					});
 			case 'GoRight':
 				return _Utils_update(
 					gamepad,
 					{
-						right: pressed ? $author$project$LandingPage$StartPressed : $author$project$LandingPage$NotPressed
+						right: pressed ? $author$project$Mario$StartPressed : $author$project$Mario$NotPressed
 					});
 			case 'Duck':
 				return _Utils_update(
 					gamepad,
 					{
-						duck: pressed ? $author$project$LandingPage$StartPressed : $author$project$LandingPage$NotPressed
+						duck: pressed ? $author$project$Mario$StartPressed : $author$project$Mario$NotPressed
 					});
 			case 'Jump':
 				return _Utils_update(
 					gamepad,
 					{
-						jump: pressed ? $author$project$LandingPage$StartPressed : $author$project$LandingPage$NotPressed
+						jump: pressed ? $author$project$Mario$StartPressed : $author$project$Mario$NotPressed
 					});
 			default:
 				return _Utils_update(
 					gamepad,
 					{
-						run: pressed ? $author$project$LandingPage$StartPressed : $author$project$LandingPage$NotPressed
+						run: pressed ? $author$project$Mario$StartPressed : $author$project$Mario$NotPressed
 					});
 		}
 	});
@@ -6819,29 +6950,29 @@ var $author$project$LandingPage$gravity = F2(
 				vy: (mario.y > 0) ? (mario.vy - (dt / 4)) : 0
 			});
 	});
-var $author$project$LandingPage$HeldFor = function (a) {
+var $author$project$Mario$HeldFor = function (a) {
 	return {$: 'HeldFor', a: a};
 };
-var $author$project$LandingPage$hold = F2(
+var $author$project$Mario$hold = F2(
 	function (dt, pressed) {
 		switch (pressed.$) {
 			case 'NotPressed':
-				return $author$project$LandingPage$NotPressed;
+				return $author$project$Mario$NotPressed;
 			case 'StartPressed':
-				return $author$project$LandingPage$HeldFor(dt);
+				return $author$project$Mario$HeldFor(dt);
 			default:
 				var existingDt = pressed.a;
-				return $author$project$LandingPage$HeldFor(existingDt + dt);
+				return $author$project$Mario$HeldFor(existingDt + dt);
 		}
 	});
-var $author$project$LandingPage$holdButtonsOnGamepad = F2(
+var $author$project$Mario$holdButtonsOnGamepad = F2(
 	function (dt, gamepad) {
 		return {
-			duck: A2($author$project$LandingPage$hold, dt, gamepad.duck),
-			jump: A2($author$project$LandingPage$hold, dt, gamepad.jump),
-			left: A2($author$project$LandingPage$hold, dt, gamepad.left),
-			right: A2($author$project$LandingPage$hold, dt, gamepad.right),
-			run: A2($author$project$LandingPage$hold, dt, gamepad.run)
+			duck: A2($author$project$Mario$hold, dt, gamepad.duck),
+			jump: A2($author$project$Mario$hold, dt, gamepad.jump),
+			left: A2($author$project$Mario$hold, dt, gamepad.left),
+			right: A2($author$project$Mario$hold, dt, gamepad.right),
+			run: A2($author$project$Mario$hold, dt, gamepad.run)
 		};
 	});
 var $author$project$LandingPage$holdButtons = F2(
@@ -6850,12 +6981,12 @@ var $author$project$LandingPage$holdButtons = F2(
 		return _Utils_update(
 			model,
 			{
-				gamepad: A2($author$project$LandingPage$holdButtonsOnGamepad, dt, gamepad)
+				gamepad: A2($author$project$Mario$holdButtonsOnGamepad, dt, gamepad)
 			});
 	});
 var $author$project$LandingPage$jump = F2(
 	function (pad, mario) {
-		return (_Utils_eq(pad.jump, $author$project$LandingPage$StartPressed) && (!mario.vy)) ? _Utils_update(
+		return (_Utils_eq(pad.jump, $author$project$Mario$StartPressed) && (!mario.vy)) ? _Utils_update(
 			mario,
 			{vy: 6.0}) : mario;
 	});
@@ -7322,11 +7453,47 @@ var $ohanhi$keyboard$Keyboard$updateWithParser = F3(
 		}
 	});
 var $ohanhi$keyboard$Keyboard$update = $ohanhi$keyboard$Keyboard$updateWithParser($ohanhi$keyboard$Keyboard$anyKeyUpper);
-var $author$project$LandingPage$Ducking = {$: 'Ducking'};
-var $author$project$LandingPage$Jumping = {$: 'Jumping'};
-var $author$project$LandingPage$Left = {$: 'Left'};
-var $author$project$LandingPage$Running = {$: 'Running'};
-var $author$project$LandingPage$Walking = {$: 'Walking'};
+var $elm$core$String$reverse = _String_reverse;
+var $author$project$LandingPage$updateDslContent = F2(
+	function (keyMsg, model) {
+		return A3(
+			$elm$core$List$foldl,
+			F2(
+				function (key, content) {
+					switch (key.$) {
+						case 'Spacebar':
+							return content + ' ';
+						case 'Enter':
+							return content + '\n----';
+						case 'Backspace':
+							return $elm$core$String$reverse(
+								function (unconsd) {
+									if (unconsd.$ === 'Just') {
+										var _v2 = unconsd.a;
+										var x = _v2.a;
+										var xs = _v2.b;
+										return xs;
+									} else {
+										return '';
+									}
+								}(
+									$elm$core$String$uncons(
+										$elm$core$String$reverse(content))));
+						case 'Character':
+							var c = key.a;
+							return _Utils_ap(content, c);
+						default:
+							return content;
+					}
+				}),
+			model.dslContent,
+			A2($ohanhi$keyboard$Keyboard$update, keyMsg, _List_Nil));
+	});
+var $author$project$Mario$Ducking = {$: 'Ducking'};
+var $author$project$Mario$Jumping = {$: 'Jumping'};
+var $author$project$Mario$Left = {$: 'Left'};
+var $author$project$Mario$Running = {$: 'Running'};
+var $author$project$Mario$Walking = {$: 'Walking'};
 var $ianmackenzie$elm_units$Quantity$greaterThan = F2(
 	function (_v0, _v1) {
 		var y = _v0.a;
@@ -7901,18 +8068,18 @@ var $author$project$LandingPage$updateSprites = function (model) {
 	var current = $mdgriffith$elm_animator$Animator$current(model.mario);
 	var direction = function () {
 		if (model.vx > 0) {
-			return $author$project$LandingPage$Right;
+			return $author$project$Mario$Right;
 		} else {
 			if (model.vx < 0) {
-				return $author$project$LandingPage$Left;
+				return $author$project$Mario$Left;
 			} else {
 				var currentDirection = current.b;
 				return currentDirection;
 			}
 		}
 	}();
-	var action = (!(!model.y)) ? $author$project$LandingPage$Jumping : ((!(!model.vx)) ? (($elm$core$Basics$abs(model.vx) > 2) ? $author$project$LandingPage$Running : $author$project$LandingPage$Walking) : ($author$project$LandingPage$isHeld(model.gamepad.duck) ? $author$project$LandingPage$Ducking : $author$project$LandingPage$Standing));
-	var newMario = A2($author$project$LandingPage$Mario, action, direction);
+	var action = (!(!model.y)) ? $author$project$Mario$Jumping : ((!(!model.vx)) ? (($elm$core$Basics$abs(model.vx) > 2) ? $author$project$Mario$Running : $author$project$Mario$Walking) : ($author$project$LandingPage$isHeld(model.gamepad.duck) ? $author$project$Mario$Ducking : $author$project$Mario$Standing));
+	var newMario = A2($author$project$Mario$Mario, action, direction);
 	return (!_Utils_eq(current, newMario)) ? _Utils_update(
 		model,
 		{
@@ -7968,7 +8135,7 @@ var $author$project$LandingPage$update = F2(
 					_Utils_update(
 						model,
 						{
-							gamepad: A3($author$project$LandingPage$applyButtonToGamepad, button, true, model.gamepad)
+							gamepad: A3($author$project$Mario$applyButtonToGamepad, button, true, model.gamepad)
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'Released':
@@ -7977,7 +8144,7 @@ var $author$project$LandingPage$update = F2(
 					_Utils_update(
 						model,
 						{
-							gamepad: A3($author$project$LandingPage$applyButtonToGamepad, button, false, model.gamepad)
+							gamepad: A3($author$project$Mario$applyButtonToGamepad, button, false, model.gamepad)
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 'WindowSize':
@@ -7996,20 +8163,12 @@ var $author$project$LandingPage$update = F2(
 					_Utils_update(
 						model,
 						{
+							dslContent: A2($author$project$LandingPage$updateDslContent, keyMsg, model),
 							pressedKeys: A2($ohanhi$keyboard$Keyboard$update, keyMsg, model.pressedKeys)
 						}),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
-var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $mdgriffith$elm_animator$Internal$Timeline$Cycle = F2(
 	function (a, b) {
 		return {$: 'Cycle', a: a, b: b};
@@ -8027,7 +8186,6 @@ var $mdgriffith$elm_animator$Animator$cycle = F2(
 			$mdgriffith$elm_animator$Internal$Timeline$Loop(duration),
 			frames);
 	});
-var $elm$html$Html$div = _VirtualDom_node('div');
 var $mdgriffith$elm_animator$Animator$FramesPerSecond = function (a) {
 	return {$: 'FramesPerSecond', a: a};
 };
@@ -8043,9 +8201,7 @@ var $mdgriffith$elm_animator$Internal$Timeline$WithRest = F2(
 var $mdgriffith$elm_animator$Animator$framesWith = function (cfg) {
 	return A2($mdgriffith$elm_animator$Internal$Timeline$WithRest, cfg.resting, cfg.transition);
 };
-var $elm$core$String$fromFloat = _String_fromNumber;
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $author$project$LandingPage$sprite = {
+var $author$project$Mario$sprite = {
 	tail: {
 		bum: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 20, x: 208, y: 239},
 		duck: {adjustX: 5, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 120, y: 235},
@@ -8397,6 +8553,861 @@ var $mdgriffith$elm_animator$Animator$step = F2(
 			currentFrameSet,
 			$mdgriffith$elm_animator$Internal$Timeline$dwellingTime(timeline)) : A2($mdgriffith$elm_animator$Animator$stepFrames, currentFrameSet, progress);
 	});
+var $author$project$Mario$animateMario = function (model) {
+	return A2(
+		$mdgriffith$elm_animator$Animator$step,
+		model.mario,
+		function (_v0) {
+			var action = _v0.a;
+			var direction = _v0.b;
+			var frame = function (mySprite) {
+				if (direction.$ === 'Left') {
+					return $mdgriffith$elm_animator$Animator$frame(mySprite);
+				} else {
+					return $mdgriffith$elm_animator$Animator$frame(
+						_Utils_update(
+							mySprite,
+							{flipX: true}));
+				}
+			};
+			switch (action.$) {
+				case 'Standing':
+					return frame($author$project$Mario$sprite.tail.stand);
+				case 'Ducking':
+					return frame($author$project$Mario$sprite.tail.duck);
+				case 'Jumping':
+					return frame($author$project$Mario$sprite.tail.jump);
+				case 'Walking':
+					return $mdgriffith$elm_animator$Animator$framesWith(
+						{
+							resting: A2(
+								$mdgriffith$elm_animator$Animator$cycle,
+								$mdgriffith$elm_animator$Animator$fps(15),
+								_List_fromArray(
+									[
+										frame($author$project$Mario$sprite.tail.step1),
+										frame($author$project$Mario$sprite.tail.step2),
+										frame($author$project$Mario$sprite.tail.stand)
+									])),
+							transition: frame($author$project$Mario$sprite.tail.stand)
+						});
+				default:
+					return $mdgriffith$elm_animator$Animator$framesWith(
+						{
+							resting: A2(
+								$mdgriffith$elm_animator$Animator$cycle,
+								$mdgriffith$elm_animator$Animator$fps(30),
+								_List_fromArray(
+									[
+										frame($author$project$Mario$sprite.tail.runStep1),
+										frame($author$project$Mario$sprite.tail.runStep2),
+										frame($author$project$Mario$sprite.tail.standArms)
+									])),
+							transition: frame($author$project$Mario$sprite.tail.standArms)
+						});
+			}
+		});
+};
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $jxxcarlson$elm_tree_builder$Tree$Build$EmptyBlocks = {$: 'EmptyBlocks'};
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var $zwilias$elm_rosetree$Tree$Zipper$Zipper = function (a) {
+	return {$: 'Zipper', a: a};
+};
+var $zwilias$elm_rosetree$Tree$Zipper$fromTree = function (t) {
+	return $zwilias$elm_rosetree$Tree$Zipper$Zipper(
+		{after: _List_Nil, before: _List_Nil, crumbs: _List_Nil, focus: t});
+};
+var $zwilias$elm_rosetree$Tree$Tree = F2(
+	function (a, b) {
+		return {$: 'Tree', a: a, b: b};
+	});
+var $zwilias$elm_rosetree$Tree$tree = $zwilias$elm_rosetree$Tree$Tree;
+var $jxxcarlson$elm_tree_builder$Tree$Build$init = F3(
+	function (defaultNode, makeNode, blocks) {
+		var _v0 = $elm$core$List$head(blocks);
+		if (_v0.$ === 'Nothing') {
+			return $elm$core$Result$Err($jxxcarlson$elm_tree_builder$Tree$Build$EmptyBlocks);
+		} else {
+			var rootBlock = _v0.a;
+			return $elm$core$Result$Ok(
+				{
+					blocks: A2($elm$core$List$drop, 1, blocks),
+					_default: $zwilias$elm_rosetree$Tree$Zipper$fromTree(
+						A2($zwilias$elm_rosetree$Tree$tree, defaultNode, _List_Nil)),
+					indent: 0,
+					indentationChanges: _List_Nil,
+					level: 0,
+					make: makeNode,
+					zipper: $zwilias$elm_rosetree$Tree$Zipper$fromTree(
+						A2(
+							$zwilias$elm_rosetree$Tree$tree,
+							makeNode(rootBlock),
+							_List_Nil))
+				});
+		}
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Build$loop = F2(
+	function (s, f) {
+		loop:
+		while (true) {
+			var _v0 = f(s);
+			if (_v0.$ === 'Loop') {
+				var s_ = _v0.a;
+				var $temp$s = s_,
+					$temp$f = f;
+				s = $temp$s;
+				f = $temp$f;
+				continue loop;
+			} else {
+				var b = _v0.a;
+				return b;
+			}
+		}
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Build$Done = function (a) {
+	return {$: 'Done', a: a};
+};
+var $jxxcarlson$elm_tree_builder$Tree$Build$Loop = function (a) {
+	return {$: 'Loop', a: a};
+};
+var $zwilias$elm_rosetree$Tree$appendChild = F2(
+	function (c, _v0) {
+		var v = _v0.a;
+		var cs = _v0.b;
+		return A2(
+			$zwilias$elm_rosetree$Tree$Tree,
+			v,
+			_Utils_ap(
+				cs,
+				_List_fromArray(
+					[c])));
+	});
+var $zwilias$elm_rosetree$Tree$Zipper$tree = function (_v0) {
+	var focus = _v0.a.focus;
+	return focus;
+};
+var $jxxcarlson$elm_tree_builder$Tree$Build$appendChild = F2(
+	function (t, z) {
+		return A2(
+			$zwilias$elm_rosetree$Tree$appendChild,
+			t,
+			$zwilias$elm_rosetree$Tree$Zipper$tree(z));
+	});
+var $zwilias$elm_rosetree$Tree$Zipper$replaceTree = F2(
+	function (t, _v0) {
+		var zipper = _v0.a;
+		return $zwilias$elm_rosetree$Tree$Zipper$Zipper(
+			_Utils_update(
+				zipper,
+				{focus: t}));
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Build$attachAtFocus = F2(
+	function (t, z) {
+		return A2(
+			$zwilias$elm_rosetree$Tree$Zipper$replaceTree,
+			A2($jxxcarlson$elm_tree_builder$Tree$Build$appendChild, t, z),
+			z);
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Build$handleEQ = F3(
+	function (indent, block, state) {
+		var newTree = A2(
+			$zwilias$elm_rosetree$Tree$tree,
+			state.make(block),
+			_List_Nil);
+		return _Utils_update(
+			state,
+			{
+				blocks: A2($elm$core$List$drop, 1, state.blocks),
+				indent: indent,
+				zipper: A2($jxxcarlson$elm_tree_builder$Tree$Build$attachAtFocus, newTree, state.zipper)
+			});
+	});
+var $zwilias$elm_rosetree$Tree$children = function (_v0) {
+	var c = _v0.b;
+	return c;
+};
+var $zwilias$elm_rosetree$Tree$label = function (_v0) {
+	var v = _v0.a;
+	return v;
+};
+var $zwilias$elm_rosetree$Tree$Zipper$lastChild = function (_v0) {
+	var zipper = _v0.a;
+	var _v1 = $elm$core$List$reverse(
+		$zwilias$elm_rosetree$Tree$children(zipper.focus));
+	if (!_v1.b) {
+		return $elm$core$Maybe$Nothing;
+	} else {
+		var c = _v1.a;
+		var rest = _v1.b;
+		return $elm$core$Maybe$Just(
+			$zwilias$elm_rosetree$Tree$Zipper$Zipper(
+				{
+					after: _List_Nil,
+					before: rest,
+					crumbs: A2(
+						$elm$core$List$cons,
+						{
+							after: zipper.after,
+							before: zipper.before,
+							label: $zwilias$elm_rosetree$Tree$label(zipper.focus)
+						},
+						zipper.crumbs),
+					focus: c
+				}));
+	}
+};
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+};
+var $jxxcarlson$elm_tree_builder$Tree$Build$pushIndentationChange = F2(
+	function (k, ks) {
+		return A2(
+			$elm$core$List$cons,
+			k - $elm$core$List$sum(ks),
+			ks);
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Build$handleGT = F3(
+	function (indent, block, state) {
+		var newTree = A2(
+			$zwilias$elm_rosetree$Tree$tree,
+			state.make(block),
+			_List_Nil);
+		var _v0 = $zwilias$elm_rosetree$Tree$Zipper$lastChild(state.zipper);
+		if (_v0.$ === 'Nothing') {
+			return _Utils_update(
+				state,
+				{
+					blocks: A2($elm$core$List$drop, 1, state.blocks),
+					indent: indent,
+					indentationChanges: A2($jxxcarlson$elm_tree_builder$Tree$Build$pushIndentationChange, block.indent, state.indentationChanges),
+					level: state.level + 1,
+					zipper: A2($jxxcarlson$elm_tree_builder$Tree$Build$attachAtFocus, newTree, state.zipper)
+				});
+		} else {
+			var newZipper = _v0.a;
+			return _Utils_update(
+				state,
+				{
+					blocks: A2($elm$core$List$drop, 1, state.blocks),
+					indent: indent,
+					indentationChanges: A2($jxxcarlson$elm_tree_builder$Tree$Build$pushIndentationChange, block.indent, state.indentationChanges),
+					level: state.level + 1,
+					zipper: A2($jxxcarlson$elm_tree_builder$Tree$Build$attachAtFocus, newTree, newZipper)
+				});
+		}
+	});
+var $zwilias$elm_rosetree$Tree$Zipper$reconstruct = F4(
+	function (focus, before, after, l) {
+		return A2(
+			$zwilias$elm_rosetree$Tree$tree,
+			l,
+			_Utils_ap(
+				$elm$core$List$reverse(before),
+				_Utils_ap(
+					_List_fromArray(
+						[focus]),
+					after)));
+	});
+var $zwilias$elm_rosetree$Tree$Zipper$parent = function (_v0) {
+	var zipper = _v0.a;
+	var _v1 = zipper.crumbs;
+	if (!_v1.b) {
+		return $elm$core$Maybe$Nothing;
+	} else {
+		var crumb = _v1.a;
+		var rest = _v1.b;
+		return $elm$core$Maybe$Just(
+			$zwilias$elm_rosetree$Tree$Zipper$Zipper(
+				{
+					after: crumb.after,
+					before: crumb.before,
+					crumbs: rest,
+					focus: A4($zwilias$elm_rosetree$Tree$Zipper$reconstruct, zipper.focus, zipper.before, zipper.after, crumb.label)
+				}));
+	}
+};
+var $jxxcarlson$elm_tree_builder$Tree$Build$popUntilAux = F2(
+	function (goal, _v0) {
+		popUntilAux:
+		while (true) {
+			var sum = _v0.sum;
+			var popped = _v0.popped;
+			var remaining = _v0.remaining;
+			var _v1 = $elm$core$List$head(remaining);
+			if (_v1.$ === 'Nothing') {
+				return {popped: popped, remaining: remaining, sum: sum};
+			} else {
+				var k = _v1.a;
+				var newSum = sum + k;
+				if (_Utils_cmp(newSum, goal) < 0) {
+					var $temp$goal = goal,
+						$temp$_v0 = {
+						popped: popped + 1,
+						remaining: A2($elm$core$List$drop, 1, remaining),
+						sum: newSum
+					};
+					goal = $temp$goal;
+					_v0 = $temp$_v0;
+					continue popUntilAux;
+				} else {
+					return {
+						popped: popped + 1,
+						remaining: A2($elm$core$List$drop, 1, remaining),
+						sum: newSum
+					};
+				}
+			}
+		}
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Build$popUntil = F2(
+	function (goal, input) {
+		return A2(
+			$jxxcarlson$elm_tree_builder$Tree$Build$popUntilAux,
+			goal,
+			{popped: 0, remaining: input, sum: 0});
+	});
+var $elm$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		if (maybeValue.$ === 'Just') {
+			var value = maybeValue.a;
+			return callback(value);
+		} else {
+			return $elm$core$Maybe$Nothing;
+		}
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Build$repeatM = F3(
+	function (n, f, x) {
+		repeatM:
+		while (true) {
+			if (!n) {
+				return x;
+			} else {
+				var $temp$n = n - 1,
+					$temp$f = f,
+					$temp$x = A2($elm$core$Maybe$andThen, f, x);
+				n = $temp$n;
+				f = $temp$f;
+				x = $temp$x;
+				continue repeatM;
+			}
+		}
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Build$repeat = F3(
+	function (n, f, x) {
+		var _v0 = A3(
+			$jxxcarlson$elm_tree_builder$Tree$Build$repeatM,
+			n,
+			f,
+			$elm$core$Maybe$Just(x));
+		if (_v0.$ === 'Nothing') {
+			return x;
+		} else {
+			var y = _v0.a;
+			return y;
+		}
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Build$handleLT = F3(
+	function (indent, block, state) {
+		var newTree = A2(
+			$zwilias$elm_rosetree$Tree$tree,
+			state.make(block),
+			_List_Nil);
+		var deltaInfo = A2($jxxcarlson$elm_tree_builder$Tree$Build$popUntil, state.indent - indent, state.indentationChanges);
+		var deltaLevel = deltaInfo.popped;
+		return _Utils_update(
+			state,
+			{
+				blocks: A2($elm$core$List$drop, 1, state.blocks),
+				indent: indent,
+				indentationChanges: deltaInfo.remaining,
+				level: state.level - deltaLevel,
+				zipper: A2(
+					$jxxcarlson$elm_tree_builder$Tree$Build$attachAtFocus,
+					newTree,
+					A3($jxxcarlson$elm_tree_builder$Tree$Build$repeat, deltaLevel, $zwilias$elm_rosetree$Tree$Zipper$parent, state.zipper))
+			});
+	});
+var $zwilias$elm_rosetree$Tree$Zipper$previousSibling = function (_v0) {
+	var zipper = _v0.a;
+	var _v1 = zipper.before;
+	if (!_v1.b) {
+		return $elm$core$Maybe$Nothing;
+	} else {
+		var previous = _v1.a;
+		var rest = _v1.b;
+		return $elm$core$Maybe$Just(
+			$zwilias$elm_rosetree$Tree$Zipper$Zipper(
+				{
+					after: A2($elm$core$List$cons, zipper.focus, zipper.after),
+					before: rest,
+					crumbs: zipper.crumbs,
+					focus: previous
+				}));
+	}
+};
+var $zwilias$elm_rosetree$Tree$Zipper$firstSibling = function (zipper) {
+	firstSibling:
+	while (true) {
+		var _v0 = $zwilias$elm_rosetree$Tree$Zipper$previousSibling(zipper);
+		if (_v0.$ === 'Nothing') {
+			return zipper;
+		} else {
+			var z = _v0.a;
+			var $temp$zipper = z;
+			zipper = $temp$zipper;
+			continue firstSibling;
+		}
+	}
+};
+var $zwilias$elm_rosetree$Tree$Zipper$root = function (zipper) {
+	root:
+	while (true) {
+		var _v0 = $zwilias$elm_rosetree$Tree$Zipper$parent(zipper);
+		if (_v0.$ === 'Nothing') {
+			return $zwilias$elm_rosetree$Tree$Zipper$firstSibling(zipper);
+		} else {
+			var z = _v0.a;
+			var $temp$zipper = z;
+			zipper = $temp$zipper;
+			continue root;
+		}
+	}
+};
+var $zwilias$elm_rosetree$Tree$Zipper$toTree = A2($elm$core$Basics$composeL, $zwilias$elm_rosetree$Tree$Zipper$tree, $zwilias$elm_rosetree$Tree$Zipper$root);
+var $jxxcarlson$elm_tree_builder$Tree$Build$nextStep = function (state) {
+	var _v0 = $elm$core$List$head(state.blocks);
+	if (_v0.$ === 'Nothing') {
+		return $jxxcarlson$elm_tree_builder$Tree$Build$Done(
+			$zwilias$elm_rosetree$Tree$Zipper$toTree(state.zipper));
+	} else {
+		var block = _v0.a;
+		var _v1 = A2($elm$core$Basics$compare, block.indent, state.indent);
+		switch (_v1.$) {
+			case 'GT':
+				return $jxxcarlson$elm_tree_builder$Tree$Build$Loop(
+					A3($jxxcarlson$elm_tree_builder$Tree$Build$handleGT, block.indent, block, state));
+			case 'EQ':
+				return $jxxcarlson$elm_tree_builder$Tree$Build$Loop(
+					A3($jxxcarlson$elm_tree_builder$Tree$Build$handleEQ, block.indent, block, state));
+			default:
+				return $jxxcarlson$elm_tree_builder$Tree$Build$Loop(
+					A3($jxxcarlson$elm_tree_builder$Tree$Build$handleLT, block.indent, block, state));
+		}
+	}
+};
+var $jxxcarlson$elm_tree_builder$Tree$Build$fromBlocks = F3(
+	function (defaultNode, makeNode, blocks) {
+		var _v0 = A3($jxxcarlson$elm_tree_builder$Tree$Build$init, defaultNode, makeNode, blocks);
+		if (_v0.$ === 'Err') {
+			var error = _v0.a;
+			return $elm$core$Result$Err(error);
+		} else {
+			var initialState = _v0.a;
+			return $elm$core$Result$Ok(
+				A2($jxxcarlson$elm_tree_builder$Tree$Build$loop, initialState, $jxxcarlson$elm_tree_builder$Tree$Build$nextStep));
+		}
+	});
+var $elm$parser$Parser$Advanced$Parser = function (a) {
+	return {$: 'Parser', a: a};
+};
+var $elm$parser$Parser$Advanced$Good = F3(
+	function (a, b, c) {
+		return {$: 'Good', a: a, b: b, c: c};
+	});
+var $elm$parser$Parser$Advanced$isSubChar = _Parser_isSubChar;
+var $elm$parser$Parser$Advanced$chompWhileHelp = F5(
+	function (isGood, offset, row, col, s0) {
+		chompWhileHelp:
+		while (true) {
+			var newOffset = A3($elm$parser$Parser$Advanced$isSubChar, isGood, offset, s0.src);
+			if (_Utils_eq(newOffset, -1)) {
+				return A3(
+					$elm$parser$Parser$Advanced$Good,
+					_Utils_cmp(s0.offset, offset) < 0,
+					_Utils_Tuple0,
+					{col: col, context: s0.context, indent: s0.indent, offset: offset, row: row, src: s0.src});
+			} else {
+				if (_Utils_eq(newOffset, -2)) {
+					var $temp$isGood = isGood,
+						$temp$offset = offset + 1,
+						$temp$row = row + 1,
+						$temp$col = 1,
+						$temp$s0 = s0;
+					isGood = $temp$isGood;
+					offset = $temp$offset;
+					row = $temp$row;
+					col = $temp$col;
+					s0 = $temp$s0;
+					continue chompWhileHelp;
+				} else {
+					var $temp$isGood = isGood,
+						$temp$offset = newOffset,
+						$temp$row = row,
+						$temp$col = col + 1,
+						$temp$s0 = s0;
+					isGood = $temp$isGood;
+					offset = $temp$offset;
+					row = $temp$row;
+					col = $temp$col;
+					s0 = $temp$s0;
+					continue chompWhileHelp;
+				}
+			}
+		}
+	});
+var $elm$parser$Parser$Advanced$chompWhile = function (isGood) {
+	return $elm$parser$Parser$Advanced$Parser(
+		function (s) {
+			return A5($elm$parser$Parser$Advanced$chompWhileHelp, isGood, s.offset, s.row, s.col, s);
+		});
+};
+var $elm$parser$Parser$chompWhile = $elm$parser$Parser$Advanced$chompWhile;
+var $elm$parser$Parser$Advanced$getOffset = $elm$parser$Parser$Advanced$Parser(
+	function (s) {
+		return A3($elm$parser$Parser$Advanced$Good, false, s.offset, s);
+	});
+var $elm$parser$Parser$getOffset = $elm$parser$Parser$Advanced$getOffset;
+var $elm$parser$Parser$Advanced$getSource = $elm$parser$Parser$Advanced$Parser(
+	function (s) {
+		return A3($elm$parser$Parser$Advanced$Good, false, s.src, s);
+	});
+var $elm$parser$Parser$getSource = $elm$parser$Parser$Advanced$getSource;
+var $elm$parser$Parser$Advanced$Bad = F2(
+	function (a, b) {
+		return {$: 'Bad', a: a, b: b};
+	});
+var $elm$parser$Parser$Advanced$map2 = F3(
+	function (func, _v0, _v1) {
+		var parseA = _v0.a;
+		var parseB = _v1.a;
+		return $elm$parser$Parser$Advanced$Parser(
+			function (s0) {
+				var _v2 = parseA(s0);
+				if (_v2.$ === 'Bad') {
+					var p = _v2.a;
+					var x = _v2.b;
+					return A2($elm$parser$Parser$Advanced$Bad, p, x);
+				} else {
+					var p1 = _v2.a;
+					var a = _v2.b;
+					var s1 = _v2.c;
+					var _v3 = parseB(s1);
+					if (_v3.$ === 'Bad') {
+						var p2 = _v3.a;
+						var x = _v3.b;
+						return A2($elm$parser$Parser$Advanced$Bad, p1 || p2, x);
+					} else {
+						var p2 = _v3.a;
+						var b = _v3.b;
+						var s2 = _v3.c;
+						return A3(
+							$elm$parser$Parser$Advanced$Good,
+							p1 || p2,
+							A2(func, a, b),
+							s2);
+					}
+				}
+			});
+	});
+var $elm$parser$Parser$Advanced$ignorer = F2(
+	function (keepParser, ignoreParser) {
+		return A3($elm$parser$Parser$Advanced$map2, $elm$core$Basics$always, keepParser, ignoreParser);
+	});
+var $elm$parser$Parser$ignorer = $elm$parser$Parser$Advanced$ignorer;
+var $elm$parser$Parser$Advanced$keeper = F2(
+	function (parseFunc, parseArg) {
+		return A3($elm$parser$Parser$Advanced$map2, $elm$core$Basics$apL, parseFunc, parseArg);
+	});
+var $elm$parser$Parser$keeper = $elm$parser$Parser$Advanced$keeper;
+var $elm$parser$Parser$Advanced$succeed = function (a) {
+	return $elm$parser$Parser$Advanced$Parser(
+		function (s) {
+			return A3($elm$parser$Parser$Advanced$Good, false, a, s);
+		});
+};
+var $elm$parser$Parser$succeed = $elm$parser$Parser$Advanced$succeed;
+var $jxxcarlson$elm_tree_builder$Tree$Line$prefixParser = function (lineNumber) {
+	return A2(
+		$elm$parser$Parser$keeper,
+		A2(
+			$elm$parser$Parser$keeper,
+			A2(
+				$elm$parser$Parser$keeper,
+				A2(
+					$elm$parser$Parser$keeper,
+					$elm$parser$Parser$succeed(
+						F4(
+							function (prefixStart, prefixEnd, end, content) {
+								return {
+									content: A3($elm$core$String$slice, prefixEnd, end, content),
+									indent: prefixEnd - prefixStart,
+									lineNumber: lineNumber
+								};
+							})),
+					A2(
+						$elm$parser$Parser$ignorer,
+						$elm$parser$Parser$getOffset,
+						$elm$parser$Parser$chompWhile(
+							function (c) {
+								return _Utils_eq(
+									c,
+									_Utils_chr(' '));
+							}))),
+				A2(
+					$elm$parser$Parser$ignorer,
+					$elm$parser$Parser$getOffset,
+					$elm$parser$Parser$chompWhile(
+						function (c) {
+							return !_Utils_eq(
+								c,
+								_Utils_chr('\n'));
+						}))),
+			$elm$parser$Parser$getOffset),
+		$elm$parser$Parser$getSource);
+};
+var $elm$parser$Parser$DeadEnd = F3(
+	function (row, col, problem) {
+		return {col: col, problem: problem, row: row};
+	});
+var $elm$parser$Parser$problemToDeadEnd = function (p) {
+	return A3($elm$parser$Parser$DeadEnd, p.row, p.col, p.problem);
+};
+var $elm$parser$Parser$Advanced$bagToList = F2(
+	function (bag, list) {
+		bagToList:
+		while (true) {
+			switch (bag.$) {
+				case 'Empty':
+					return list;
+				case 'AddRight':
+					var bag1 = bag.a;
+					var x = bag.b;
+					var $temp$bag = bag1,
+						$temp$list = A2($elm$core$List$cons, x, list);
+					bag = $temp$bag;
+					list = $temp$list;
+					continue bagToList;
+				default:
+					var bag1 = bag.a;
+					var bag2 = bag.b;
+					var $temp$bag = bag1,
+						$temp$list = A2($elm$parser$Parser$Advanced$bagToList, bag2, list);
+					bag = $temp$bag;
+					list = $temp$list;
+					continue bagToList;
+			}
+		}
+	});
+var $elm$parser$Parser$Advanced$run = F2(
+	function (_v0, src) {
+		var parse = _v0.a;
+		var _v1 = parse(
+			{col: 1, context: _List_Nil, indent: 1, offset: 0, row: 1, src: src});
+		if (_v1.$ === 'Good') {
+			var value = _v1.b;
+			return $elm$core$Result$Ok(value);
+		} else {
+			var bag = _v1.b;
+			return $elm$core$Result$Err(
+				A2($elm$parser$Parser$Advanced$bagToList, bag, _List_Nil));
+		}
+	});
+var $elm$parser$Parser$run = F2(
+	function (parser, source) {
+		var _v0 = A2($elm$parser$Parser$Advanced$run, parser, source);
+		if (_v0.$ === 'Ok') {
+			var a = _v0.a;
+			return $elm$core$Result$Ok(a);
+		} else {
+			var problems = _v0.a;
+			return $elm$core$Result$Err(
+				A2($elm$core$List$map, $elm$parser$Parser$problemToDeadEnd, problems));
+		}
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Line$classify = F2(
+	function (lineNumber, str) {
+		var _v0 = A2(
+			$elm$parser$Parser$run,
+			$jxxcarlson$elm_tree_builder$Tree$Line$prefixParser(lineNumber),
+			str);
+		if (_v0.$ === 'Err') {
+			return {content: '!!ERROR', indent: 0, lineNumber: lineNumber};
+		} else {
+			var result = _v0.a;
+			return result;
+		}
+	});
+var $jxxcarlson$elm_tree_builder$Tree$BlocksV$lineToBlock = F2(
+	function (numberOfLines, _v0) {
+		var indent = _v0.indent;
+		var content = _v0.content;
+		var lineNumber = _v0.lineNumber;
+		return {content: content, indent: indent, lineNumber: lineNumber, numberOfLines: numberOfLines};
+	});
+var $elm$core$String$lines = _String_lines;
+var $elm$core$String$trim = _String_trim;
+var $jxxcarlson$elm_tree_builder$Tree$BlocksV$fromStringAsLines = function (str) {
+	return A2(
+		$elm$core$List$indexedMap,
+		F2(
+			function (k, line) {
+				return A2(
+					$jxxcarlson$elm_tree_builder$Tree$BlocksV$lineToBlock,
+					1,
+					A2($jxxcarlson$elm_tree_builder$Tree$Line$classify, k, line));
+			}),
+		A2(
+			$elm$core$List$filter,
+			function (line) {
+				return A2($elm$core$String$left, 1, line) !== '#';
+			},
+			$elm$core$String$lines(
+				$elm$core$String$trim(str))));
+};
+var $jxxcarlson$elm_tree_builder$Tree$Blocks$fromStringAsLines = $jxxcarlson$elm_tree_builder$Tree$BlocksV$fromStringAsLines;
+var $jxxcarlson$elm_tree_builder$Tree$Build$fromString = F3(
+	function (defaultNode, makeNode, str) {
+		return A3(
+			$jxxcarlson$elm_tree_builder$Tree$Build$fromBlocks,
+			defaultNode,
+			makeNode,
+			$jxxcarlson$elm_tree_builder$Tree$Blocks$fromStringAsLines(str));
+	});
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$core$String$toLower = _String_toLower;
+var $author$project$LandingPage$labelToHtml = function (l) {
+	return $elm$html$Html$text(
+		$elm$core$String$toLower(l));
+};
+var $zwilias$elm_rosetree$Tree$restructureHelp = F4(
+	function (fLabel, fTree, acc, stack) {
+		restructureHelp:
+		while (true) {
+			var _v0 = acc.todo;
+			if (!_v0.b) {
+				var node = A2(
+					fTree,
+					acc.label,
+					$elm$core$List$reverse(acc.done));
+				if (!stack.b) {
+					return node;
+				} else {
+					var top = stack.a;
+					var rest = stack.b;
+					var $temp$fLabel = fLabel,
+						$temp$fTree = fTree,
+						$temp$acc = _Utils_update(
+						top,
+						{
+							done: A2($elm$core$List$cons, node, top.done)
+						}),
+						$temp$stack = rest;
+					fLabel = $temp$fLabel;
+					fTree = $temp$fTree;
+					acc = $temp$acc;
+					stack = $temp$stack;
+					continue restructureHelp;
+				}
+			} else {
+				if (!_v0.a.b.b) {
+					var _v2 = _v0.a;
+					var l = _v2.a;
+					var rest = _v0.b;
+					var $temp$fLabel = fLabel,
+						$temp$fTree = fTree,
+						$temp$acc = _Utils_update(
+						acc,
+						{
+							done: A2(
+								$elm$core$List$cons,
+								A2(
+									fTree,
+									fLabel(l),
+									_List_Nil),
+								acc.done),
+							todo: rest
+						}),
+						$temp$stack = stack;
+					fLabel = $temp$fLabel;
+					fTree = $temp$fTree;
+					acc = $temp$acc;
+					stack = $temp$stack;
+					continue restructureHelp;
+				} else {
+					var _v3 = _v0.a;
+					var l = _v3.a;
+					var cs = _v3.b;
+					var rest = _v0.b;
+					var $temp$fLabel = fLabel,
+						$temp$fTree = fTree,
+						$temp$acc = {
+						done: _List_Nil,
+						label: fLabel(l),
+						todo: cs
+					},
+						$temp$stack = A2(
+						$elm$core$List$cons,
+						_Utils_update(
+							acc,
+							{todo: rest}),
+						stack);
+					fLabel = $temp$fLabel;
+					fTree = $temp$fTree;
+					acc = $temp$acc;
+					stack = $temp$stack;
+					continue restructureHelp;
+				}
+			}
+		}
+	});
+var $zwilias$elm_rosetree$Tree$restructure = F3(
+	function (convertLabel, convertTree, _v0) {
+		var l = _v0.a;
+		var c = _v0.b;
+		return A4(
+			$zwilias$elm_rosetree$Tree$restructureHelp,
+			convertLabel,
+			convertTree,
+			{
+				done: _List_Nil,
+				label: convertLabel(l),
+				todo: c
+			},
+			_List_Nil);
+	});
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$node = function (tag) {
@@ -8404,8 +9415,6 @@ var $elm$virtual_dom$VirtualDom$node = function (tag) {
 		_VirtualDom_noScript(tag));
 };
 var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$LandingPage$stylesheet = A3(
 	$elm$html$Html$node,
 	'style',
@@ -8414,6 +9423,37 @@ var $author$project$LandingPage$stylesheet = A3(
 		[
 			$elm$html$Html$text('@import url(\'https://fonts.googleapis.com/css?family=Roboto&display=swap\');\r\nbody, html {\r\n    margin: 0;\r\n    padding:0;\r\n    border:0;\r\n    display:block;\r\n    position: relative;\r\n    width: 100%;\r\n    height: 100%;\r\n    color: white;\r\n}\r\n.pixel-art {\r\n    image-rendering: pixelated;\r\n    image-rendering: -moz-crisp-edges;\r\n    image-rendering: crisp-edges;\r\n}\r\n#backgroundVid {\r\n  position: fixed;\r\n  right: 0;\r\n  bottom: 0;\r\n  min-width: 100%;\r\n  min-height: 100%;\r\n  z-index: -1;\r\n}\r\n')
 		]));
+var $author$project$LandingPage$toListItems = F2(
+	function (label, children) {
+		if (!children.b) {
+			return A2(
+				$elm$html$Html$div,
+				_List_Nil,
+				_List_fromArray(
+					[label]));
+		} else {
+			return A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						A2($elm$html$Html$Attributes$style, 'padding', '5%')
+					]),
+				_List_fromArray(
+					[
+						label,
+						A2($elm$html$Html$div, _List_Nil, children)
+					]));
+		}
+	});
+var $elm$core$Result$toMaybe = function (result) {
+	if (result.$ === 'Ok') {
+		var v = result.a;
+		return $elm$core$Maybe$Just(v);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $elm$core$Debug$toString = _Debug_toString;
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$json$Json$Encode$float = _Json_wrap;
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
@@ -9201,7 +10241,7 @@ var $author$project$LandingPage$viewGuide = function (guideTimeline) {
 				$elm$html$Html$text('HFDS')
 			]));
 };
-var $author$project$LandingPage$viewSprite = function (box) {
+var $author$project$Mario$viewSprite = function (box) {
 	return A2(
 		$elm$html$Html$div,
 		_List_Nil,
@@ -9272,6 +10312,28 @@ var $author$project$LandingPage$view = function (model) {
 						$elm$html$Html$div,
 						_List_fromArray(
 							[
+								$elm$html$Html$Attributes$class('positioner'),
+								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'top',
+								$elm$core$String$fromFloat((model.window.height / 9) - model.y) + 'px'),
+								A2(
+								$elm$html$Html$Attributes$style,
+								'right',
+								$elm$core$String$fromFloat(100) + 'px'),
+								A2($elm$html$Html$Attributes$style, 'width', '300px')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text(
+								$elm$core$String$toLower(
+									$elm$core$Debug$toString(model.mario)))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
 								A2($elm$html$Html$Attributes$style, 'position', 'absolute'),
 								A2($elm$html$Html$Attributes$style, 'top', '80px'),
 								A2($elm$html$Html$Attributes$style, 'left', '80px'),
@@ -9294,7 +10356,55 @@ var $author$project$LandingPage$view = function (model) {
 									[
 										$elm$html$Html$text('ben tyler - software developer')
 									])),
-								$author$project$LandingPage$viewGuide(model.guide)
+								$author$project$LandingPage$viewGuide(model.guide),
+								function (maybe) {
+								if (maybe.$ === 'Just') {
+									var r = maybe.a;
+									return function (root) {
+										return A2(
+											$elm$html$Html$div,
+											_List_Nil,
+											_List_fromArray(
+												[root]));
+									}(
+										A3($zwilias$elm_rosetree$Tree$restructure, $author$project$LandingPage$labelToHtml, $author$project$LandingPage$toListItems, r));
+								} else {
+									return A2($elm$html$Html$div, _List_Nil, _List_Nil);
+								}
+							}(
+								$elm$core$Result$toMaybe(
+									A3(
+										$jxxcarlson$elm_tree_builder$Tree$Build$fromString,
+										'?',
+										function ($) {
+											return $.content;
+										},
+										model.dslContent))),
+								A2(
+								$elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$toLower(
+											$elm$core$Debug$toString(
+												A3(
+													$jxxcarlson$elm_tree_builder$Tree$Build$fromString,
+													'?',
+													function ($) {
+														return $.content;
+													},
+													model.dslContent))))
+									])),
+								A2(
+								$elm$html$Html$div,
+								_List_Nil,
+								_List_fromArray(
+									[
+										$elm$html$Html$text(
+										$elm$core$String$toLower(
+											$elm$core$Debug$toString(model.dslContent)))
+									]))
 							])),
 						A2(
 						$elm$html$Html$div,
@@ -9313,60 +10423,8 @@ var $author$project$LandingPage$view = function (model) {
 							]),
 						_List_fromArray(
 							[
-								$author$project$LandingPage$viewSprite(
-								A2(
-									$mdgriffith$elm_animator$Animator$step,
-									model.mario,
-									function (_v0) {
-										var action = _v0.a;
-										var direction = _v0.b;
-										var frame = function (mySprite) {
-											if (direction.$ === 'Left') {
-												return $mdgriffith$elm_animator$Animator$frame(mySprite);
-											} else {
-												return $mdgriffith$elm_animator$Animator$frame(
-													_Utils_update(
-														mySprite,
-														{flipX: true}));
-											}
-										};
-										switch (action.$) {
-											case 'Standing':
-												return frame($author$project$LandingPage$sprite.tail.stand);
-											case 'Ducking':
-												return frame($author$project$LandingPage$sprite.tail.duck);
-											case 'Jumping':
-												return frame($author$project$LandingPage$sprite.tail.jump);
-											case 'Walking':
-												return $mdgriffith$elm_animator$Animator$framesWith(
-													{
-														resting: A2(
-															$mdgriffith$elm_animator$Animator$cycle,
-															$mdgriffith$elm_animator$Animator$fps(15),
-															_List_fromArray(
-																[
-																	frame($author$project$LandingPage$sprite.tail.step1),
-																	frame($author$project$LandingPage$sprite.tail.step2),
-																	frame($author$project$LandingPage$sprite.tail.stand)
-																])),
-														transition: frame($author$project$LandingPage$sprite.tail.stand)
-													});
-											default:
-												return $mdgriffith$elm_animator$Animator$framesWith(
-													{
-														resting: A2(
-															$mdgriffith$elm_animator$Animator$cycle,
-															$mdgriffith$elm_animator$Animator$fps(30),
-															_List_fromArray(
-																[
-																	frame($author$project$LandingPage$sprite.tail.runStep1),
-																	frame($author$project$LandingPage$sprite.tail.runStep2),
-																	frame($author$project$LandingPage$sprite.tail.standArms)
-																])),
-														transition: frame($author$project$LandingPage$sprite.tail.standArms)
-													});
-										}
-									}))
+								$author$project$Mario$viewSprite(
+								$author$project$Mario$animateMario(model))
 							]))
 					]))
 			]),

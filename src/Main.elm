@@ -15,6 +15,7 @@ It looks like a lot, but much of it is only needed once per project!
 
 -}
 
+import Mario exposing (..)
 import Animator
 import Animator.Inline
 import Browser
@@ -22,14 +23,16 @@ import Color
 import Html exposing (..)
 import Html.Attributes as Attr
 import Html.Events as Events
-import Time
 import Json.Encode
+import Time
+
 
 {-| (1) - In our model we'd normally store just a `Bool`.
 However now we have an `Animator.Timeline Bool`
 -}
 type alias Model =
     { checked : Animator.Timeline Bool
+    , guide : Animator.Timeline String
     }
 
 
@@ -44,11 +47,11 @@ animator =
         |> Animator.watching
             -- we tell the animator how
             -- to get the checked timeline using .checked
-            .checked
+            .guide
             -- and we tell the animator how
             -- to update that timeline as well
             (\newChecked model ->
-                { model | checked = newChecked }
+                { model | guide = newChecked }
             )
 
 
@@ -58,6 +61,7 @@ main =
             \() ->
                 -- (3) - How we create our timeline
                 ( { checked = Animator.init False
+                  , guide = Animator.init "doo"
                   }
                 , Cmd.none
                 )
@@ -75,6 +79,7 @@ main =
 type Msg
     = Tick Time.Posix
     | Check Bool
+    | Guid String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -84,6 +89,15 @@ update msg model =
             ( model
                 |> Animator.update newTime animator
               -- (5) - Updating our model using our animator and the current time.
+            , Cmd.none
+            )
+
+        Guid newGuid ->
+            ( { model
+                | guide =
+                    model.guide
+                        |> Animator.go Animator.verySlowly newGuid
+              }
             , Cmd.none
             )
 
@@ -117,11 +131,25 @@ view model =
             [ div
                 [ Attr.class "viewport"
                 ]
-                [ viewHugeCheckbox model.checked
+                [ viewGuid model.guide
+
+                --viewHugeCheckbox model.checked
                 ]
             ]
         ]
     }
+
+
+viewGuid : Animator.Timeline String -> Html Msg
+viewGuid guide =
+    div [Animator.Inline.opacity guide <|
+                        \state ->
+                            if state == "welcome" then
+                                Animator.at 0
+
+                            else
+                                Animator.at 1] 
+        [ text"hi" ]
 
 
 viewHugeCheckbox : Animator.Timeline Bool -> Html Msg
