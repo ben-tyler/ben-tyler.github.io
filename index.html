@@ -4387,43 +4387,6 @@ function _Browser_load(url)
 
 
 
-var _Bitwise_and = F2(function(a, b)
-{
-	return a & b;
-});
-
-var _Bitwise_or = F2(function(a, b)
-{
-	return a | b;
-});
-
-var _Bitwise_xor = F2(function(a, b)
-{
-	return a ^ b;
-});
-
-function _Bitwise_complement(a)
-{
-	return ~a;
-};
-
-var _Bitwise_shiftLeftBy = F2(function(offset, a)
-{
-	return a << offset;
-});
-
-var _Bitwise_shiftRightBy = F2(function(offset, a)
-{
-	return a >> offset;
-});
-
-var _Bitwise_shiftRightZfBy = F2(function(offset, a)
-{
-	return a >>> offset;
-});
-
-
-
 
 // STRINGS
 
@@ -4550,6 +4513,43 @@ var _Parser_findSubString = F5(function(smallString, offset, row, col, bigString
 	}
 
 	return _Utils_Tuple3(newOffset, row, col);
+});
+
+
+
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
 });
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$LT = {$: 'LT'};
@@ -5412,8 +5412,8 @@ var $mdgriffith$elm_animator$Animator$init = function (first) {
 var $author$project$LandingPage$init = {
 	dslContent: '',
 	dslEditor: {level: 0, word: 0},
+	evaler: $mdgriffith$elm_animator$Animator$init('some guide'),
 	gamepad: {duck: $author$project$Mario$NotPressed, jump: $author$project$Mario$NotPressed, left: $author$project$Mario$NotPressed, right: $author$project$Mario$NotPressed, run: $author$project$Mario$NotPressed},
-	guide: $mdgriffith$elm_animator$Animator$init('some guide'),
 	mario: $mdgriffith$elm_animator$Animator$init(
 		A2($author$project$Mario$Mario, $author$project$Mario$Standing, $author$project$Mario$Right)),
 	pressedKeys: _List_Nil,
@@ -6300,13 +6300,13 @@ var $mdgriffith$elm_animator$Animator$watching = F3(
 var $author$project$LandingPage$animator = A3(
 	$mdgriffith$elm_animator$Animator$watching,
 	function ($) {
-		return $.guide;
+		return $.evaler;
 	},
 	F2(
-		function (guide, m) {
+		function (evaler, m) {
 			return _Utils_update(
 				m,
-				{guide: guide});
+				{evaler: evaler});
 		}),
 	A3(
 		$mdgriffith$elm_animator$Animator$watching,
@@ -6980,486 +6980,7 @@ var $author$project$Mario$applyButtonToGamepad = F3(
 					});
 		}
 	});
-var $author$project$LandingPage$gravity = F2(
-	function (dt, mario) {
-		return _Utils_update(
-			mario,
-			{
-				vy: (mario.y > 0) ? (mario.vy - (dt / 4)) : 0
-			});
-	});
-var $elm$core$Bitwise$and = _Bitwise_and;
-var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
-var $elm$core$String$repeatHelp = F3(
-	function (n, chunk, result) {
-		return (n <= 0) ? result : A3(
-			$elm$core$String$repeatHelp,
-			n >> 1,
-			_Utils_ap(chunk, chunk),
-			(!(n & 1)) ? result : _Utils_ap(result, chunk));
-	});
-var $elm$core$String$repeat = F2(
-	function (n, chunk) {
-		return A3($elm$core$String$repeatHelp, n, chunk, '');
-	});
-var $author$project$LandingPage$monkeyFunction = F2(
-	function (content, level) {
-		var lambdaSignature = '🙈🙉🙊';
-		var indentation = A2($elm$core$String$repeat, level, '    ');
-		var funcIndentation = A2($elm$core$String$repeat, level - 1, '    ');
-		return content + ('\n' + (funcIndentation + (lambdaSignature + ('\n' + (indentation + '')))));
-	});
-var $author$project$LandingPage$newLine = F2(
-	function (content, level) {
-		return content + ('\n' + A2($elm$core$String$repeat, level * 4, ' \t'));
-	});
-var $ohanhi$keyboard$Keyboard$Backspace = {$: 'Backspace'};
-var $ohanhi$keyboard$Keyboard$Clear = {$: 'Clear'};
-var $ohanhi$keyboard$Keyboard$Copy = {$: 'Copy'};
-var $ohanhi$keyboard$Keyboard$CrSel = {$: 'CrSel'};
-var $ohanhi$keyboard$Keyboard$Cut = {$: 'Cut'};
-var $ohanhi$keyboard$Keyboard$Delete = {$: 'Delete'};
-var $ohanhi$keyboard$Keyboard$EraseEof = {$: 'EraseEof'};
-var $ohanhi$keyboard$Keyboard$ExSel = {$: 'ExSel'};
-var $ohanhi$keyboard$Keyboard$Insert = {$: 'Insert'};
-var $ohanhi$keyboard$Keyboard$Paste = {$: 'Paste'};
-var $ohanhi$keyboard$Keyboard$Redo = {$: 'Redo'};
-var $ohanhi$keyboard$Keyboard$Undo = {$: 'Undo'};
-var $ohanhi$keyboard$Keyboard$editingKey = function (_v0) {
-	var value = _v0.a;
-	switch (value) {
-		case 'Backspace':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Backspace);
-		case 'Clear':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Clear);
-		case 'Copy':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Copy);
-		case 'CrSel':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$CrSel);
-		case 'Cut':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Cut);
-		case 'Delete':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Delete);
-		case 'EraseEof':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$EraseEof);
-		case 'ExSel':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ExSel);
-		case 'Insert':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Insert);
-		case 'Paste':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Paste);
-		case 'Redo':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Redo);
-		case 'Undo':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Undo);
-		default:
-			return $elm$core$Maybe$Nothing;
-	}
-};
-var $ohanhi$keyboard$Keyboard$F1 = {$: 'F1'};
-var $ohanhi$keyboard$Keyboard$F10 = {$: 'F10'};
-var $ohanhi$keyboard$Keyboard$F11 = {$: 'F11'};
-var $ohanhi$keyboard$Keyboard$F12 = {$: 'F12'};
-var $ohanhi$keyboard$Keyboard$F13 = {$: 'F13'};
-var $ohanhi$keyboard$Keyboard$F14 = {$: 'F14'};
-var $ohanhi$keyboard$Keyboard$F15 = {$: 'F15'};
-var $ohanhi$keyboard$Keyboard$F16 = {$: 'F16'};
-var $ohanhi$keyboard$Keyboard$F17 = {$: 'F17'};
-var $ohanhi$keyboard$Keyboard$F18 = {$: 'F18'};
-var $ohanhi$keyboard$Keyboard$F19 = {$: 'F19'};
-var $ohanhi$keyboard$Keyboard$F2 = {$: 'F2'};
-var $ohanhi$keyboard$Keyboard$F20 = {$: 'F20'};
-var $ohanhi$keyboard$Keyboard$F3 = {$: 'F3'};
-var $ohanhi$keyboard$Keyboard$F4 = {$: 'F4'};
-var $ohanhi$keyboard$Keyboard$F5 = {$: 'F5'};
-var $ohanhi$keyboard$Keyboard$F6 = {$: 'F6'};
-var $ohanhi$keyboard$Keyboard$F7 = {$: 'F7'};
-var $ohanhi$keyboard$Keyboard$F8 = {$: 'F8'};
-var $ohanhi$keyboard$Keyboard$F9 = {$: 'F9'};
-var $ohanhi$keyboard$Keyboard$functionKey = function (_v0) {
-	var value = _v0.a;
-	switch (value) {
-		case 'F1':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F1);
-		case 'F2':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F2);
-		case 'F3':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F3);
-		case 'F4':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F4);
-		case 'F5':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F5);
-		case 'F6':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F6);
-		case 'F7':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F7);
-		case 'F8':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F8);
-		case 'F9':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F9);
-		case 'F10':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F10);
-		case 'F11':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F11);
-		case 'F12':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F12);
-		case 'F13':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F13);
-		case 'F14':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F14);
-		case 'F15':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F15);
-		case 'F16':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F16);
-		case 'F17':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F17);
-		case 'F18':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F18);
-		case 'F19':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F19);
-		case 'F20':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F20);
-		default:
-			return $elm$core$Maybe$Nothing;
-	}
-};
-var $ohanhi$keyboard$Keyboard$ChannelDown = {$: 'ChannelDown'};
-var $ohanhi$keyboard$Keyboard$ChannelUp = {$: 'ChannelUp'};
-var $ohanhi$keyboard$Keyboard$MediaFastForward = {$: 'MediaFastForward'};
-var $ohanhi$keyboard$Keyboard$MediaPause = {$: 'MediaPause'};
-var $ohanhi$keyboard$Keyboard$MediaPlay = {$: 'MediaPlay'};
-var $ohanhi$keyboard$Keyboard$MediaPlayPause = {$: 'MediaPlayPause'};
-var $ohanhi$keyboard$Keyboard$MediaRecord = {$: 'MediaRecord'};
-var $ohanhi$keyboard$Keyboard$MediaRewind = {$: 'MediaRewind'};
-var $ohanhi$keyboard$Keyboard$MediaStop = {$: 'MediaStop'};
-var $ohanhi$keyboard$Keyboard$MediaTrackNext = {$: 'MediaTrackNext'};
-var $ohanhi$keyboard$Keyboard$MediaTrackPrevious = {$: 'MediaTrackPrevious'};
-var $ohanhi$keyboard$Keyboard$mediaKey = function (_v0) {
-	var value = _v0.a;
-	switch (value) {
-		case 'ChannelDown':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ChannelDown);
-		case 'ChannelUp':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ChannelUp);
-		case 'MediaFastForward':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaFastForward);
-		case 'MediaPause':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaPause);
-		case 'MediaPlay':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaPlay);
-		case 'MediaPlayPause':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaPlayPause);
-		case 'MediaRecord':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaRecord);
-		case 'MediaRewind':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaRewind);
-		case 'MediaStop':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaStop);
-		case 'MediaTrackNext':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaTrackNext);
-		case 'MediaTrackPrevious':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaTrackPrevious);
-		default:
-			return $elm$core$Maybe$Nothing;
-	}
-};
-var $ohanhi$keyboard$Keyboard$Alt = {$: 'Alt'};
-var $ohanhi$keyboard$Keyboard$AltGraph = {$: 'AltGraph'};
-var $ohanhi$keyboard$Keyboard$CapsLock = {$: 'CapsLock'};
-var $ohanhi$keyboard$Keyboard$Control = {$: 'Control'};
-var $ohanhi$keyboard$Keyboard$Fn = {$: 'Fn'};
-var $ohanhi$keyboard$Keyboard$FnLock = {$: 'FnLock'};
-var $ohanhi$keyboard$Keyboard$Hyper = {$: 'Hyper'};
-var $ohanhi$keyboard$Keyboard$Meta = {$: 'Meta'};
-var $ohanhi$keyboard$Keyboard$NumLock = {$: 'NumLock'};
-var $ohanhi$keyboard$Keyboard$ScrollLock = {$: 'ScrollLock'};
-var $ohanhi$keyboard$Keyboard$Shift = {$: 'Shift'};
-var $ohanhi$keyboard$Keyboard$Super = {$: 'Super'};
-var $ohanhi$keyboard$Keyboard$Symbol = {$: 'Symbol'};
-var $ohanhi$keyboard$Keyboard$SymbolLock = {$: 'SymbolLock'};
-var $ohanhi$keyboard$Keyboard$modifierKey = function (_v0) {
-	var value = _v0.a;
-	switch (value) {
-		case 'Alt':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Alt);
-		case 'AltGraph':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$AltGraph);
-		case 'CapsLock':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$CapsLock);
-		case 'Control':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Control);
-		case 'Fn':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Fn);
-		case 'FnLock':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$FnLock);
-		case 'Hyper':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Hyper);
-		case 'Meta':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Meta);
-		case 'NumLock':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$NumLock);
-		case 'ScrollLock':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ScrollLock);
-		case 'Shift':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Shift);
-		case 'Super':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Super);
-		case 'OS':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Super);
-		case 'Symbol':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Symbol);
-		case 'SymbolLock':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$SymbolLock);
-		default:
-			return $elm$core$Maybe$Nothing;
-	}
-};
-var $ohanhi$keyboard$Keyboard$ArrowDown = {$: 'ArrowDown'};
-var $ohanhi$keyboard$Keyboard$ArrowLeft = {$: 'ArrowLeft'};
-var $ohanhi$keyboard$Keyboard$ArrowRight = {$: 'ArrowRight'};
-var $ohanhi$keyboard$Keyboard$ArrowUp = {$: 'ArrowUp'};
-var $ohanhi$keyboard$Keyboard$End = {$: 'End'};
-var $ohanhi$keyboard$Keyboard$Home = {$: 'Home'};
-var $ohanhi$keyboard$Keyboard$PageDown = {$: 'PageDown'};
-var $ohanhi$keyboard$Keyboard$PageUp = {$: 'PageUp'};
-var $ohanhi$keyboard$Keyboard$navigationKey = function (_v0) {
-	var value = _v0.a;
-	switch (value) {
-		case 'ArrowDown':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowDown);
-		case 'ArrowLeft':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowLeft);
-		case 'ArrowRight':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowRight);
-		case 'ArrowUp':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowUp);
-		case 'Down':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowDown);
-		case 'Left':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowLeft);
-		case 'Right':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowRight);
-		case 'Up':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowUp);
-		case 'End':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$End);
-		case 'Home':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Home);
-		case 'PageDown':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$PageDown);
-		case 'PageUp':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$PageUp);
-		default:
-			return $elm$core$Maybe$Nothing;
-	}
-};
-var $ohanhi$keyboard$Keyboard$oneOf = F2(
-	function (fns, key) {
-		oneOf:
-		while (true) {
-			if (!fns.b) {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				var fn = fns.a;
-				var rest = fns.b;
-				var _v1 = fn(key);
-				if (_v1.$ === 'Just') {
-					var a = _v1.a;
-					return $elm$core$Maybe$Just(a);
-				} else {
-					var $temp$fns = rest,
-						$temp$key = key;
-					fns = $temp$fns;
-					key = $temp$key;
-					continue oneOf;
-				}
-			}
-		}
-	});
-var $ohanhi$keyboard$Keyboard$AppSwitch = {$: 'AppSwitch'};
-var $ohanhi$keyboard$Keyboard$Call = {$: 'Call'};
-var $ohanhi$keyboard$Keyboard$Camera = {$: 'Camera'};
-var $ohanhi$keyboard$Keyboard$CameraFocus = {$: 'CameraFocus'};
-var $ohanhi$keyboard$Keyboard$EndCall = {$: 'EndCall'};
-var $ohanhi$keyboard$Keyboard$GoBack = {$: 'GoBack'};
-var $ohanhi$keyboard$Keyboard$GoHome = {$: 'GoHome'};
-var $ohanhi$keyboard$Keyboard$HeadsetHook = {$: 'HeadsetHook'};
-var $ohanhi$keyboard$Keyboard$LastNumberRedial = {$: 'LastNumberRedial'};
-var $ohanhi$keyboard$Keyboard$MannerMode = {$: 'MannerMode'};
-var $ohanhi$keyboard$Keyboard$Notification = {$: 'Notification'};
-var $ohanhi$keyboard$Keyboard$VoiceDial = {$: 'VoiceDial'};
-var $ohanhi$keyboard$Keyboard$phoneKey = function (_v0) {
-	var value = _v0.a;
-	switch (value) {
-		case 'AppSwitch':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$AppSwitch);
-		case 'Call':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Call);
-		case 'Camera':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Camera);
-		case 'CameraFocus':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$CameraFocus);
-		case 'EndCall':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$EndCall);
-		case 'GoBack':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$GoBack);
-		case 'GoHome':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$GoHome);
-		case 'HeadsetHook':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$HeadsetHook);
-		case 'LastNumberRedial':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$LastNumberRedial);
-		case 'Notification':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Notification);
-		case 'MannerMode':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MannerMode);
-		case 'VoiceDial':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$VoiceDial);
-		default:
-			return $elm$core$Maybe$Nothing;
-	}
-};
-var $ohanhi$keyboard$Keyboard$Again = {$: 'Again'};
-var $ohanhi$keyboard$Keyboard$Attn = {$: 'Attn'};
-var $ohanhi$keyboard$Keyboard$Cancel = {$: 'Cancel'};
-var $ohanhi$keyboard$Keyboard$ContextMenu = {$: 'ContextMenu'};
-var $ohanhi$keyboard$Keyboard$Escape = {$: 'Escape'};
-var $ohanhi$keyboard$Keyboard$Execute = {$: 'Execute'};
-var $ohanhi$keyboard$Keyboard$Find = {$: 'Find'};
-var $ohanhi$keyboard$Keyboard$Finish = {$: 'Finish'};
-var $ohanhi$keyboard$Keyboard$Help = {$: 'Help'};
-var $ohanhi$keyboard$Keyboard$Pause = {$: 'Pause'};
-var $ohanhi$keyboard$Keyboard$Play = {$: 'Play'};
-var $ohanhi$keyboard$Keyboard$Props = {$: 'Props'};
-var $ohanhi$keyboard$Keyboard$Select = {$: 'Select'};
-var $ohanhi$keyboard$Keyboard$ZoomIn = {$: 'ZoomIn'};
-var $ohanhi$keyboard$Keyboard$ZoomOut = {$: 'ZoomOut'};
-var $ohanhi$keyboard$Keyboard$uiKey = function (_v0) {
-	var value = _v0.a;
-	switch (value) {
-		case 'Again':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Again);
-		case 'Attn':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Attn);
-		case 'Cancel':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Cancel);
-		case 'ContextMenu':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ContextMenu);
-		case 'Escape':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Escape);
-		case 'Execute':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Execute);
-		case 'Find':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Find);
-		case 'Finish':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Finish);
-		case 'Help':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Help);
-		case 'Pause':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Pause);
-		case 'Play':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Play);
-		case 'Props':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Props);
-		case 'Select':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Select);
-		case 'ZoomIn':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ZoomIn);
-		case 'ZoomOut':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ZoomOut);
-		default:
-			return $elm$core$Maybe$Nothing;
-	}
-};
-var $ohanhi$keyboard$Keyboard$Enter = {$: 'Enter'};
-var $ohanhi$keyboard$Keyboard$Spacebar = {$: 'Spacebar'};
-var $ohanhi$keyboard$Keyboard$Tab = {$: 'Tab'};
-var $ohanhi$keyboard$Keyboard$whitespaceKey = function (_v0) {
-	var value = _v0.a;
-	switch (value) {
-		case 'Enter':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Enter);
-		case 'Tab':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Tab);
-		case 'Spacebar':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Spacebar);
-		case ' ':
-			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Spacebar);
-		default:
-			return $elm$core$Maybe$Nothing;
-	}
-};
-var $ohanhi$keyboard$Keyboard$anyKeyWith = function (charParser) {
-	return $ohanhi$keyboard$Keyboard$oneOf(
-		_List_fromArray(
-			[$ohanhi$keyboard$Keyboard$whitespaceKey, charParser, $ohanhi$keyboard$Keyboard$modifierKey, $ohanhi$keyboard$Keyboard$navigationKey, $ohanhi$keyboard$Keyboard$editingKey, $ohanhi$keyboard$Keyboard$functionKey, $ohanhi$keyboard$Keyboard$uiKey, $ohanhi$keyboard$Keyboard$phoneKey, $ohanhi$keyboard$Keyboard$mediaKey]));
-};
-var $ohanhi$keyboard$Keyboard$Character = function (a) {
-	return {$: 'Character', a: a};
-};
-var $elm$core$String$toUpper = _String_toUpper;
-var $ohanhi$keyboard$Keyboard$characterKeyUpper = function (_v0) {
-	var value = _v0.a;
-	return ($elm$core$String$length(value) === 1) ? $elm$core$Maybe$Just(
-		$ohanhi$keyboard$Keyboard$Character(
-			$elm$core$String$toUpper(value))) : $elm$core$Maybe$Nothing;
-};
-var $ohanhi$keyboard$Keyboard$anyKeyUpper = $ohanhi$keyboard$Keyboard$anyKeyWith($ohanhi$keyboard$Keyboard$characterKeyUpper);
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
-var $elm$core$Basics$neq = _Utils_notEqual;
-var $ohanhi$keyboard$Keyboard$insert = F3(
-	function (keyParser, rawKey, list) {
-		var _v0 = keyParser(rawKey);
-		if (_v0.$ === 'Just') {
-			var key = _v0.a;
-			return A2(
-				$elm$core$List$cons,
-				key,
-				A2(
-					$elm$core$List$filter,
-					$elm$core$Basics$neq(key),
-					list));
-		} else {
-			return list;
-		}
-	});
-var $ohanhi$keyboard$Keyboard$remove = F3(
-	function (keyParser, rawKey, list) {
-		var _v0 = keyParser(rawKey);
-		if (_v0.$ === 'Just') {
-			var key = _v0.a;
-			return A2(
-				$elm$core$List$filter,
-				$elm$core$Basics$neq(key),
-				list);
-		} else {
-			return list;
-		}
-	});
-var $ohanhi$keyboard$Keyboard$updateWithParser = F3(
-	function (keyParser, msg, state) {
-		if (msg.$ === 'Down') {
-			var key = msg.a;
-			return A3($ohanhi$keyboard$Keyboard$insert, keyParser, key, state);
-		} else {
-			var key = msg.a;
-			return A3($ohanhi$keyboard$Keyboard$remove, keyParser, key, state);
-		}
-	});
-var $ohanhi$keyboard$Keyboard$update = $ohanhi$keyboard$Keyboard$updateWithParser($ohanhi$keyboard$Keyboard$anyKeyUpper);
-var $elm$core$String$concat = function (strings) {
-	return A2($elm$core$String$join, '', strings);
-};
+var $jxxcarlson$elm_tree_builder$Tree$Build$EmptyBlocks = {$: 'EmptyBlocks'};
 var $elm$core$List$drop = F2(
 	function (n, list) {
 		drop:
@@ -7481,1253 +7002,6 @@ var $elm$core$List$drop = F2(
 			}
 		}
 	});
-var $elm$core$String$words = _String_words;
-var $author$project$LandingPage$wordDelete = function (str) {
-	return $elm$core$String$concat(
-		$elm$core$List$reverse(
-			A2(
-				$elm$core$List$drop,
-				1,
-				$elm$core$List$reverse(
-					$elm$core$String$words(str)))));
-};
-var $author$project$LandingPage$handleDsl = F2(
-	function (keyMsg, model) {
-		var parseContent = function (content) {
-			return content;
-		};
-		var editorState = A3(
-			$elm$core$List$foldl,
-			F2(
-				function (key, result) {
-					if (key.$ === 'Control') {
-						return _Utils_update(
-							result,
-							{level: result.level + 2});
-					} else {
-						return result;
-					}
-				}),
-			model.dslEditor,
-			A2($ohanhi$keyboard$Keyboard$update, keyMsg, _List_Nil));
-		var contentString = A3(
-			$elm$core$List$foldl,
-			F2(
-				function (key, content) {
-					switch (key.$) {
-						case 'Spacebar':
-							return content + ' \t';
-						case 'Enter':
-							return A2($author$project$LandingPage$newLine, content, editorState.level);
-						case 'Backspace':
-							return $author$project$LandingPage$wordDelete(content);
-						case 'Character':
-							var c = key.a;
-							return _Utils_ap(content, c);
-						case 'Control':
-							return A2($author$project$LandingPage$monkeyFunction, content, editorState.level);
-						default:
-							return content;
-					}
-				}),
-			model.dslContent,
-			A2($ohanhi$keyboard$Keyboard$update, keyMsg, _List_Nil));
-		return _Utils_update(
-			model,
-			{dslContent: contentString, dslEditor: editorState});
-	});
-var $author$project$Mario$HeldFor = function (a) {
-	return {$: 'HeldFor', a: a};
-};
-var $author$project$Mario$hold = F2(
-	function (dt, pressed) {
-		switch (pressed.$) {
-			case 'NotPressed':
-				return $author$project$Mario$NotPressed;
-			case 'StartPressed':
-				return $author$project$Mario$HeldFor(dt);
-			default:
-				var existingDt = pressed.a;
-				return $author$project$Mario$HeldFor(existingDt + dt);
-		}
-	});
-var $author$project$Mario$holdButtonsOnGamepad = F2(
-	function (dt, gamepad) {
-		return {
-			duck: A2($author$project$Mario$hold, dt, gamepad.duck),
-			jump: A2($author$project$Mario$hold, dt, gamepad.jump),
-			left: A2($author$project$Mario$hold, dt, gamepad.left),
-			right: A2($author$project$Mario$hold, dt, gamepad.right),
-			run: A2($author$project$Mario$hold, dt, gamepad.run)
-		};
-	});
-var $author$project$LandingPage$holdButtons = F2(
-	function (dt, model) {
-		var gamepad = model.gamepad;
-		return _Utils_update(
-			model,
-			{
-				gamepad: A2($author$project$Mario$holdButtonsOnGamepad, dt, gamepad)
-			});
-	});
-var $author$project$LandingPage$jump = F2(
-	function (pad, mario) {
-		return (_Utils_eq(pad.jump, $author$project$Mario$StartPressed) && (!mario.vy)) ? _Utils_update(
-			mario,
-			{vy: 6.0}) : mario;
-	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$LandingPage$physics = F2(
-	function (dt, mario) {
-		return _Utils_update(
-			mario,
-			{
-				x: A2(
-					$elm$core$Basics$max,
-					0,
-					A2($elm$core$Basics$min, mario.window.width - 40, mario.x + (dt * mario.vx))),
-				y: A2($elm$core$Basics$max, 0, mario.y + (dt * mario.vy))
-			});
-	});
-var $mdgriffith$elm_animator$Animator$update = F3(
-	function (newTime, _v0, model) {
-		var updateModel = _v0.b;
-		return A2(updateModel, newTime, model);
-	});
-var $author$project$Mario$Ducking = {$: 'Ducking'};
-var $author$project$Mario$Jumping = {$: 'Jumping'};
-var $author$project$Mario$Left = {$: 'Left'};
-var $author$project$Mario$Running = {$: 'Running'};
-var $author$project$Mario$Walking = {$: 'Walking'};
-var $ianmackenzie$elm_units$Quantity$greaterThan = F2(
-	function (_v0, _v1) {
-		var y = _v0.a;
-		var x = _v1.a;
-		return _Utils_cmp(x, y) > 0;
-	});
-var $mdgriffith$elm_animator$Internal$Time$inMilliseconds = function (_v0) {
-	var ms = _v0.a;
-	return ms;
-};
-var $ianmackenzie$elm_units$Duration$seconds = function (numSeconds) {
-	return $ianmackenzie$elm_units$Quantity$Quantity(numSeconds);
-};
-var $ianmackenzie$elm_units$Duration$milliseconds = function (numMilliseconds) {
-	return $ianmackenzie$elm_units$Duration$seconds(0.001 * numMilliseconds);
-};
-var $mdgriffith$elm_animator$Internal$Time$duration = F2(
-	function (one, two) {
-		return A2($ianmackenzie$elm_units$Quantity$greaterThan, two, one) ? $ianmackenzie$elm_units$Duration$milliseconds(
-			A2(
-				$elm$core$Basics$max,
-				0,
-				$mdgriffith$elm_animator$Internal$Time$inMilliseconds(one) - $mdgriffith$elm_animator$Internal$Time$inMilliseconds(two))) : $ianmackenzie$elm_units$Duration$milliseconds(
-			A2(
-				$elm$core$Basics$max,
-				0,
-				$mdgriffith$elm_animator$Internal$Time$inMilliseconds(two) - $mdgriffith$elm_animator$Internal$Time$inMilliseconds(one)));
-	});
-var $mdgriffith$elm_animator$Internal$Timeline$adjustTime = F4(
-	function (lookup, getPersonality, unmodified, upcomingOccurring) {
-		var event = unmodified.a;
-		var start = unmodified.b;
-		var eventEnd = unmodified.c;
-		if (!upcomingOccurring.b) {
-			return unmodified;
-		} else {
-			var _v1 = upcomingOccurring.a;
-			var next = _v1.a;
-			var nextStartTime = _v1.b;
-			var personality = getPersonality(
-				lookup(event));
-			if (!(!personality.departLate)) {
-				var totalDuration = A2($mdgriffith$elm_animator$Internal$Time$duration, eventEnd, nextStartTime);
-				var nextPersonality = getPersonality(
-					lookup(next));
-				var totalPortions = A2($elm$core$Basics$max, personality.departLate + nextPersonality.arriveEarly, 1);
-				var lateBy = A2($ianmackenzie$elm_units$Quantity$multiplyBy, personality.departLate / totalPortions, totalDuration);
-				return A3(
-					$mdgriffith$elm_animator$Internal$Timeline$Occurring,
-					event,
-					start,
-					A2($mdgriffith$elm_animator$Internal$Time$advanceBy, lateBy, eventEnd));
-			} else {
-				return unmodified;
-			}
-		}
-	});
-var $ianmackenzie$elm_units$Quantity$minus = F2(
-	function (_v0, _v1) {
-		var y = _v0.a;
-		var x = _v1.a;
-		return $ianmackenzie$elm_units$Quantity$Quantity(x - y);
-	});
-var $mdgriffith$elm_animator$Internal$Time$rollbackBy = F2(
-	function (dur, time) {
-		return A2(
-			$ianmackenzie$elm_units$Quantity$minus,
-			$ianmackenzie$elm_units$Quantity$Quantity(
-				$ianmackenzie$elm_units$Duration$inMilliseconds(dur)),
-			time);
-	});
-var $mdgriffith$elm_animator$Internal$Time$zeroDuration = function (_v0) {
-	var dur = _v0.a;
-	return !dur;
-};
-var $mdgriffith$elm_animator$Internal$Timeline$adjustTimeWithPrevious = F5(
-	function (lookup, getPersonality, _v0, unmodified, upcomingOccurring) {
-		var prev = _v0.a;
-		var prevStart = _v0.b;
-		var prevEnd = _v0.c;
-		var event = unmodified.a;
-		var start = unmodified.b;
-		var eventEnd = unmodified.c;
-		var totalPrevDuration = A2($mdgriffith$elm_animator$Internal$Time$duration, prevEnd, start);
-		var prevPersonality = getPersonality(
-			lookup(prev));
-		var personality = getPersonality(
-			lookup(event));
-		var totalPrevPortions = A2($elm$core$Basics$max, prevPersonality.departLate + personality.arriveEarly, 1);
-		var earlyBy = A2($ianmackenzie$elm_units$Quantity$multiplyBy, personality.arriveEarly / totalPrevPortions, totalPrevDuration);
-		if (!upcomingOccurring.b) {
-			return $mdgriffith$elm_animator$Internal$Time$zeroDuration(earlyBy) ? unmodified : A3(
-				$mdgriffith$elm_animator$Internal$Timeline$Occurring,
-				event,
-				A2($mdgriffith$elm_animator$Internal$Time$rollbackBy, earlyBy, start),
-				eventEnd);
-		} else {
-			var _v2 = upcomingOccurring.a;
-			var next = _v2.a;
-			var nextStartTime = _v2.b;
-			if (!(!personality.departLate)) {
-				var totalDuration = A2($mdgriffith$elm_animator$Internal$Time$duration, eventEnd, nextStartTime);
-				var nextPersonality = getPersonality(
-					lookup(next));
-				var totalPortions = A2($elm$core$Basics$max, personality.departLate + nextPersonality.arriveEarly, 1);
-				var lateBy = A2($ianmackenzie$elm_units$Quantity$multiplyBy, personality.departLate / totalPortions, totalDuration);
-				return A3(
-					$mdgriffith$elm_animator$Internal$Timeline$Occurring,
-					event,
-					A2($mdgriffith$elm_animator$Internal$Time$rollbackBy, earlyBy, start),
-					A2($mdgriffith$elm_animator$Internal$Time$advanceBy, lateBy, eventEnd));
-			} else {
-				if ($mdgriffith$elm_animator$Internal$Time$zeroDuration(earlyBy)) {
-					return unmodified;
-				} else {
-					return A3(
-						$mdgriffith$elm_animator$Internal$Timeline$Occurring,
-						event,
-						A2($mdgriffith$elm_animator$Internal$Time$rollbackBy, earlyBy, start),
-						eventEnd);
-				}
-			}
-		}
-	});
-var $mdgriffith$elm_animator$Internal$Timeline$hasDwell = function (_v0) {
-	var start = _v0.b.a;
-	var end = _v0.c.a;
-	return !(!(start - end));
-};
-var $mdgriffith$elm_animator$Internal$Timeline$createLookAhead = F4(
-	function (fn, lookup, currentEvent, upcomingEvents) {
-		if (!upcomingEvents.b) {
-			return $elm$core$Maybe$Nothing;
-		} else {
-			var unadjustedUpcoming = upcomingEvents.a;
-			var remain = upcomingEvents.b;
-			var upcomingOccurring = A5($mdgriffith$elm_animator$Internal$Timeline$adjustTimeWithPrevious, lookup, fn.adjustor, currentEvent, unadjustedUpcoming, remain);
-			return $elm$core$Maybe$Just(
-				{
-					anchor: lookup(
-						$mdgriffith$elm_animator$Internal$Timeline$getEvent(upcomingOccurring)),
-					resting: $mdgriffith$elm_animator$Internal$Timeline$hasDwell(upcomingOccurring),
-					time: $mdgriffith$elm_animator$Internal$Time$inMilliseconds(
-						$mdgriffith$elm_animator$Internal$Timeline$startTime(upcomingOccurring))
-				});
-		}
-	});
-var $mdgriffith$elm_animator$Internal$Timeline$overLines = F7(
-	function (fn, lookup, details, maybePreviousEvent, _v0, futureLines, state) {
-		overLines:
-		while (true) {
-			var lineStart = _v0.a;
-			var unadjustedStartEvent = _v0.b;
-			var lineRemain = _v0.c;
-			var transition = function (newState) {
-				if (!futureLines.b) {
-					return newState;
-				} else {
-					var future = futureLines.a;
-					var futureStart = future.a;
-					var futureStartEv = future.b;
-					var futureRemain = future.c;
-					var restOfFuture = futureLines.b;
-					return A2($mdgriffith$elm_animator$Internal$Time$thisBeforeOrEqualThat, futureStart, details.now) ? A7($mdgriffith$elm_animator$Internal$Timeline$overLines, fn, lookup, details, $elm$core$Maybe$Nothing, future, restOfFuture, newState) : newState;
-				}
-			};
-			var now = function () {
-				if (!futureLines.b) {
-					return details.now;
-				} else {
-					var _v5 = futureLines.a;
-					var futureStart = _v5.a;
-					var futureStartEv = _v5.b;
-					var futureRemain = _v5.c;
-					var restOfFuture = futureLines.b;
-					return A2($mdgriffith$elm_animator$Internal$Time$thisBeforeThat, futureStart, details.now) ? futureStart : details.now;
-				}
-			}();
-			var lineStartEv = function () {
-				if (maybePreviousEvent.$ === 'Nothing') {
-					return A4($mdgriffith$elm_animator$Internal$Timeline$adjustTime, lookup, fn.adjustor, unadjustedStartEvent, lineRemain);
-				} else {
-					var prev = maybePreviousEvent.a;
-					return A5($mdgriffith$elm_animator$Internal$Timeline$adjustTimeWithPrevious, lookup, fn.adjustor, prev, unadjustedStartEvent, lineRemain);
-				}
-			}();
-			if (A2(
-				$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
-				now,
-				$mdgriffith$elm_animator$Internal$Timeline$startTime(lineStartEv))) {
-				return transition(
-					A7(
-						fn.lerp,
-						$mdgriffith$elm_animator$Internal$Time$inMilliseconds(lineStart),
-						$elm$core$Maybe$Just(
-							lookup(details.initial)),
-						lookup(
-							$mdgriffith$elm_animator$Internal$Timeline$getEvent(lineStartEv)),
-						$mdgriffith$elm_animator$Internal$Time$inMilliseconds(
-							$mdgriffith$elm_animator$Internal$Timeline$startTime(lineStartEv)),
-						$mdgriffith$elm_animator$Internal$Time$inMilliseconds(now),
-						A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedStartEvent, lineRemain),
-						state));
-			} else {
-				if (A2(
-					$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
-					now,
-					$mdgriffith$elm_animator$Internal$Timeline$endTime(lineStartEv))) {
-					return transition(
-						A5(
-							fn.visit,
-							lookup,
-							lineStartEv,
-							now,
-							A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedStartEvent, lineRemain),
-							state));
-				} else {
-					if (!lineRemain.b) {
-						return transition(
-							A5(fn.visit, lookup, lineStartEv, now, $elm$core$Maybe$Nothing, state));
-					} else {
-						var unadjustedNext = lineRemain.a;
-						var lineRemain2 = lineRemain.b;
-						var next = A5($mdgriffith$elm_animator$Internal$Timeline$adjustTimeWithPrevious, lookup, fn.adjustor, unadjustedStartEvent, unadjustedNext, lineRemain2);
-						if (A2(
-							$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
-							now,
-							$mdgriffith$elm_animator$Internal$Timeline$startTime(next))) {
-							return transition(
-								A7(
-									fn.lerp,
-									$mdgriffith$elm_animator$Internal$Time$inMilliseconds(
-										$mdgriffith$elm_animator$Internal$Timeline$endTime(lineStartEv)),
-									$elm$core$Maybe$Just(
-										lookup(
-											$mdgriffith$elm_animator$Internal$Timeline$getEvent(lineStartEv))),
-									lookup(
-										$mdgriffith$elm_animator$Internal$Timeline$getEvent(next)),
-									$mdgriffith$elm_animator$Internal$Time$inMilliseconds(
-										$mdgriffith$elm_animator$Internal$Timeline$startTime(next)),
-									$mdgriffith$elm_animator$Internal$Time$inMilliseconds(now),
-									A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext, lineRemain2),
-									A5(
-										fn.visit,
-										lookup,
-										lineStartEv,
-										now,
-										A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedStartEvent, lineRemain),
-										state)));
-						} else {
-							if (A2(
-								$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
-								now,
-								$mdgriffith$elm_animator$Internal$Timeline$endTime(next))) {
-								return transition(
-									A5(
-										fn.visit,
-										lookup,
-										next,
-										now,
-										A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext, lineRemain2),
-										state));
-							} else {
-								if (!lineRemain2.b) {
-									return transition(
-										A5(fn.visit, lookup, next, now, $elm$core$Maybe$Nothing, state));
-								} else {
-									var unadjustedNext2 = lineRemain2.a;
-									var lineRemain3 = lineRemain2.b;
-									var next2 = A5($mdgriffith$elm_animator$Internal$Timeline$adjustTimeWithPrevious, lookup, fn.adjustor, unadjustedNext, unadjustedNext2, lineRemain3);
-									if (A2(
-										$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
-										now,
-										$mdgriffith$elm_animator$Internal$Timeline$startTime(next2))) {
-										var after = A5(
-											fn.visit,
-											lookup,
-											next,
-											now,
-											A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext, lineRemain2),
-											state);
-										return transition(
-											A7(
-												fn.lerp,
-												$mdgriffith$elm_animator$Internal$Time$inMilliseconds(
-													$mdgriffith$elm_animator$Internal$Timeline$endTime(next)),
-												$elm$core$Maybe$Just(
-													lookup(
-														$mdgriffith$elm_animator$Internal$Timeline$getEvent(next))),
-												lookup(
-													$mdgriffith$elm_animator$Internal$Timeline$getEvent(next2)),
-												$mdgriffith$elm_animator$Internal$Time$inMilliseconds(
-													$mdgriffith$elm_animator$Internal$Timeline$startTime(next2)),
-												$mdgriffith$elm_animator$Internal$Time$inMilliseconds(now),
-												A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext2, lineRemain3),
-												after));
-									} else {
-										if (A2(
-											$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
-											now,
-											$mdgriffith$elm_animator$Internal$Timeline$endTime(next2))) {
-											return transition(
-												A5(
-													fn.visit,
-													lookup,
-													next2,
-													now,
-													A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext2, lineRemain3),
-													state));
-										} else {
-											var after = A5(
-												fn.visit,
-												lookup,
-												next2,
-												now,
-												A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext2, lineRemain3),
-												state);
-											var $temp$fn = fn,
-												$temp$lookup = lookup,
-												$temp$details = details,
-												$temp$maybePreviousEvent = $elm$core$Maybe$Just(next),
-												$temp$_v0 = A3(
-												$mdgriffith$elm_animator$Internal$Timeline$Line,
-												$mdgriffith$elm_animator$Internal$Timeline$endTime(next),
-												unadjustedNext2,
-												lineRemain3),
-												$temp$futureLines = futureLines,
-												$temp$state = after;
-											fn = $temp$fn;
-											lookup = $temp$lookup;
-											details = $temp$details;
-											maybePreviousEvent = $temp$maybePreviousEvent;
-											_v0 = $temp$_v0;
-											futureLines = $temp$futureLines;
-											state = $temp$state;
-											continue overLines;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	});
-var $mdgriffith$elm_animator$Internal$Timeline$foldp = F3(
-	function (lookup, fn, _v0) {
-		var timelineDetails = _v0.a;
-		var _v1 = timelineDetails.events;
-		var timetable = _v1.a;
-		var start = fn.start(
-			lookup(timelineDetails.initial));
-		if (!timetable.b) {
-			return start;
-		} else {
-			var firstLine = timetable.a;
-			var remainingLines = timetable.b;
-			return A7($mdgriffith$elm_animator$Internal$Timeline$overLines, fn, lookup, timelineDetails, $elm$core$Maybe$Nothing, firstLine, remainingLines, start);
-		}
-	});
-var $mdgriffith$elm_animator$Internal$Timeline$linearDefault = {arriveEarly: 0, arriveSlowly: 0, departLate: 0, departSlowly: 0, wobbliness: 0};
-var $mdgriffith$elm_animator$Internal$Timeline$current = function (timeline) {
-	var details = timeline.a;
-	return A3(
-		$mdgriffith$elm_animator$Internal$Timeline$foldp,
-		$elm$core$Basics$identity,
-		{
-			adjustor: function (_v0) {
-				return $mdgriffith$elm_animator$Internal$Timeline$linearDefault;
-			},
-			dwellPeriod: function (_v1) {
-				return $elm$core$Maybe$Nothing;
-			},
-			lerp: F7(
-				function (_v2, _v3, target, _v4, _v5, _v6, _v7) {
-					return target;
-				}),
-			start: function (_v8) {
-				return details.initial;
-			},
-			visit: F5(
-				function (lookup, target, targetTime, maybeLookAhead, state) {
-					return $mdgriffith$elm_animator$Internal$Timeline$getEvent(target);
-				})
-		},
-		timeline);
-};
-var $mdgriffith$elm_animator$Animator$current = $mdgriffith$elm_animator$Internal$Timeline$current;
-var $mdgriffith$elm_animator$Animator$TransitionTo = F2(
-	function (a, b) {
-		return {$: 'TransitionTo', a: a, b: b};
-	});
-var $mdgriffith$elm_animator$Animator$event = $mdgriffith$elm_animator$Animator$TransitionTo;
-var $mdgriffith$elm_animator$Animator$initializeSchedule = F2(
-	function (waiting, steps) {
-		initializeSchedule:
-		while (true) {
-			if (!steps.b) {
-				return $elm$core$Maybe$Nothing;
-			} else {
-				if (steps.a.$ === 'Wait') {
-					var additionalWait = steps.a.a;
-					var moreSteps = steps.b;
-					var $temp$waiting = A2($ianmackenzie$elm_units$Quantity$plus, waiting, additionalWait),
-						$temp$steps = moreSteps;
-					waiting = $temp$waiting;
-					steps = $temp$steps;
-					continue initializeSchedule;
-				} else {
-					var _v1 = steps.a;
-					var dur = _v1.a;
-					var checkpoint = _v1.b;
-					var moreSteps = steps.b;
-					return $elm$core$Maybe$Just(
-						_Utils_Tuple2(
-							A3(
-								$mdgriffith$elm_animator$Internal$Timeline$Schedule,
-								waiting,
-								A3($mdgriffith$elm_animator$Internal$Timeline$Event, dur, checkpoint, $elm$core$Maybe$Nothing),
-								_List_Nil),
-							moreSteps));
-				}
-			}
-		}
-	});
-var $mdgriffith$elm_animator$Animator$millis = $ianmackenzie$elm_units$Duration$milliseconds;
-var $mdgriffith$elm_animator$Internal$Timeline$addToDwell = F2(
-	function (duration, maybeDwell) {
-		if (!$ianmackenzie$elm_units$Duration$inMilliseconds(duration)) {
-			return maybeDwell;
-		} else {
-			if (maybeDwell.$ === 'Nothing') {
-				return $elm$core$Maybe$Just(duration);
-			} else {
-				var existing = maybeDwell.a;
-				return $elm$core$Maybe$Just(
-					A2($ianmackenzie$elm_units$Quantity$plus, duration, existing));
-			}
-		}
-	});
-var $mdgriffith$elm_animator$Internal$Timeline$extendEventDwell = F2(
-	function (extendBy, thisEvent) {
-		var at = thisEvent.a;
-		var ev = thisEvent.b;
-		var maybeDwell = thisEvent.c;
-		return (!$ianmackenzie$elm_units$Duration$inMilliseconds(extendBy)) ? thisEvent : A3(
-			$mdgriffith$elm_animator$Internal$Timeline$Event,
-			at,
-			ev,
-			A2($mdgriffith$elm_animator$Internal$Timeline$addToDwell, extendBy, maybeDwell));
-	});
-var $mdgriffith$elm_animator$Animator$stepsToEvents = F2(
-	function (currentStep, _v0) {
-		var delay = _v0.a;
-		var startEvent = _v0.b;
-		var events = _v0.c;
-		if (!events.b) {
-			if (currentStep.$ === 'Wait') {
-				var waiting = currentStep.a;
-				return A3(
-					$mdgriffith$elm_animator$Internal$Timeline$Schedule,
-					delay,
-					A2($mdgriffith$elm_animator$Internal$Timeline$extendEventDwell, waiting, startEvent),
-					events);
-			} else {
-				var dur = currentStep.a;
-				var checkpoint = currentStep.b;
-				return A3(
-					$mdgriffith$elm_animator$Internal$Timeline$Schedule,
-					delay,
-					startEvent,
-					_List_fromArray(
-						[
-							A3($mdgriffith$elm_animator$Internal$Timeline$Event, dur, checkpoint, $elm$core$Maybe$Nothing)
-						]));
-			}
-		} else {
-			var _v3 = events.a;
-			var durationTo = _v3.a;
-			var recentEvent = _v3.b;
-			var maybeDwell = _v3.c;
-			var remaining = events.b;
-			if (currentStep.$ === 'Wait') {
-				var dur = currentStep.a;
-				return A3(
-					$mdgriffith$elm_animator$Internal$Timeline$Schedule,
-					delay,
-					startEvent,
-					A2(
-						$elm$core$List$cons,
-						A3(
-							$mdgriffith$elm_animator$Internal$Timeline$Event,
-							durationTo,
-							recentEvent,
-							A2($mdgriffith$elm_animator$Internal$Timeline$addToDwell, dur, maybeDwell)),
-						remaining));
-			} else {
-				var dur = currentStep.a;
-				var checkpoint = currentStep.b;
-				return _Utils_eq(checkpoint, recentEvent) ? A3(
-					$mdgriffith$elm_animator$Internal$Timeline$Schedule,
-					delay,
-					startEvent,
-					A2(
-						$elm$core$List$cons,
-						A3(
-							$mdgriffith$elm_animator$Internal$Timeline$Event,
-							durationTo,
-							recentEvent,
-							A2($mdgriffith$elm_animator$Internal$Timeline$addToDwell, dur, maybeDwell)),
-						remaining)) : A3(
-					$mdgriffith$elm_animator$Internal$Timeline$Schedule,
-					delay,
-					startEvent,
-					A2(
-						$elm$core$List$cons,
-						A3($mdgriffith$elm_animator$Internal$Timeline$Event, dur, checkpoint, $elm$core$Maybe$Nothing),
-						events));
-			}
-		}
-	});
-var $mdgriffith$elm_animator$Animator$interrupt = F2(
-	function (steps, _v0) {
-		var tl = _v0.a;
-		return $mdgriffith$elm_animator$Internal$Timeline$Timeline(
-			_Utils_update(
-				tl,
-				{
-					interruption: function () {
-						var _v1 = A2(
-							$mdgriffith$elm_animator$Animator$initializeSchedule,
-							$mdgriffith$elm_animator$Animator$millis(0),
-							steps);
-						if (_v1.$ === 'Nothing') {
-							return tl.interruption;
-						} else {
-							var _v2 = _v1.a;
-							var schedule = _v2.a;
-							var otherSteps = _v2.b;
-							return A2(
-								$elm$core$List$cons,
-								A3($elm$core$List$foldl, $mdgriffith$elm_animator$Animator$stepsToEvents, schedule, otherSteps),
-								tl.interruption);
-						}
-					}(),
-					running: true
-				}));
-	});
-var $mdgriffith$elm_animator$Animator$go = F3(
-	function (duration, ev, timeline) {
-		return A2(
-			$mdgriffith$elm_animator$Animator$interrupt,
-			_List_fromArray(
-				[
-					A2($mdgriffith$elm_animator$Animator$event, duration, ev)
-				]),
-			timeline);
-	});
-var $mdgriffith$elm_animator$Animator$immediately = $mdgriffith$elm_animator$Animator$millis(0);
-var $author$project$LandingPage$isHeld = function (pressed) {
-	switch (pressed.$) {
-		case 'NotPressed':
-			return false;
-		case 'StartPressed':
-			return true;
-		default:
-			return true;
-	}
-};
-var $author$project$LandingPage$updateSprites = function (model) {
-	var current = $mdgriffith$elm_animator$Animator$current(model.mario);
-	var direction = function () {
-		if (model.vx > 0) {
-			return $author$project$Mario$Right;
-		} else {
-			if (model.vx < 0) {
-				return $author$project$Mario$Left;
-			} else {
-				var currentDirection = current.b;
-				return currentDirection;
-			}
-		}
-	}();
-	var action = (!(!model.y)) ? $author$project$Mario$Jumping : ((!(!model.vx)) ? (($elm$core$Basics$abs(model.vx) > 2) ? $author$project$Mario$Running : $author$project$Mario$Walking) : ($author$project$LandingPage$isHeld(model.gamepad.duck) ? $author$project$Mario$Ducking : $author$project$Mario$Standing));
-	var newMario = A2($author$project$Mario$Mario, action, direction);
-	return (!_Utils_eq(current, newMario)) ? _Utils_update(
-		model,
-		{
-			mario: A3($mdgriffith$elm_animator$Animator$go, $mdgriffith$elm_animator$Animator$immediately, newMario, model.mario)
-		}) : model;
-};
-var $author$project$LandingPage$walk = F2(
-	function (pad, mario) {
-		var run = F2(
-			function (yes, x) {
-				return yes ? (x * 2.0) : x;
-			});
-		var newVx = ($author$project$LandingPage$isHeld(pad.left) && $author$project$LandingPage$isHeld(pad.right)) ? 0 : ($author$project$LandingPage$isHeld(pad.left) ? A2(
-			run,
-			$author$project$LandingPage$isHeld(pad.run),
-			-1.8) : ($author$project$LandingPage$isHeld(pad.right) ? A2(
-			run,
-			$author$project$LandingPage$isHeld(pad.run),
-			1.8) : 0));
-		return _Utils_update(
-			mario,
-			{vx: newVx});
-	});
-var $author$project$LandingPage$update = F2(
-	function (msg, model) {
-		switch (msg.$) {
-			case 'Tick':
-				var newTime = msg.a;
-				return _Utils_Tuple2(
-					A3($mdgriffith$elm_animator$Animator$update, newTime, $author$project$LandingPage$animator, model),
-					$elm$core$Platform$Cmd$none);
-			case 'Frame':
-				var dt = msg.a;
-				return _Utils_Tuple2(
-					$author$project$LandingPage$updateSprites(
-						A2(
-							$author$project$LandingPage$physics,
-							dt / 10,
-							A2(
-								$author$project$LandingPage$walk,
-								model.gamepad,
-								A2(
-									$author$project$LandingPage$jump,
-									model.gamepad,
-									A2(
-										$author$project$LandingPage$gravity,
-										dt / 10,
-										A2($author$project$LandingPage$holdButtons, dt, model)))))),
-					$elm$core$Platform$Cmd$none);
-			case 'Pressed':
-				var button = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							gamepad: A3($author$project$Mario$applyButtonToGamepad, button, true, model.gamepad)
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 'Released':
-				var button = msg.a;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							gamepad: A3($author$project$Mario$applyButtonToGamepad, button, false, model.gamepad)
-						}),
-					$elm$core$Platform$Cmd$none);
-			case 'WindowSize':
-				var width = msg.a;
-				var height = msg.b;
-				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							window: {height: height, width: width}
-						}),
-					$elm$core$Platform$Cmd$none);
-			default:
-				var keyMsg = msg.a;
-				return _Utils_Tuple2(
-					function (m) {
-						return _Utils_update(
-							m,
-							{
-								pressedKeys: A2($ohanhi$keyboard$Keyboard$update, keyMsg, m.pressedKeys)
-							});
-					}(
-						A2($author$project$LandingPage$handleDsl, keyMsg, model)),
-					$elm$core$Platform$Cmd$none);
-		}
-	});
-var $mdgriffith$elm_animator$Internal$Timeline$Cycle = F2(
-	function (a, b) {
-		return {$: 'Cycle', a: a, b: b};
-	});
-var $mdgriffith$elm_animator$Internal$Timeline$Loop = function (a) {
-	return {$: 'Loop', a: a};
-};
-var $mdgriffith$elm_animator$Animator$cycle = F2(
-	function (_v0, frames) {
-		var framesPerSecond = _v0.a;
-		var duration = $ianmackenzie$elm_units$Duration$seconds(
-			$elm$core$List$length(frames) / framesPerSecond);
-		return A2(
-			$mdgriffith$elm_animator$Internal$Timeline$Cycle,
-			$mdgriffith$elm_animator$Internal$Timeline$Loop(duration),
-			frames);
-	});
-var $mdgriffith$elm_animator$Animator$FramesPerSecond = function (a) {
-	return {$: 'FramesPerSecond', a: a};
-};
-var $mdgriffith$elm_animator$Animator$fps = $mdgriffith$elm_animator$Animator$FramesPerSecond;
-var $mdgriffith$elm_animator$Internal$Timeline$Single = function (a) {
-	return {$: 'Single', a: a};
-};
-var $mdgriffith$elm_animator$Animator$frame = $mdgriffith$elm_animator$Internal$Timeline$Single;
-var $mdgriffith$elm_animator$Internal$Timeline$WithRest = F2(
-	function (a, b) {
-		return {$: 'WithRest', a: a, b: b};
-	});
-var $mdgriffith$elm_animator$Animator$framesWith = function (cfg) {
-	return A2($mdgriffith$elm_animator$Internal$Timeline$WithRest, cfg.resting, cfg.transition);
-};
-var $author$project$Mario$sprite = {
-	tail: {
-		bum: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 20, x: 208, y: 239},
-		duck: {adjustX: 5, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 120, y: 235},
-		fall1: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 268, y: 280},
-		fall2: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 300, y: 280},
-		jump: {adjustX: 4, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 90, y: 240},
-		kick: {adjustX: -1, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 180, y: 240},
-		pivot: {adjustX: 0, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 150, y: 240},
-		runJump1: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 329, y: 280},
-		runJump2: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 359, y: 280},
-		runJump3: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 389, y: 280},
-		runStep1: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 25, y: 280},
-		runStep2: {adjustX: 4, adjustY: 0, flipX: false, flipY: false, height: 30, width: 25, x: 52, y: 280},
-		stand: {adjustX: 4, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 0, y: 240},
-		standArms: {adjustX: 4, adjustY: 0, flipX: false, flipY: false, height: 30, width: 25, x: 0, y: 280},
-		step1: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 30, y: 240},
-		step2: {adjustX: 4, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 60, y: 240}
-	}
-};
-var $mdgriffith$elm_animator$Internal$Timeline$Dwelling = function (a) {
-	return {$: 'Dwelling', a: a};
-};
-var $mdgriffith$elm_animator$Internal$Timeline$Transitioning = function (a) {
-	return {$: 'Transitioning', a: a};
-};
-var $mdgriffith$elm_animator$Internal$Time$earliest = F2(
-	function (oneQty, twoQty) {
-		var one = oneQty.a;
-		var two = twoQty.a;
-		return ((one - two) >= 0) ? twoQty : oneQty;
-	});
-var $mdgriffith$elm_animator$Internal$Time$millis = function (ms) {
-	return $ianmackenzie$elm_units$Quantity$Quantity(ms);
-};
-var $mdgriffith$elm_animator$Internal$Timeline$status = function (timeline) {
-	var details = timeline.a;
-	return A3(
-		$mdgriffith$elm_animator$Internal$Timeline$foldp,
-		$elm$core$Basics$identity,
-		{
-			adjustor: function (_v0) {
-				return $mdgriffith$elm_animator$Internal$Timeline$linearDefault;
-			},
-			dwellPeriod: function (_v1) {
-				return $elm$core$Maybe$Nothing;
-			},
-			lerp: F7(
-				function (prevEndTime, maybePrev, target, targetTime, now, maybeLookAhead, state) {
-					var start = prevEndTime;
-					var end = targetTime;
-					return (_Utils_cmp(now, end) > -1) ? $mdgriffith$elm_animator$Internal$Timeline$Transitioning(1) : $mdgriffith$elm_animator$Internal$Timeline$Transitioning(
-						A3(
-							$mdgriffith$elm_animator$Internal$Time$progress,
-							$mdgriffith$elm_animator$Internal$Time$millis(start),
-							$mdgriffith$elm_animator$Internal$Time$millis(end),
-							$mdgriffith$elm_animator$Internal$Time$millis(now)));
-				}),
-			start: function (_v2) {
-				return $mdgriffith$elm_animator$Internal$Timeline$Transitioning(0);
-			},
-			visit: F5(
-				function (lookup, _v3, now, maybeLookAhead, state) {
-					var event = _v3.a;
-					var start = _v3.b;
-					var eventEnd = _v3.c;
-					var dwellTime = function () {
-						if (maybeLookAhead.$ === 'Nothing') {
-							return A2($mdgriffith$elm_animator$Internal$Time$duration, start, now);
-						} else {
-							return A2(
-								$mdgriffith$elm_animator$Internal$Time$duration,
-								start,
-								A2($mdgriffith$elm_animator$Internal$Time$earliest, now, eventEnd));
-						}
-					}();
-					return $mdgriffith$elm_animator$Internal$Time$zeroDuration(dwellTime) ? $mdgriffith$elm_animator$Internal$Timeline$Transitioning(1) : $mdgriffith$elm_animator$Internal$Timeline$Dwelling(dwellTime);
-				})
-		},
-		timeline);
-};
-var $mdgriffith$elm_animator$Internal$Timeline$dwellingTime = function (timeline) {
-	var _v0 = $mdgriffith$elm_animator$Internal$Timeline$status(timeline);
-	if (_v0.$ === 'Dwelling') {
-		var x = _v0.a;
-		return $ianmackenzie$elm_units$Duration$inMilliseconds(x);
-	} else {
-		return 0;
-	}
-};
-var $mdgriffith$elm_animator$Internal$Timeline$progress = function (timeline) {
-	var _v0 = $mdgriffith$elm_animator$Internal$Timeline$status(timeline);
-	if (_v0.$ === 'Dwelling') {
-		return 1;
-	} else {
-		var t = _v0.a;
-		return t;
-	}
-};
-var $mdgriffith$elm_animator$Animator$frameSize = function (myFrame) {
-	frameSize:
-	while (true) {
-		switch (myFrame.$) {
-			case 'Single':
-				return 1;
-			case 'Hold':
-				var i = myFrame.a;
-				return i;
-			case 'Walk':
-				var i = myFrame.a;
-				var frames = myFrame.b;
-				return A3(
-					$elm$core$List$foldl,
-					F2(
-						function (frm, total) {
-							return total + $mdgriffith$elm_animator$Animator$frameSize(frm);
-						}),
-					0,
-					frames);
-			default:
-				var newFrameSet = myFrame.b;
-				var $temp$myFrame = newFrameSet;
-				myFrame = $temp$myFrame;
-				continue frameSize;
-		}
-	}
-};
-var $mdgriffith$elm_animator$Animator$lastFrame = function (myFrame) {
-	lastFrame:
-	while (true) {
-		switch (myFrame.$) {
-			case 'Single':
-				var item = myFrame.a;
-				return item;
-			case 'Hold':
-				var item = myFrame.b;
-				return item;
-			case 'Walk':
-				var item = myFrame.a;
-				var remainingFrames = myFrame.b;
-				var _v1 = $elm$core$List$head(
-					$elm$core$List$reverse(remainingFrames));
-				if (_v1.$ === 'Nothing') {
-					return item;
-				} else {
-					var last = _v1.a;
-					var $temp$myFrame = last;
-					myFrame = $temp$myFrame;
-					continue lastFrame;
-				}
-			default:
-				var frames = myFrame.b;
-				var $temp$myFrame = frames;
-				myFrame = $temp$myFrame;
-				continue lastFrame;
-		}
-	}
-};
-var $mdgriffith$elm_animator$Animator$totalFrames = function (frames) {
-	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (frm, total) {
-				return total + $mdgriffith$elm_animator$Animator$frameSize(frm);
-			}),
-		0,
-		frames);
-};
-var $mdgriffith$elm_animator$Animator$getItemAtIndex = F4(
-	function (targetIndex, transitionFrame, currentIndex, cycleList) {
-		getItemAtIndex:
-		while (true) {
-			if (!cycleList.b) {
-				return $mdgriffith$elm_animator$Animator$lastFrame(transitionFrame);
-			} else {
-				var top = cycleList.a;
-				var remain = cycleList.b;
-				switch (top.$) {
-					case 'Single':
-						var item = top.a;
-						if (_Utils_eq(targetIndex, currentIndex)) {
-							return item;
-						} else {
-							var $temp$targetIndex = targetIndex,
-								$temp$transitionFrame = transitionFrame,
-								$temp$currentIndex = currentIndex + 1,
-								$temp$cycleList = remain;
-							targetIndex = $temp$targetIndex;
-							transitionFrame = $temp$transitionFrame;
-							currentIndex = $temp$currentIndex;
-							cycleList = $temp$cycleList;
-							continue getItemAtIndex;
-						}
-					case 'Hold':
-						var i = top.a;
-						var item = top.b;
-						if ((_Utils_cmp(currentIndex, targetIndex) < 1) && (_Utils_cmp(currentIndex + i, targetIndex) > -1)) {
-							return item;
-						} else {
-							var $temp$targetIndex = targetIndex,
-								$temp$transitionFrame = transitionFrame,
-								$temp$currentIndex = currentIndex + i,
-								$temp$cycleList = remain;
-							targetIndex = $temp$targetIndex;
-							transitionFrame = $temp$transitionFrame;
-							currentIndex = $temp$currentIndex;
-							cycleList = $temp$cycleList;
-							continue getItemAtIndex;
-						}
-					case 'Walk':
-						var item = top.a;
-						var allFrames = top.b;
-						var frameCount = $mdgriffith$elm_animator$Animator$totalFrames(allFrames);
-						if (_Utils_cmp(targetIndex, currentIndex + frameCount) < 0) {
-							var $temp$targetIndex = targetIndex,
-								$temp$transitionFrame = transitionFrame,
-								$temp$currentIndex = currentIndex,
-								$temp$cycleList = allFrames;
-							targetIndex = $temp$targetIndex;
-							transitionFrame = $temp$transitionFrame;
-							currentIndex = $temp$currentIndex;
-							cycleList = $temp$cycleList;
-							continue getItemAtIndex;
-						} else {
-							var $temp$targetIndex = targetIndex,
-								$temp$transitionFrame = transitionFrame,
-								$temp$currentIndex = currentIndex + frameCount,
-								$temp$cycleList = remain;
-							targetIndex = $temp$targetIndex;
-							transitionFrame = $temp$transitionFrame;
-							currentIndex = $temp$currentIndex;
-							cycleList = $temp$cycleList;
-							continue getItemAtIndex;
-						}
-					default:
-						var frames = top.b;
-						var frameCount = $mdgriffith$elm_animator$Animator$frameSize(frames);
-						if (_Utils_cmp(targetIndex, currentIndex + frameCount) < 0) {
-							var $temp$targetIndex = targetIndex,
-								$temp$transitionFrame = transitionFrame,
-								$temp$currentIndex = currentIndex,
-								$temp$cycleList = _List_fromArray(
-								[frames]);
-							targetIndex = $temp$targetIndex;
-							transitionFrame = $temp$transitionFrame;
-							currentIndex = $temp$currentIndex;
-							cycleList = $temp$cycleList;
-							continue getItemAtIndex;
-						} else {
-							var $temp$targetIndex = targetIndex,
-								$temp$transitionFrame = transitionFrame,
-								$temp$currentIndex = currentIndex + frameCount,
-								$temp$cycleList = remain;
-							targetIndex = $temp$targetIndex;
-							transitionFrame = $temp$transitionFrame;
-							currentIndex = $temp$currentIndex;
-							cycleList = $temp$cycleList;
-							continue getItemAtIndex;
-						}
-				}
-			}
-		}
-	});
-var $mdgriffith$elm_animator$Animator$wrapToUnit = function (x) {
-	return x - $elm$core$Basics$floor(x);
-};
-var $mdgriffith$elm_animator$Animator$restFrames = F2(
-	function (currentFrameSet, restingTimeMs) {
-		switch (currentFrameSet.$) {
-			case 'Single':
-				var item = currentFrameSet.a;
-				return item;
-			case 'Hold':
-				var i = currentFrameSet.a;
-				var item = currentFrameSet.b;
-				return item;
-			case 'Walk':
-				var start = currentFrameSet.a;
-				var sprites = currentFrameSet.b;
-				var index = $mdgriffith$elm_animator$Animator$totalFrames(sprites) - 1;
-				return A4(
-					$mdgriffith$elm_animator$Animator$getItemAtIndex,
-					index,
-					$mdgriffith$elm_animator$Internal$Timeline$Single(start),
-					0,
-					sprites);
-			default:
-				var _v1 = currentFrameSet.a;
-				var period = _v1.a;
-				var cycleFrameList = _v1.b;
-				var transitionFrames = currentFrameSet.b;
-				var len = $mdgriffith$elm_animator$Animator$totalFrames(cycleFrameList);
-				if (period.$ === 'Loop') {
-					var dur = period.a;
-					var iterationTimeMS = $ianmackenzie$elm_units$Duration$inMilliseconds(dur);
-					var progress = $mdgriffith$elm_animator$Animator$wrapToUnit(restingTimeMs / iterationTimeMS);
-					var targetIndex = $elm$core$Basics$floor(progress * len);
-					return A4($mdgriffith$elm_animator$Animator$getItemAtIndex, targetIndex, transitionFrames, 0, cycleFrameList);
-				} else {
-					var n = period.a;
-					var dur = period.b;
-					var iterationTimeMS = $ianmackenzie$elm_units$Duration$inMilliseconds(dur);
-					var iteration = $elm$core$Basics$floor(restingTimeMs / iterationTimeMS);
-					var progress = (_Utils_cmp(iteration, n) > -1) ? 1 : $mdgriffith$elm_animator$Animator$wrapToUnit(restingTimeMs / iterationTimeMS);
-					var targetIndex = $elm$core$Basics$floor(progress * len);
-					return A4($mdgriffith$elm_animator$Animator$getItemAtIndex, targetIndex, transitionFrames, 0, cycleFrameList);
-				}
-		}
-	});
-var $mdgriffith$elm_animator$Animator$stepFrames = F2(
-	function (currentFrameSet, progress) {
-		stepFrames:
-		while (true) {
-			switch (currentFrameSet.$) {
-				case 'Single':
-					var item = currentFrameSet.a;
-					return item;
-				case 'Hold':
-					var i = currentFrameSet.a;
-					var item = currentFrameSet.b;
-					return item;
-				case 'Walk':
-					var start = currentFrameSet.a;
-					var sprites = currentFrameSet.b;
-					var frameCount = $mdgriffith$elm_animator$Animator$totalFrames(sprites);
-					var index = $elm$core$Basics$floor(progress * frameCount) - 1;
-					return A4(
-						$mdgriffith$elm_animator$Animator$getItemAtIndex,
-						index,
-						$mdgriffith$elm_animator$Internal$Timeline$Single(start),
-						0,
-						sprites);
-				default:
-					var newFrameSet = currentFrameSet.b;
-					var $temp$currentFrameSet = newFrameSet,
-						$temp$progress = progress;
-					currentFrameSet = $temp$currentFrameSet;
-					progress = $temp$progress;
-					continue stepFrames;
-			}
-		}
-	});
-var $mdgriffith$elm_animator$Animator$step = F2(
-	function (timeline, lookup) {
-		var progress = $mdgriffith$elm_animator$Internal$Timeline$progress(timeline);
-		var currentFrameSet = lookup(
-			$mdgriffith$elm_animator$Animator$current(timeline));
-		return (progress === 1) ? A2(
-			$mdgriffith$elm_animator$Animator$restFrames,
-			currentFrameSet,
-			$mdgriffith$elm_animator$Internal$Timeline$dwellingTime(timeline)) : A2($mdgriffith$elm_animator$Animator$stepFrames, currentFrameSet, progress);
-	});
-var $author$project$Mario$animateMario = function (model) {
-	return A2(
-		$mdgriffith$elm_animator$Animator$step,
-		model.mario,
-		function (_v0) {
-			var action = _v0.a;
-			var direction = _v0.b;
-			var frame = function (mySprite) {
-				if (direction.$ === 'Left') {
-					return $mdgriffith$elm_animator$Animator$frame(mySprite);
-				} else {
-					return $mdgriffith$elm_animator$Animator$frame(
-						_Utils_update(
-							mySprite,
-							{flipX: true}));
-				}
-			};
-			switch (action.$) {
-				case 'Standing':
-					return frame($author$project$Mario$sprite.tail.stand);
-				case 'Ducking':
-					return frame($author$project$Mario$sprite.tail.duck);
-				case 'Jumping':
-					return frame($author$project$Mario$sprite.tail.jump);
-				case 'Walking':
-					return $mdgriffith$elm_animator$Animator$framesWith(
-						{
-							resting: A2(
-								$mdgriffith$elm_animator$Animator$cycle,
-								$mdgriffith$elm_animator$Animator$fps(15),
-								_List_fromArray(
-									[
-										frame($author$project$Mario$sprite.tail.step1),
-										frame($author$project$Mario$sprite.tail.step2),
-										frame($author$project$Mario$sprite.tail.stand)
-									])),
-							transition: frame($author$project$Mario$sprite.tail.stand)
-						});
-				default:
-					return $mdgriffith$elm_animator$Animator$framesWith(
-						{
-							resting: A2(
-								$mdgriffith$elm_animator$Animator$cycle,
-								$mdgriffith$elm_animator$Animator$fps(30),
-								_List_fromArray(
-									[
-										frame($author$project$Mario$sprite.tail.runStep1),
-										frame($author$project$Mario$sprite.tail.runStep2),
-										frame($author$project$Mario$sprite.tail.standArms)
-									])),
-							transition: frame($author$project$Mario$sprite.tail.standArms)
-						});
-			}
-		});
-};
-var $elm$json$Json$Encode$string = _Json_wrap;
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
-var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
-var $elm$html$Html$div = _VirtualDom_node('div');
-var $elm$core$String$fromFloat = _String_fromNumber;
-var $jxxcarlson$elm_tree_builder$Tree$Build$EmptyBlocks = {$: 'EmptyBlocks'};
 var $zwilias$elm_rosetree$Tree$Zipper$Zipper = function (a) {
 	return {$: 'Zipper', a: a};
 };
@@ -9237,6 +7511,7 @@ var $elm$parser$Parser$Advanced$keeper = F2(
 		return A3($elm$parser$Parser$Advanced$map2, $elm$core$Basics$apL, parseFunc, parseArg);
 	});
 var $elm$parser$Parser$keeper = $elm$parser$Parser$Advanced$keeper;
+var $elm$core$Basics$neq = _Utils_notEqual;
 var $elm$parser$Parser$Advanced$succeed = function (a) {
 	return $elm$parser$Parser$Advanced$Parser(
 		function (s) {
@@ -9355,6 +7630,17 @@ var $jxxcarlson$elm_tree_builder$Tree$Line$classify = F2(
 			return result;
 		}
 	});
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
 var $jxxcarlson$elm_tree_builder$Tree$BlocksV$lineToBlock = F2(
 	function (numberOfLines, _v0) {
 		var indent = _v0.indent;
@@ -9391,110 +7677,1785 @@ var $jxxcarlson$elm_tree_builder$Tree$Build$fromString = F3(
 			makeNode,
 			$jxxcarlson$elm_tree_builder$Tree$Blocks$fromStringAsLines(str));
 	});
-var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$core$String$toLower = _String_toLower;
-var $author$project$LandingPage$labelToHtml = function (l) {
-	return $elm$html$Html$text(
-		$elm$core$String$toLower(l));
+var $zwilias$elm_rosetree$Tree$Zipper$label = function (zipper) {
+	return $zwilias$elm_rosetree$Tree$label(
+		$zwilias$elm_rosetree$Tree$Zipper$tree(zipper));
 };
-var $zwilias$elm_rosetree$Tree$restructureHelp = F4(
-	function (fLabel, fTree, acc, stack) {
-		restructureHelp:
+var $author$project$LandingPage$evalRunner = function (model) {
+	var tree = A3(
+		$jxxcarlson$elm_tree_builder$Tree$Build$fromString,
+		'?',
+		function ($) {
+			return $.content;
+		},
+		model.dslContent);
+	if (tree.$ === 'Ok') {
+		var r = tree.a;
+		return $zwilias$elm_rosetree$Tree$Zipper$label(
+			$zwilias$elm_rosetree$Tree$Zipper$fromTree(r));
+	} else {
+		var m = tree.a;
+		return '';
+	}
+};
+var $mdgriffith$elm_animator$Animator$TransitionTo = F2(
+	function (a, b) {
+		return {$: 'TransitionTo', a: a, b: b};
+	});
+var $mdgriffith$elm_animator$Animator$event = $mdgriffith$elm_animator$Animator$TransitionTo;
+var $mdgriffith$elm_animator$Animator$initializeSchedule = F2(
+	function (waiting, steps) {
+		initializeSchedule:
 		while (true) {
-			var _v0 = acc.todo;
-			if (!_v0.b) {
-				var node = A2(
-					fTree,
-					acc.label,
-					$elm$core$List$reverse(acc.done));
-				if (!stack.b) {
-					return node;
-				} else {
-					var top = stack.a;
-					var rest = stack.b;
-					var $temp$fLabel = fLabel,
-						$temp$fTree = fTree,
-						$temp$acc = _Utils_update(
-						top,
-						{
-							done: A2($elm$core$List$cons, node, top.done)
-						}),
-						$temp$stack = rest;
-					fLabel = $temp$fLabel;
-					fTree = $temp$fTree;
-					acc = $temp$acc;
-					stack = $temp$stack;
-					continue restructureHelp;
-				}
+			if (!steps.b) {
+				return $elm$core$Maybe$Nothing;
 			} else {
-				if (!_v0.a.b.b) {
-					var _v2 = _v0.a;
-					var l = _v2.a;
-					var rest = _v0.b;
-					var $temp$fLabel = fLabel,
-						$temp$fTree = fTree,
-						$temp$acc = _Utils_update(
-						acc,
-						{
-							done: A2(
-								$elm$core$List$cons,
-								A2(
-									fTree,
-									fLabel(l),
-									_List_Nil),
-								acc.done),
-							todo: rest
-						}),
-						$temp$stack = stack;
-					fLabel = $temp$fLabel;
-					fTree = $temp$fTree;
-					acc = $temp$acc;
-					stack = $temp$stack;
-					continue restructureHelp;
+				if (steps.a.$ === 'Wait') {
+					var additionalWait = steps.a.a;
+					var moreSteps = steps.b;
+					var $temp$waiting = A2($ianmackenzie$elm_units$Quantity$plus, waiting, additionalWait),
+						$temp$steps = moreSteps;
+					waiting = $temp$waiting;
+					steps = $temp$steps;
+					continue initializeSchedule;
 				} else {
-					var _v3 = _v0.a;
-					var l = _v3.a;
-					var cs = _v3.b;
-					var rest = _v0.b;
-					var $temp$fLabel = fLabel,
-						$temp$fTree = fTree,
-						$temp$acc = {
-						done: _List_Nil,
-						label: fLabel(l),
-						todo: cs
-					},
-						$temp$stack = A2(
-						$elm$core$List$cons,
-						_Utils_update(
-							acc,
-							{todo: rest}),
-						stack);
-					fLabel = $temp$fLabel;
-					fTree = $temp$fTree;
-					acc = $temp$acc;
-					stack = $temp$stack;
-					continue restructureHelp;
+					var _v1 = steps.a;
+					var dur = _v1.a;
+					var checkpoint = _v1.b;
+					var moreSteps = steps.b;
+					return $elm$core$Maybe$Just(
+						_Utils_Tuple2(
+							A3(
+								$mdgriffith$elm_animator$Internal$Timeline$Schedule,
+								waiting,
+								A3($mdgriffith$elm_animator$Internal$Timeline$Event, dur, checkpoint, $elm$core$Maybe$Nothing),
+								_List_Nil),
+							moreSteps));
 				}
 			}
 		}
 	});
-var $zwilias$elm_rosetree$Tree$restructure = F3(
-	function (convertLabel, convertTree, _v0) {
-		var l = _v0.a;
-		var c = _v0.b;
-		return A4(
-			$zwilias$elm_rosetree$Tree$restructureHelp,
-			convertLabel,
-			convertTree,
-			{
-				done: _List_Nil,
-				label: convertLabel(l),
-				todo: c
-			},
-			_List_Nil);
+var $ianmackenzie$elm_units$Duration$seconds = function (numSeconds) {
+	return $ianmackenzie$elm_units$Quantity$Quantity(numSeconds);
+};
+var $ianmackenzie$elm_units$Duration$milliseconds = function (numMilliseconds) {
+	return $ianmackenzie$elm_units$Duration$seconds(0.001 * numMilliseconds);
+};
+var $mdgriffith$elm_animator$Animator$millis = $ianmackenzie$elm_units$Duration$milliseconds;
+var $mdgriffith$elm_animator$Internal$Timeline$addToDwell = F2(
+	function (duration, maybeDwell) {
+		if (!$ianmackenzie$elm_units$Duration$inMilliseconds(duration)) {
+			return maybeDwell;
+		} else {
+			if (maybeDwell.$ === 'Nothing') {
+				return $elm$core$Maybe$Just(duration);
+			} else {
+				var existing = maybeDwell.a;
+				return $elm$core$Maybe$Just(
+					A2($ianmackenzie$elm_units$Quantity$plus, duration, existing));
+			}
+		}
 	});
+var $mdgriffith$elm_animator$Internal$Timeline$extendEventDwell = F2(
+	function (extendBy, thisEvent) {
+		var at = thisEvent.a;
+		var ev = thisEvent.b;
+		var maybeDwell = thisEvent.c;
+		return (!$ianmackenzie$elm_units$Duration$inMilliseconds(extendBy)) ? thisEvent : A3(
+			$mdgriffith$elm_animator$Internal$Timeline$Event,
+			at,
+			ev,
+			A2($mdgriffith$elm_animator$Internal$Timeline$addToDwell, extendBy, maybeDwell));
+	});
+var $mdgriffith$elm_animator$Animator$stepsToEvents = F2(
+	function (currentStep, _v0) {
+		var delay = _v0.a;
+		var startEvent = _v0.b;
+		var events = _v0.c;
+		if (!events.b) {
+			if (currentStep.$ === 'Wait') {
+				var waiting = currentStep.a;
+				return A3(
+					$mdgriffith$elm_animator$Internal$Timeline$Schedule,
+					delay,
+					A2($mdgriffith$elm_animator$Internal$Timeline$extendEventDwell, waiting, startEvent),
+					events);
+			} else {
+				var dur = currentStep.a;
+				var checkpoint = currentStep.b;
+				return A3(
+					$mdgriffith$elm_animator$Internal$Timeline$Schedule,
+					delay,
+					startEvent,
+					_List_fromArray(
+						[
+							A3($mdgriffith$elm_animator$Internal$Timeline$Event, dur, checkpoint, $elm$core$Maybe$Nothing)
+						]));
+			}
+		} else {
+			var _v3 = events.a;
+			var durationTo = _v3.a;
+			var recentEvent = _v3.b;
+			var maybeDwell = _v3.c;
+			var remaining = events.b;
+			if (currentStep.$ === 'Wait') {
+				var dur = currentStep.a;
+				return A3(
+					$mdgriffith$elm_animator$Internal$Timeline$Schedule,
+					delay,
+					startEvent,
+					A2(
+						$elm$core$List$cons,
+						A3(
+							$mdgriffith$elm_animator$Internal$Timeline$Event,
+							durationTo,
+							recentEvent,
+							A2($mdgriffith$elm_animator$Internal$Timeline$addToDwell, dur, maybeDwell)),
+						remaining));
+			} else {
+				var dur = currentStep.a;
+				var checkpoint = currentStep.b;
+				return _Utils_eq(checkpoint, recentEvent) ? A3(
+					$mdgriffith$elm_animator$Internal$Timeline$Schedule,
+					delay,
+					startEvent,
+					A2(
+						$elm$core$List$cons,
+						A3(
+							$mdgriffith$elm_animator$Internal$Timeline$Event,
+							durationTo,
+							recentEvent,
+							A2($mdgriffith$elm_animator$Internal$Timeline$addToDwell, dur, maybeDwell)),
+						remaining)) : A3(
+					$mdgriffith$elm_animator$Internal$Timeline$Schedule,
+					delay,
+					startEvent,
+					A2(
+						$elm$core$List$cons,
+						A3($mdgriffith$elm_animator$Internal$Timeline$Event, dur, checkpoint, $elm$core$Maybe$Nothing),
+						events));
+			}
+		}
+	});
+var $mdgriffith$elm_animator$Animator$interrupt = F2(
+	function (steps, _v0) {
+		var tl = _v0.a;
+		return $mdgriffith$elm_animator$Internal$Timeline$Timeline(
+			_Utils_update(
+				tl,
+				{
+					interruption: function () {
+						var _v1 = A2(
+							$mdgriffith$elm_animator$Animator$initializeSchedule,
+							$mdgriffith$elm_animator$Animator$millis(0),
+							steps);
+						if (_v1.$ === 'Nothing') {
+							return tl.interruption;
+						} else {
+							var _v2 = _v1.a;
+							var schedule = _v2.a;
+							var otherSteps = _v2.b;
+							return A2(
+								$elm$core$List$cons,
+								A3($elm$core$List$foldl, $mdgriffith$elm_animator$Animator$stepsToEvents, schedule, otherSteps),
+								tl.interruption);
+						}
+					}(),
+					running: true
+				}));
+	});
+var $mdgriffith$elm_animator$Animator$go = F3(
+	function (duration, ev, timeline) {
+		return A2(
+			$mdgriffith$elm_animator$Animator$interrupt,
+			_List_fromArray(
+				[
+					A2($mdgriffith$elm_animator$Animator$event, duration, ev)
+				]),
+			timeline);
+	});
+var $author$project$LandingPage$gravity = F2(
+	function (dt, mario) {
+		return _Utils_update(
+			mario,
+			{
+				vy: (mario.y > 0) ? (mario.vy - (dt / 4)) : 0
+			});
+	});
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var $elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			$elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
+	});
+var $elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3($elm$core$String$repeatHelp, n, chunk, '');
+	});
+var $author$project$LandingPage$duckValue = F2(
+	function (content, level) {
+		return content + ('\n' + (A2($elm$core$String$repeat, level, '    ') + '🦆'));
+	});
+var $author$project$LandingPage$monkeyFunction = F2(
+	function (content, level) {
+		var lambdaSignature = '🐀';
+		var indentation = A2($elm$core$String$repeat, level, '    ');
+		var funcIndentation = A2($elm$core$String$repeat, level - 1, '    ');
+		return content + ('\n' + (funcIndentation + lambdaSignature));
+	});
+var $ohanhi$keyboard$Keyboard$Backspace = {$: 'Backspace'};
+var $ohanhi$keyboard$Keyboard$Clear = {$: 'Clear'};
+var $ohanhi$keyboard$Keyboard$Copy = {$: 'Copy'};
+var $ohanhi$keyboard$Keyboard$CrSel = {$: 'CrSel'};
+var $ohanhi$keyboard$Keyboard$Cut = {$: 'Cut'};
+var $ohanhi$keyboard$Keyboard$Delete = {$: 'Delete'};
+var $ohanhi$keyboard$Keyboard$EraseEof = {$: 'EraseEof'};
+var $ohanhi$keyboard$Keyboard$ExSel = {$: 'ExSel'};
+var $ohanhi$keyboard$Keyboard$Insert = {$: 'Insert'};
+var $ohanhi$keyboard$Keyboard$Paste = {$: 'Paste'};
+var $ohanhi$keyboard$Keyboard$Redo = {$: 'Redo'};
+var $ohanhi$keyboard$Keyboard$Undo = {$: 'Undo'};
+var $ohanhi$keyboard$Keyboard$editingKey = function (_v0) {
+	var value = _v0.a;
+	switch (value) {
+		case 'Backspace':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Backspace);
+		case 'Clear':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Clear);
+		case 'Copy':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Copy);
+		case 'CrSel':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$CrSel);
+		case 'Cut':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Cut);
+		case 'Delete':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Delete);
+		case 'EraseEof':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$EraseEof);
+		case 'ExSel':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ExSel);
+		case 'Insert':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Insert);
+		case 'Paste':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Paste);
+		case 'Redo':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Redo);
+		case 'Undo':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Undo);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $ohanhi$keyboard$Keyboard$F1 = {$: 'F1'};
+var $ohanhi$keyboard$Keyboard$F10 = {$: 'F10'};
+var $ohanhi$keyboard$Keyboard$F11 = {$: 'F11'};
+var $ohanhi$keyboard$Keyboard$F12 = {$: 'F12'};
+var $ohanhi$keyboard$Keyboard$F13 = {$: 'F13'};
+var $ohanhi$keyboard$Keyboard$F14 = {$: 'F14'};
+var $ohanhi$keyboard$Keyboard$F15 = {$: 'F15'};
+var $ohanhi$keyboard$Keyboard$F16 = {$: 'F16'};
+var $ohanhi$keyboard$Keyboard$F17 = {$: 'F17'};
+var $ohanhi$keyboard$Keyboard$F18 = {$: 'F18'};
+var $ohanhi$keyboard$Keyboard$F19 = {$: 'F19'};
+var $ohanhi$keyboard$Keyboard$F2 = {$: 'F2'};
+var $ohanhi$keyboard$Keyboard$F20 = {$: 'F20'};
+var $ohanhi$keyboard$Keyboard$F3 = {$: 'F3'};
+var $ohanhi$keyboard$Keyboard$F4 = {$: 'F4'};
+var $ohanhi$keyboard$Keyboard$F5 = {$: 'F5'};
+var $ohanhi$keyboard$Keyboard$F6 = {$: 'F6'};
+var $ohanhi$keyboard$Keyboard$F7 = {$: 'F7'};
+var $ohanhi$keyboard$Keyboard$F8 = {$: 'F8'};
+var $ohanhi$keyboard$Keyboard$F9 = {$: 'F9'};
+var $ohanhi$keyboard$Keyboard$functionKey = function (_v0) {
+	var value = _v0.a;
+	switch (value) {
+		case 'F1':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F1);
+		case 'F2':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F2);
+		case 'F3':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F3);
+		case 'F4':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F4);
+		case 'F5':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F5);
+		case 'F6':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F6);
+		case 'F7':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F7);
+		case 'F8':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F8);
+		case 'F9':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F9);
+		case 'F10':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F10);
+		case 'F11':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F11);
+		case 'F12':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F12);
+		case 'F13':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F13);
+		case 'F14':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F14);
+		case 'F15':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F15);
+		case 'F16':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F16);
+		case 'F17':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F17);
+		case 'F18':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F18);
+		case 'F19':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F19);
+		case 'F20':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$F20);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $ohanhi$keyboard$Keyboard$ChannelDown = {$: 'ChannelDown'};
+var $ohanhi$keyboard$Keyboard$ChannelUp = {$: 'ChannelUp'};
+var $ohanhi$keyboard$Keyboard$MediaFastForward = {$: 'MediaFastForward'};
+var $ohanhi$keyboard$Keyboard$MediaPause = {$: 'MediaPause'};
+var $ohanhi$keyboard$Keyboard$MediaPlay = {$: 'MediaPlay'};
+var $ohanhi$keyboard$Keyboard$MediaPlayPause = {$: 'MediaPlayPause'};
+var $ohanhi$keyboard$Keyboard$MediaRecord = {$: 'MediaRecord'};
+var $ohanhi$keyboard$Keyboard$MediaRewind = {$: 'MediaRewind'};
+var $ohanhi$keyboard$Keyboard$MediaStop = {$: 'MediaStop'};
+var $ohanhi$keyboard$Keyboard$MediaTrackNext = {$: 'MediaTrackNext'};
+var $ohanhi$keyboard$Keyboard$MediaTrackPrevious = {$: 'MediaTrackPrevious'};
+var $ohanhi$keyboard$Keyboard$mediaKey = function (_v0) {
+	var value = _v0.a;
+	switch (value) {
+		case 'ChannelDown':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ChannelDown);
+		case 'ChannelUp':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ChannelUp);
+		case 'MediaFastForward':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaFastForward);
+		case 'MediaPause':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaPause);
+		case 'MediaPlay':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaPlay);
+		case 'MediaPlayPause':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaPlayPause);
+		case 'MediaRecord':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaRecord);
+		case 'MediaRewind':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaRewind);
+		case 'MediaStop':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaStop);
+		case 'MediaTrackNext':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaTrackNext);
+		case 'MediaTrackPrevious':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MediaTrackPrevious);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $ohanhi$keyboard$Keyboard$Alt = {$: 'Alt'};
+var $ohanhi$keyboard$Keyboard$AltGraph = {$: 'AltGraph'};
+var $ohanhi$keyboard$Keyboard$CapsLock = {$: 'CapsLock'};
+var $ohanhi$keyboard$Keyboard$Control = {$: 'Control'};
+var $ohanhi$keyboard$Keyboard$Fn = {$: 'Fn'};
+var $ohanhi$keyboard$Keyboard$FnLock = {$: 'FnLock'};
+var $ohanhi$keyboard$Keyboard$Hyper = {$: 'Hyper'};
+var $ohanhi$keyboard$Keyboard$Meta = {$: 'Meta'};
+var $ohanhi$keyboard$Keyboard$NumLock = {$: 'NumLock'};
+var $ohanhi$keyboard$Keyboard$ScrollLock = {$: 'ScrollLock'};
+var $ohanhi$keyboard$Keyboard$Shift = {$: 'Shift'};
+var $ohanhi$keyboard$Keyboard$Super = {$: 'Super'};
+var $ohanhi$keyboard$Keyboard$Symbol = {$: 'Symbol'};
+var $ohanhi$keyboard$Keyboard$SymbolLock = {$: 'SymbolLock'};
+var $ohanhi$keyboard$Keyboard$modifierKey = function (_v0) {
+	var value = _v0.a;
+	switch (value) {
+		case 'Alt':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Alt);
+		case 'AltGraph':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$AltGraph);
+		case 'CapsLock':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$CapsLock);
+		case 'Control':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Control);
+		case 'Fn':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Fn);
+		case 'FnLock':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$FnLock);
+		case 'Hyper':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Hyper);
+		case 'Meta':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Meta);
+		case 'NumLock':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$NumLock);
+		case 'ScrollLock':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ScrollLock);
+		case 'Shift':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Shift);
+		case 'Super':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Super);
+		case 'OS':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Super);
+		case 'Symbol':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Symbol);
+		case 'SymbolLock':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$SymbolLock);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $ohanhi$keyboard$Keyboard$ArrowDown = {$: 'ArrowDown'};
+var $ohanhi$keyboard$Keyboard$ArrowLeft = {$: 'ArrowLeft'};
+var $ohanhi$keyboard$Keyboard$ArrowRight = {$: 'ArrowRight'};
+var $ohanhi$keyboard$Keyboard$ArrowUp = {$: 'ArrowUp'};
+var $ohanhi$keyboard$Keyboard$End = {$: 'End'};
+var $ohanhi$keyboard$Keyboard$Home = {$: 'Home'};
+var $ohanhi$keyboard$Keyboard$PageDown = {$: 'PageDown'};
+var $ohanhi$keyboard$Keyboard$PageUp = {$: 'PageUp'};
+var $ohanhi$keyboard$Keyboard$navigationKey = function (_v0) {
+	var value = _v0.a;
+	switch (value) {
+		case 'ArrowDown':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowDown);
+		case 'ArrowLeft':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowLeft);
+		case 'ArrowRight':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowRight);
+		case 'ArrowUp':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowUp);
+		case 'Down':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowDown);
+		case 'Left':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowLeft);
+		case 'Right':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowRight);
+		case 'Up':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ArrowUp);
+		case 'End':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$End);
+		case 'Home':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Home);
+		case 'PageDown':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$PageDown);
+		case 'PageUp':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$PageUp);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $ohanhi$keyboard$Keyboard$oneOf = F2(
+	function (fns, key) {
+		oneOf:
+		while (true) {
+			if (!fns.b) {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var fn = fns.a;
+				var rest = fns.b;
+				var _v1 = fn(key);
+				if (_v1.$ === 'Just') {
+					var a = _v1.a;
+					return $elm$core$Maybe$Just(a);
+				} else {
+					var $temp$fns = rest,
+						$temp$key = key;
+					fns = $temp$fns;
+					key = $temp$key;
+					continue oneOf;
+				}
+			}
+		}
+	});
+var $ohanhi$keyboard$Keyboard$AppSwitch = {$: 'AppSwitch'};
+var $ohanhi$keyboard$Keyboard$Call = {$: 'Call'};
+var $ohanhi$keyboard$Keyboard$Camera = {$: 'Camera'};
+var $ohanhi$keyboard$Keyboard$CameraFocus = {$: 'CameraFocus'};
+var $ohanhi$keyboard$Keyboard$EndCall = {$: 'EndCall'};
+var $ohanhi$keyboard$Keyboard$GoBack = {$: 'GoBack'};
+var $ohanhi$keyboard$Keyboard$GoHome = {$: 'GoHome'};
+var $ohanhi$keyboard$Keyboard$HeadsetHook = {$: 'HeadsetHook'};
+var $ohanhi$keyboard$Keyboard$LastNumberRedial = {$: 'LastNumberRedial'};
+var $ohanhi$keyboard$Keyboard$MannerMode = {$: 'MannerMode'};
+var $ohanhi$keyboard$Keyboard$Notification = {$: 'Notification'};
+var $ohanhi$keyboard$Keyboard$VoiceDial = {$: 'VoiceDial'};
+var $ohanhi$keyboard$Keyboard$phoneKey = function (_v0) {
+	var value = _v0.a;
+	switch (value) {
+		case 'AppSwitch':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$AppSwitch);
+		case 'Call':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Call);
+		case 'Camera':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Camera);
+		case 'CameraFocus':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$CameraFocus);
+		case 'EndCall':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$EndCall);
+		case 'GoBack':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$GoBack);
+		case 'GoHome':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$GoHome);
+		case 'HeadsetHook':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$HeadsetHook);
+		case 'LastNumberRedial':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$LastNumberRedial);
+		case 'Notification':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Notification);
+		case 'MannerMode':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$MannerMode);
+		case 'VoiceDial':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$VoiceDial);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $ohanhi$keyboard$Keyboard$Again = {$: 'Again'};
+var $ohanhi$keyboard$Keyboard$Attn = {$: 'Attn'};
+var $ohanhi$keyboard$Keyboard$Cancel = {$: 'Cancel'};
+var $ohanhi$keyboard$Keyboard$ContextMenu = {$: 'ContextMenu'};
+var $ohanhi$keyboard$Keyboard$Escape = {$: 'Escape'};
+var $ohanhi$keyboard$Keyboard$Execute = {$: 'Execute'};
+var $ohanhi$keyboard$Keyboard$Find = {$: 'Find'};
+var $ohanhi$keyboard$Keyboard$Finish = {$: 'Finish'};
+var $ohanhi$keyboard$Keyboard$Help = {$: 'Help'};
+var $ohanhi$keyboard$Keyboard$Pause = {$: 'Pause'};
+var $ohanhi$keyboard$Keyboard$Play = {$: 'Play'};
+var $ohanhi$keyboard$Keyboard$Props = {$: 'Props'};
+var $ohanhi$keyboard$Keyboard$Select = {$: 'Select'};
+var $ohanhi$keyboard$Keyboard$ZoomIn = {$: 'ZoomIn'};
+var $ohanhi$keyboard$Keyboard$ZoomOut = {$: 'ZoomOut'};
+var $ohanhi$keyboard$Keyboard$uiKey = function (_v0) {
+	var value = _v0.a;
+	switch (value) {
+		case 'Again':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Again);
+		case 'Attn':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Attn);
+		case 'Cancel':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Cancel);
+		case 'ContextMenu':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ContextMenu);
+		case 'Escape':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Escape);
+		case 'Execute':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Execute);
+		case 'Find':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Find);
+		case 'Finish':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Finish);
+		case 'Help':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Help);
+		case 'Pause':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Pause);
+		case 'Play':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Play);
+		case 'Props':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Props);
+		case 'Select':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Select);
+		case 'ZoomIn':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ZoomIn);
+		case 'ZoomOut':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$ZoomOut);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $ohanhi$keyboard$Keyboard$Enter = {$: 'Enter'};
+var $ohanhi$keyboard$Keyboard$Spacebar = {$: 'Spacebar'};
+var $ohanhi$keyboard$Keyboard$Tab = {$: 'Tab'};
+var $ohanhi$keyboard$Keyboard$whitespaceKey = function (_v0) {
+	var value = _v0.a;
+	switch (value) {
+		case 'Enter':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Enter);
+		case 'Tab':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Tab);
+		case 'Spacebar':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Spacebar);
+		case ' ':
+			return $elm$core$Maybe$Just($ohanhi$keyboard$Keyboard$Spacebar);
+		default:
+			return $elm$core$Maybe$Nothing;
+	}
+};
+var $ohanhi$keyboard$Keyboard$anyKeyWith = function (charParser) {
+	return $ohanhi$keyboard$Keyboard$oneOf(
+		_List_fromArray(
+			[$ohanhi$keyboard$Keyboard$whitespaceKey, charParser, $ohanhi$keyboard$Keyboard$modifierKey, $ohanhi$keyboard$Keyboard$navigationKey, $ohanhi$keyboard$Keyboard$editingKey, $ohanhi$keyboard$Keyboard$functionKey, $ohanhi$keyboard$Keyboard$uiKey, $ohanhi$keyboard$Keyboard$phoneKey, $ohanhi$keyboard$Keyboard$mediaKey]));
+};
+var $ohanhi$keyboard$Keyboard$Character = function (a) {
+	return {$: 'Character', a: a};
+};
+var $elm$core$String$toUpper = _String_toUpper;
+var $ohanhi$keyboard$Keyboard$characterKeyUpper = function (_v0) {
+	var value = _v0.a;
+	return ($elm$core$String$length(value) === 1) ? $elm$core$Maybe$Just(
+		$ohanhi$keyboard$Keyboard$Character(
+			$elm$core$String$toUpper(value))) : $elm$core$Maybe$Nothing;
+};
+var $ohanhi$keyboard$Keyboard$anyKeyUpper = $ohanhi$keyboard$Keyboard$anyKeyWith($ohanhi$keyboard$Keyboard$characterKeyUpper);
+var $ohanhi$keyboard$Keyboard$insert = F3(
+	function (keyParser, rawKey, list) {
+		var _v0 = keyParser(rawKey);
+		if (_v0.$ === 'Just') {
+			var key = _v0.a;
+			return A2(
+				$elm$core$List$cons,
+				key,
+				A2(
+					$elm$core$List$filter,
+					$elm$core$Basics$neq(key),
+					list));
+		} else {
+			return list;
+		}
+	});
+var $ohanhi$keyboard$Keyboard$remove = F3(
+	function (keyParser, rawKey, list) {
+		var _v0 = keyParser(rawKey);
+		if (_v0.$ === 'Just') {
+			var key = _v0.a;
+			return A2(
+				$elm$core$List$filter,
+				$elm$core$Basics$neq(key),
+				list);
+		} else {
+			return list;
+		}
+	});
+var $ohanhi$keyboard$Keyboard$updateWithParser = F3(
+	function (keyParser, msg, state) {
+		if (msg.$ === 'Down') {
+			var key = msg.a;
+			return A3($ohanhi$keyboard$Keyboard$insert, keyParser, key, state);
+		} else {
+			var key = msg.a;
+			return A3($ohanhi$keyboard$Keyboard$remove, keyParser, key, state);
+		}
+	});
+var $ohanhi$keyboard$Keyboard$update = $ohanhi$keyboard$Keyboard$updateWithParser($ohanhi$keyboard$Keyboard$anyKeyUpper);
+var $elm$core$String$concat = function (strings) {
+	return A2($elm$core$String$join, '', strings);
+};
+var $elm$core$String$words = _String_words;
+var $author$project$LandingPage$wordDelete = function (str) {
+	return $elm$core$String$concat(
+		$elm$core$List$reverse(
+			A2(
+				$elm$core$List$drop,
+				1,
+				$elm$core$List$reverse(
+					$elm$core$String$words(str)))));
+};
+var $author$project$LandingPage$handleDsl = F2(
+	function (keyMsg, model) {
+		var parseContent = function (content) {
+			return content;
+		};
+		var editorState = A3(
+			$elm$core$List$foldl,
+			F2(
+				function (key, result) {
+					switch (key.$) {
+						case 'Control':
+							return _Utils_update(
+								result,
+								{level: result.level + 2});
+						case 'ArrowUp':
+							return _Utils_update(
+								result,
+								{level: result.level - 2});
+						case 'ArrowDown':
+							return _Utils_update(
+								result,
+								{level: result.level + 2});
+						default:
+							return result;
+					}
+				}),
+			model.dslEditor,
+			A2($ohanhi$keyboard$Keyboard$update, keyMsg, _List_Nil));
+		var contentString = A3(
+			$elm$core$List$foldl,
+			F2(
+				function (key, content) {
+					switch (key.$) {
+						case 'Spacebar':
+							return content + ' \t';
+						case 'Enter':
+							return A2($author$project$LandingPage$duckValue, content, editorState.level);
+						case 'Backspace':
+							return $author$project$LandingPage$wordDelete(content);
+						case 'Character':
+							var c = key.a;
+							return _Utils_ap(content, c);
+						case 'Control':
+							return A2($author$project$LandingPage$monkeyFunction, content, editorState.level);
+						default:
+							return content;
+					}
+				}),
+			model.dslContent,
+			A2($ohanhi$keyboard$Keyboard$update, keyMsg, _List_Nil));
+		return _Utils_update(
+			model,
+			{dslContent: contentString, dslEditor: editorState});
+	});
+var $author$project$Mario$HeldFor = function (a) {
+	return {$: 'HeldFor', a: a};
+};
+var $author$project$Mario$hold = F2(
+	function (dt, pressed) {
+		switch (pressed.$) {
+			case 'NotPressed':
+				return $author$project$Mario$NotPressed;
+			case 'StartPressed':
+				return $author$project$Mario$HeldFor(dt);
+			default:
+				var existingDt = pressed.a;
+				return $author$project$Mario$HeldFor(existingDt + dt);
+		}
+	});
+var $author$project$Mario$holdButtonsOnGamepad = F2(
+	function (dt, gamepad) {
+		return {
+			duck: A2($author$project$Mario$hold, dt, gamepad.duck),
+			jump: A2($author$project$Mario$hold, dt, gamepad.jump),
+			left: A2($author$project$Mario$hold, dt, gamepad.left),
+			right: A2($author$project$Mario$hold, dt, gamepad.right),
+			run: A2($author$project$Mario$hold, dt, gamepad.run)
+		};
+	});
+var $author$project$LandingPage$holdButtons = F2(
+	function (dt, model) {
+		var gamepad = model.gamepad;
+		return _Utils_update(
+			model,
+			{
+				gamepad: A2($author$project$Mario$holdButtonsOnGamepad, dt, gamepad)
+			});
+	});
+var $author$project$LandingPage$jump = F2(
+	function (pad, mario) {
+		return (_Utils_eq(pad.jump, $author$project$Mario$StartPressed) && (!mario.vy)) ? _Utils_update(
+			mario,
+			{vy: 6.0}) : mario;
+	});
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$LandingPage$physics = F2(
+	function (dt, mario) {
+		return _Utils_update(
+			mario,
+			{
+				x: A2(
+					$elm$core$Basics$max,
+					0,
+					A2($elm$core$Basics$min, mario.window.width - 40, mario.x + (dt * mario.vx))),
+				y: A2($elm$core$Basics$max, 0, mario.y + (dt * mario.vy))
+			});
+	});
+var $mdgriffith$elm_animator$Animator$slowly = $mdgriffith$elm_animator$Animator$millis(400);
+var $mdgriffith$elm_animator$Animator$update = F3(
+	function (newTime, _v0, model) {
+		var updateModel = _v0.b;
+		return A2(updateModel, newTime, model);
+	});
+var $author$project$Mario$Ducking = {$: 'Ducking'};
+var $author$project$Mario$Jumping = {$: 'Jumping'};
+var $author$project$Mario$Left = {$: 'Left'};
+var $author$project$Mario$Running = {$: 'Running'};
+var $author$project$Mario$Walking = {$: 'Walking'};
+var $ianmackenzie$elm_units$Quantity$greaterThan = F2(
+	function (_v0, _v1) {
+		var y = _v0.a;
+		var x = _v1.a;
+		return _Utils_cmp(x, y) > 0;
+	});
+var $mdgriffith$elm_animator$Internal$Time$inMilliseconds = function (_v0) {
+	var ms = _v0.a;
+	return ms;
+};
+var $mdgriffith$elm_animator$Internal$Time$duration = F2(
+	function (one, two) {
+		return A2($ianmackenzie$elm_units$Quantity$greaterThan, two, one) ? $ianmackenzie$elm_units$Duration$milliseconds(
+			A2(
+				$elm$core$Basics$max,
+				0,
+				$mdgriffith$elm_animator$Internal$Time$inMilliseconds(one) - $mdgriffith$elm_animator$Internal$Time$inMilliseconds(two))) : $ianmackenzie$elm_units$Duration$milliseconds(
+			A2(
+				$elm$core$Basics$max,
+				0,
+				$mdgriffith$elm_animator$Internal$Time$inMilliseconds(two) - $mdgriffith$elm_animator$Internal$Time$inMilliseconds(one)));
+	});
+var $mdgriffith$elm_animator$Internal$Timeline$adjustTime = F4(
+	function (lookup, getPersonality, unmodified, upcomingOccurring) {
+		var event = unmodified.a;
+		var start = unmodified.b;
+		var eventEnd = unmodified.c;
+		if (!upcomingOccurring.b) {
+			return unmodified;
+		} else {
+			var _v1 = upcomingOccurring.a;
+			var next = _v1.a;
+			var nextStartTime = _v1.b;
+			var personality = getPersonality(
+				lookup(event));
+			if (!(!personality.departLate)) {
+				var totalDuration = A2($mdgriffith$elm_animator$Internal$Time$duration, eventEnd, nextStartTime);
+				var nextPersonality = getPersonality(
+					lookup(next));
+				var totalPortions = A2($elm$core$Basics$max, personality.departLate + nextPersonality.arriveEarly, 1);
+				var lateBy = A2($ianmackenzie$elm_units$Quantity$multiplyBy, personality.departLate / totalPortions, totalDuration);
+				return A3(
+					$mdgriffith$elm_animator$Internal$Timeline$Occurring,
+					event,
+					start,
+					A2($mdgriffith$elm_animator$Internal$Time$advanceBy, lateBy, eventEnd));
+			} else {
+				return unmodified;
+			}
+		}
+	});
+var $ianmackenzie$elm_units$Quantity$minus = F2(
+	function (_v0, _v1) {
+		var y = _v0.a;
+		var x = _v1.a;
+		return $ianmackenzie$elm_units$Quantity$Quantity(x - y);
+	});
+var $mdgriffith$elm_animator$Internal$Time$rollbackBy = F2(
+	function (dur, time) {
+		return A2(
+			$ianmackenzie$elm_units$Quantity$minus,
+			$ianmackenzie$elm_units$Quantity$Quantity(
+				$ianmackenzie$elm_units$Duration$inMilliseconds(dur)),
+			time);
+	});
+var $mdgriffith$elm_animator$Internal$Time$zeroDuration = function (_v0) {
+	var dur = _v0.a;
+	return !dur;
+};
+var $mdgriffith$elm_animator$Internal$Timeline$adjustTimeWithPrevious = F5(
+	function (lookup, getPersonality, _v0, unmodified, upcomingOccurring) {
+		var prev = _v0.a;
+		var prevStart = _v0.b;
+		var prevEnd = _v0.c;
+		var event = unmodified.a;
+		var start = unmodified.b;
+		var eventEnd = unmodified.c;
+		var totalPrevDuration = A2($mdgriffith$elm_animator$Internal$Time$duration, prevEnd, start);
+		var prevPersonality = getPersonality(
+			lookup(prev));
+		var personality = getPersonality(
+			lookup(event));
+		var totalPrevPortions = A2($elm$core$Basics$max, prevPersonality.departLate + personality.arriveEarly, 1);
+		var earlyBy = A2($ianmackenzie$elm_units$Quantity$multiplyBy, personality.arriveEarly / totalPrevPortions, totalPrevDuration);
+		if (!upcomingOccurring.b) {
+			return $mdgriffith$elm_animator$Internal$Time$zeroDuration(earlyBy) ? unmodified : A3(
+				$mdgriffith$elm_animator$Internal$Timeline$Occurring,
+				event,
+				A2($mdgriffith$elm_animator$Internal$Time$rollbackBy, earlyBy, start),
+				eventEnd);
+		} else {
+			var _v2 = upcomingOccurring.a;
+			var next = _v2.a;
+			var nextStartTime = _v2.b;
+			if (!(!personality.departLate)) {
+				var totalDuration = A2($mdgriffith$elm_animator$Internal$Time$duration, eventEnd, nextStartTime);
+				var nextPersonality = getPersonality(
+					lookup(next));
+				var totalPortions = A2($elm$core$Basics$max, personality.departLate + nextPersonality.arriveEarly, 1);
+				var lateBy = A2($ianmackenzie$elm_units$Quantity$multiplyBy, personality.departLate / totalPortions, totalDuration);
+				return A3(
+					$mdgriffith$elm_animator$Internal$Timeline$Occurring,
+					event,
+					A2($mdgriffith$elm_animator$Internal$Time$rollbackBy, earlyBy, start),
+					A2($mdgriffith$elm_animator$Internal$Time$advanceBy, lateBy, eventEnd));
+			} else {
+				if ($mdgriffith$elm_animator$Internal$Time$zeroDuration(earlyBy)) {
+					return unmodified;
+				} else {
+					return A3(
+						$mdgriffith$elm_animator$Internal$Timeline$Occurring,
+						event,
+						A2($mdgriffith$elm_animator$Internal$Time$rollbackBy, earlyBy, start),
+						eventEnd);
+				}
+			}
+		}
+	});
+var $mdgriffith$elm_animator$Internal$Timeline$hasDwell = function (_v0) {
+	var start = _v0.b.a;
+	var end = _v0.c.a;
+	return !(!(start - end));
+};
+var $mdgriffith$elm_animator$Internal$Timeline$createLookAhead = F4(
+	function (fn, lookup, currentEvent, upcomingEvents) {
+		if (!upcomingEvents.b) {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			var unadjustedUpcoming = upcomingEvents.a;
+			var remain = upcomingEvents.b;
+			var upcomingOccurring = A5($mdgriffith$elm_animator$Internal$Timeline$adjustTimeWithPrevious, lookup, fn.adjustor, currentEvent, unadjustedUpcoming, remain);
+			return $elm$core$Maybe$Just(
+				{
+					anchor: lookup(
+						$mdgriffith$elm_animator$Internal$Timeline$getEvent(upcomingOccurring)),
+					resting: $mdgriffith$elm_animator$Internal$Timeline$hasDwell(upcomingOccurring),
+					time: $mdgriffith$elm_animator$Internal$Time$inMilliseconds(
+						$mdgriffith$elm_animator$Internal$Timeline$startTime(upcomingOccurring))
+				});
+		}
+	});
+var $mdgriffith$elm_animator$Internal$Timeline$overLines = F7(
+	function (fn, lookup, details, maybePreviousEvent, _v0, futureLines, state) {
+		overLines:
+		while (true) {
+			var lineStart = _v0.a;
+			var unadjustedStartEvent = _v0.b;
+			var lineRemain = _v0.c;
+			var transition = function (newState) {
+				if (!futureLines.b) {
+					return newState;
+				} else {
+					var future = futureLines.a;
+					var futureStart = future.a;
+					var futureStartEv = future.b;
+					var futureRemain = future.c;
+					var restOfFuture = futureLines.b;
+					return A2($mdgriffith$elm_animator$Internal$Time$thisBeforeOrEqualThat, futureStart, details.now) ? A7($mdgriffith$elm_animator$Internal$Timeline$overLines, fn, lookup, details, $elm$core$Maybe$Nothing, future, restOfFuture, newState) : newState;
+				}
+			};
+			var now = function () {
+				if (!futureLines.b) {
+					return details.now;
+				} else {
+					var _v5 = futureLines.a;
+					var futureStart = _v5.a;
+					var futureStartEv = _v5.b;
+					var futureRemain = _v5.c;
+					var restOfFuture = futureLines.b;
+					return A2($mdgriffith$elm_animator$Internal$Time$thisBeforeThat, futureStart, details.now) ? futureStart : details.now;
+				}
+			}();
+			var lineStartEv = function () {
+				if (maybePreviousEvent.$ === 'Nothing') {
+					return A4($mdgriffith$elm_animator$Internal$Timeline$adjustTime, lookup, fn.adjustor, unadjustedStartEvent, lineRemain);
+				} else {
+					var prev = maybePreviousEvent.a;
+					return A5($mdgriffith$elm_animator$Internal$Timeline$adjustTimeWithPrevious, lookup, fn.adjustor, prev, unadjustedStartEvent, lineRemain);
+				}
+			}();
+			if (A2(
+				$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
+				now,
+				$mdgriffith$elm_animator$Internal$Timeline$startTime(lineStartEv))) {
+				return transition(
+					A7(
+						fn.lerp,
+						$mdgriffith$elm_animator$Internal$Time$inMilliseconds(lineStart),
+						$elm$core$Maybe$Just(
+							lookup(details.initial)),
+						lookup(
+							$mdgriffith$elm_animator$Internal$Timeline$getEvent(lineStartEv)),
+						$mdgriffith$elm_animator$Internal$Time$inMilliseconds(
+							$mdgriffith$elm_animator$Internal$Timeline$startTime(lineStartEv)),
+						$mdgriffith$elm_animator$Internal$Time$inMilliseconds(now),
+						A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedStartEvent, lineRemain),
+						state));
+			} else {
+				if (A2(
+					$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
+					now,
+					$mdgriffith$elm_animator$Internal$Timeline$endTime(lineStartEv))) {
+					return transition(
+						A5(
+							fn.visit,
+							lookup,
+							lineStartEv,
+							now,
+							A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedStartEvent, lineRemain),
+							state));
+				} else {
+					if (!lineRemain.b) {
+						return transition(
+							A5(fn.visit, lookup, lineStartEv, now, $elm$core$Maybe$Nothing, state));
+					} else {
+						var unadjustedNext = lineRemain.a;
+						var lineRemain2 = lineRemain.b;
+						var next = A5($mdgriffith$elm_animator$Internal$Timeline$adjustTimeWithPrevious, lookup, fn.adjustor, unadjustedStartEvent, unadjustedNext, lineRemain2);
+						if (A2(
+							$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
+							now,
+							$mdgriffith$elm_animator$Internal$Timeline$startTime(next))) {
+							return transition(
+								A7(
+									fn.lerp,
+									$mdgriffith$elm_animator$Internal$Time$inMilliseconds(
+										$mdgriffith$elm_animator$Internal$Timeline$endTime(lineStartEv)),
+									$elm$core$Maybe$Just(
+										lookup(
+											$mdgriffith$elm_animator$Internal$Timeline$getEvent(lineStartEv))),
+									lookup(
+										$mdgriffith$elm_animator$Internal$Timeline$getEvent(next)),
+									$mdgriffith$elm_animator$Internal$Time$inMilliseconds(
+										$mdgriffith$elm_animator$Internal$Timeline$startTime(next)),
+									$mdgriffith$elm_animator$Internal$Time$inMilliseconds(now),
+									A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext, lineRemain2),
+									A5(
+										fn.visit,
+										lookup,
+										lineStartEv,
+										now,
+										A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedStartEvent, lineRemain),
+										state)));
+						} else {
+							if (A2(
+								$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
+								now,
+								$mdgriffith$elm_animator$Internal$Timeline$endTime(next))) {
+								return transition(
+									A5(
+										fn.visit,
+										lookup,
+										next,
+										now,
+										A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext, lineRemain2),
+										state));
+							} else {
+								if (!lineRemain2.b) {
+									return transition(
+										A5(fn.visit, lookup, next, now, $elm$core$Maybe$Nothing, state));
+								} else {
+									var unadjustedNext2 = lineRemain2.a;
+									var lineRemain3 = lineRemain2.b;
+									var next2 = A5($mdgriffith$elm_animator$Internal$Timeline$adjustTimeWithPrevious, lookup, fn.adjustor, unadjustedNext, unadjustedNext2, lineRemain3);
+									if (A2(
+										$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
+										now,
+										$mdgriffith$elm_animator$Internal$Timeline$startTime(next2))) {
+										var after = A5(
+											fn.visit,
+											lookup,
+											next,
+											now,
+											A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext, lineRemain2),
+											state);
+										return transition(
+											A7(
+												fn.lerp,
+												$mdgriffith$elm_animator$Internal$Time$inMilliseconds(
+													$mdgriffith$elm_animator$Internal$Timeline$endTime(next)),
+												$elm$core$Maybe$Just(
+													lookup(
+														$mdgriffith$elm_animator$Internal$Timeline$getEvent(next))),
+												lookup(
+													$mdgriffith$elm_animator$Internal$Timeline$getEvent(next2)),
+												$mdgriffith$elm_animator$Internal$Time$inMilliseconds(
+													$mdgriffith$elm_animator$Internal$Timeline$startTime(next2)),
+												$mdgriffith$elm_animator$Internal$Time$inMilliseconds(now),
+												A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext2, lineRemain3),
+												after));
+									} else {
+										if (A2(
+											$mdgriffith$elm_animator$Internal$Time$thisBeforeThat,
+											now,
+											$mdgriffith$elm_animator$Internal$Timeline$endTime(next2))) {
+											return transition(
+												A5(
+													fn.visit,
+													lookup,
+													next2,
+													now,
+													A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext2, lineRemain3),
+													state));
+										} else {
+											var after = A5(
+												fn.visit,
+												lookup,
+												next2,
+												now,
+												A4($mdgriffith$elm_animator$Internal$Timeline$createLookAhead, fn, lookup, unadjustedNext2, lineRemain3),
+												state);
+											var $temp$fn = fn,
+												$temp$lookup = lookup,
+												$temp$details = details,
+												$temp$maybePreviousEvent = $elm$core$Maybe$Just(next),
+												$temp$_v0 = A3(
+												$mdgriffith$elm_animator$Internal$Timeline$Line,
+												$mdgriffith$elm_animator$Internal$Timeline$endTime(next),
+												unadjustedNext2,
+												lineRemain3),
+												$temp$futureLines = futureLines,
+												$temp$state = after;
+											fn = $temp$fn;
+											lookup = $temp$lookup;
+											details = $temp$details;
+											maybePreviousEvent = $temp$maybePreviousEvent;
+											_v0 = $temp$_v0;
+											futureLines = $temp$futureLines;
+											state = $temp$state;
+											continue overLines;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
+var $mdgriffith$elm_animator$Internal$Timeline$foldp = F3(
+	function (lookup, fn, _v0) {
+		var timelineDetails = _v0.a;
+		var _v1 = timelineDetails.events;
+		var timetable = _v1.a;
+		var start = fn.start(
+			lookup(timelineDetails.initial));
+		if (!timetable.b) {
+			return start;
+		} else {
+			var firstLine = timetable.a;
+			var remainingLines = timetable.b;
+			return A7($mdgriffith$elm_animator$Internal$Timeline$overLines, fn, lookup, timelineDetails, $elm$core$Maybe$Nothing, firstLine, remainingLines, start);
+		}
+	});
+var $mdgriffith$elm_animator$Internal$Timeline$linearDefault = {arriveEarly: 0, arriveSlowly: 0, departLate: 0, departSlowly: 0, wobbliness: 0};
+var $mdgriffith$elm_animator$Internal$Timeline$current = function (timeline) {
+	var details = timeline.a;
+	return A3(
+		$mdgriffith$elm_animator$Internal$Timeline$foldp,
+		$elm$core$Basics$identity,
+		{
+			adjustor: function (_v0) {
+				return $mdgriffith$elm_animator$Internal$Timeline$linearDefault;
+			},
+			dwellPeriod: function (_v1) {
+				return $elm$core$Maybe$Nothing;
+			},
+			lerp: F7(
+				function (_v2, _v3, target, _v4, _v5, _v6, _v7) {
+					return target;
+				}),
+			start: function (_v8) {
+				return details.initial;
+			},
+			visit: F5(
+				function (lookup, target, targetTime, maybeLookAhead, state) {
+					return $mdgriffith$elm_animator$Internal$Timeline$getEvent(target);
+				})
+		},
+		timeline);
+};
+var $mdgriffith$elm_animator$Animator$current = $mdgriffith$elm_animator$Internal$Timeline$current;
+var $mdgriffith$elm_animator$Animator$immediately = $mdgriffith$elm_animator$Animator$millis(0);
+var $author$project$LandingPage$isHeld = function (pressed) {
+	switch (pressed.$) {
+		case 'NotPressed':
+			return false;
+		case 'StartPressed':
+			return true;
+		default:
+			return true;
+	}
+};
+var $author$project$LandingPage$updateSprites = function (model) {
+	var current = $mdgriffith$elm_animator$Animator$current(model.mario);
+	var direction = function () {
+		if (model.vx > 0) {
+			return $author$project$Mario$Right;
+		} else {
+			if (model.vx < 0) {
+				return $author$project$Mario$Left;
+			} else {
+				var currentDirection = current.b;
+				return currentDirection;
+			}
+		}
+	}();
+	var action = (!(!model.y)) ? $author$project$Mario$Jumping : ((!(!model.vx)) ? (($elm$core$Basics$abs(model.vx) > 2) ? $author$project$Mario$Running : $author$project$Mario$Walking) : ($author$project$LandingPage$isHeld(model.gamepad.duck) ? $author$project$Mario$Ducking : $author$project$Mario$Standing));
+	var newMario = A2($author$project$Mario$Mario, action, direction);
+	return (!_Utils_eq(current, newMario)) ? _Utils_update(
+		model,
+		{
+			mario: A3($mdgriffith$elm_animator$Animator$go, $mdgriffith$elm_animator$Animator$immediately, newMario, model.mario)
+		}) : model;
+};
+var $author$project$LandingPage$walk = F2(
+	function (pad, mario) {
+		var run = F2(
+			function (yes, x) {
+				return yes ? (x * 2.0) : x;
+			});
+		var newVx = ($author$project$LandingPage$isHeld(pad.left) && $author$project$LandingPage$isHeld(pad.right)) ? 0 : ($author$project$LandingPage$isHeld(pad.left) ? A2(
+			run,
+			$author$project$LandingPage$isHeld(pad.run),
+			-1.8) : ($author$project$LandingPage$isHeld(pad.right) ? A2(
+			run,
+			$author$project$LandingPage$isHeld(pad.run),
+			1.8) : 0));
+		return _Utils_update(
+			mario,
+			{vx: newVx});
+	});
+var $author$project$LandingPage$update = F2(
+	function (msg, model) {
+		switch (msg.$) {
+			case 'Tick':
+				var newTime = msg.a;
+				return _Utils_Tuple2(
+					A3($mdgriffith$elm_animator$Animator$update, newTime, $author$project$LandingPage$animator, model),
+					$elm$core$Platform$Cmd$none);
+			case 'Frame':
+				var dt = msg.a;
+				return _Utils_Tuple2(
+					$author$project$LandingPage$updateSprites(
+						A2(
+							$author$project$LandingPage$physics,
+							dt / 10,
+							A2(
+								$author$project$LandingPage$walk,
+								model.gamepad,
+								A2(
+									$author$project$LandingPage$jump,
+									model.gamepad,
+									A2(
+										$author$project$LandingPage$gravity,
+										dt / 10,
+										A2($author$project$LandingPage$holdButtons, dt, model)))))),
+					$elm$core$Platform$Cmd$none);
+			case 'Pressed':
+				var button = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							gamepad: A3($author$project$Mario$applyButtonToGamepad, button, true, model.gamepad)
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'Released':
+				var button = msg.a;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							gamepad: A3($author$project$Mario$applyButtonToGamepad, button, false, model.gamepad)
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'WindowSize':
+				var width = msg.a;
+				var height = msg.b;
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							window: {height: height, width: width}
+						}),
+					$elm$core$Platform$Cmd$none);
+			case 'KeyMsg':
+				var keyMsg = msg.a;
+				return _Utils_Tuple2(
+					function (m) {
+						return _Utils_update(
+							m,
+							{
+								pressedKeys: A2($ohanhi$keyboard$Keyboard$update, keyMsg, m.pressedKeys)
+							});
+					}(
+						A2($author$project$LandingPage$handleDsl, keyMsg, model)),
+					$elm$core$Platform$Cmd$none);
+			default:
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{
+							evaler: A3(
+								$mdgriffith$elm_animator$Animator$go,
+								$mdgriffith$elm_animator$Animator$slowly,
+								$author$project$LandingPage$evalRunner(model),
+								model.evaler)
+						}),
+					$elm$core$Platform$Cmd$none);
+		}
+	});
+var $author$project$LandingPage$Eval = {$: 'Eval'};
+var $mdgriffith$elm_animator$Internal$Timeline$Cycle = F2(
+	function (a, b) {
+		return {$: 'Cycle', a: a, b: b};
+	});
+var $mdgriffith$elm_animator$Internal$Timeline$Loop = function (a) {
+	return {$: 'Loop', a: a};
+};
+var $mdgriffith$elm_animator$Animator$cycle = F2(
+	function (_v0, frames) {
+		var framesPerSecond = _v0.a;
+		var duration = $ianmackenzie$elm_units$Duration$seconds(
+			$elm$core$List$length(frames) / framesPerSecond);
+		return A2(
+			$mdgriffith$elm_animator$Internal$Timeline$Cycle,
+			$mdgriffith$elm_animator$Internal$Timeline$Loop(duration),
+			frames);
+	});
+var $mdgriffith$elm_animator$Animator$FramesPerSecond = function (a) {
+	return {$: 'FramesPerSecond', a: a};
+};
+var $mdgriffith$elm_animator$Animator$fps = $mdgriffith$elm_animator$Animator$FramesPerSecond;
+var $mdgriffith$elm_animator$Internal$Timeline$Single = function (a) {
+	return {$: 'Single', a: a};
+};
+var $mdgriffith$elm_animator$Animator$frame = $mdgriffith$elm_animator$Internal$Timeline$Single;
+var $mdgriffith$elm_animator$Internal$Timeline$WithRest = F2(
+	function (a, b) {
+		return {$: 'WithRest', a: a, b: b};
+	});
+var $mdgriffith$elm_animator$Animator$framesWith = function (cfg) {
+	return A2($mdgriffith$elm_animator$Internal$Timeline$WithRest, cfg.resting, cfg.transition);
+};
+var $author$project$Mario$sprite = {
+	tail: {
+		bum: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 20, x: 208, y: 239},
+		duck: {adjustX: 5, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 120, y: 235},
+		fall1: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 268, y: 280},
+		fall2: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 300, y: 280},
+		jump: {adjustX: 4, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 90, y: 240},
+		kick: {adjustX: -1, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 180, y: 240},
+		pivot: {adjustX: 0, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 150, y: 240},
+		runJump1: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 329, y: 280},
+		runJump2: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 359, y: 280},
+		runJump3: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 389, y: 280},
+		runStep1: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 25, y: 280},
+		runStep2: {adjustX: 4, adjustY: 0, flipX: false, flipY: false, height: 30, width: 25, x: 52, y: 280},
+		stand: {adjustX: 4, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 0, y: 240},
+		standArms: {adjustX: 4, adjustY: 0, flipX: false, flipY: false, height: 30, width: 25, x: 0, y: 280},
+		step1: {adjustX: 3, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 30, y: 240},
+		step2: {adjustX: 4, adjustY: 0, flipX: false, flipY: false, height: 30, width: 27, x: 60, y: 240}
+	}
+};
+var $mdgriffith$elm_animator$Internal$Timeline$Dwelling = function (a) {
+	return {$: 'Dwelling', a: a};
+};
+var $mdgriffith$elm_animator$Internal$Timeline$Transitioning = function (a) {
+	return {$: 'Transitioning', a: a};
+};
+var $mdgriffith$elm_animator$Internal$Time$earliest = F2(
+	function (oneQty, twoQty) {
+		var one = oneQty.a;
+		var two = twoQty.a;
+		return ((one - two) >= 0) ? twoQty : oneQty;
+	});
+var $mdgriffith$elm_animator$Internal$Time$millis = function (ms) {
+	return $ianmackenzie$elm_units$Quantity$Quantity(ms);
+};
+var $mdgriffith$elm_animator$Internal$Timeline$status = function (timeline) {
+	var details = timeline.a;
+	return A3(
+		$mdgriffith$elm_animator$Internal$Timeline$foldp,
+		$elm$core$Basics$identity,
+		{
+			adjustor: function (_v0) {
+				return $mdgriffith$elm_animator$Internal$Timeline$linearDefault;
+			},
+			dwellPeriod: function (_v1) {
+				return $elm$core$Maybe$Nothing;
+			},
+			lerp: F7(
+				function (prevEndTime, maybePrev, target, targetTime, now, maybeLookAhead, state) {
+					var start = prevEndTime;
+					var end = targetTime;
+					return (_Utils_cmp(now, end) > -1) ? $mdgriffith$elm_animator$Internal$Timeline$Transitioning(1) : $mdgriffith$elm_animator$Internal$Timeline$Transitioning(
+						A3(
+							$mdgriffith$elm_animator$Internal$Time$progress,
+							$mdgriffith$elm_animator$Internal$Time$millis(start),
+							$mdgriffith$elm_animator$Internal$Time$millis(end),
+							$mdgriffith$elm_animator$Internal$Time$millis(now)));
+				}),
+			start: function (_v2) {
+				return $mdgriffith$elm_animator$Internal$Timeline$Transitioning(0);
+			},
+			visit: F5(
+				function (lookup, _v3, now, maybeLookAhead, state) {
+					var event = _v3.a;
+					var start = _v3.b;
+					var eventEnd = _v3.c;
+					var dwellTime = function () {
+						if (maybeLookAhead.$ === 'Nothing') {
+							return A2($mdgriffith$elm_animator$Internal$Time$duration, start, now);
+						} else {
+							return A2(
+								$mdgriffith$elm_animator$Internal$Time$duration,
+								start,
+								A2($mdgriffith$elm_animator$Internal$Time$earliest, now, eventEnd));
+						}
+					}();
+					return $mdgriffith$elm_animator$Internal$Time$zeroDuration(dwellTime) ? $mdgriffith$elm_animator$Internal$Timeline$Transitioning(1) : $mdgriffith$elm_animator$Internal$Timeline$Dwelling(dwellTime);
+				})
+		},
+		timeline);
+};
+var $mdgriffith$elm_animator$Internal$Timeline$dwellingTime = function (timeline) {
+	var _v0 = $mdgriffith$elm_animator$Internal$Timeline$status(timeline);
+	if (_v0.$ === 'Dwelling') {
+		var x = _v0.a;
+		return $ianmackenzie$elm_units$Duration$inMilliseconds(x);
+	} else {
+		return 0;
+	}
+};
+var $mdgriffith$elm_animator$Internal$Timeline$progress = function (timeline) {
+	var _v0 = $mdgriffith$elm_animator$Internal$Timeline$status(timeline);
+	if (_v0.$ === 'Dwelling') {
+		return 1;
+	} else {
+		var t = _v0.a;
+		return t;
+	}
+};
+var $mdgriffith$elm_animator$Animator$frameSize = function (myFrame) {
+	frameSize:
+	while (true) {
+		switch (myFrame.$) {
+			case 'Single':
+				return 1;
+			case 'Hold':
+				var i = myFrame.a;
+				return i;
+			case 'Walk':
+				var i = myFrame.a;
+				var frames = myFrame.b;
+				return A3(
+					$elm$core$List$foldl,
+					F2(
+						function (frm, total) {
+							return total + $mdgriffith$elm_animator$Animator$frameSize(frm);
+						}),
+					0,
+					frames);
+			default:
+				var newFrameSet = myFrame.b;
+				var $temp$myFrame = newFrameSet;
+				myFrame = $temp$myFrame;
+				continue frameSize;
+		}
+	}
+};
+var $mdgriffith$elm_animator$Animator$lastFrame = function (myFrame) {
+	lastFrame:
+	while (true) {
+		switch (myFrame.$) {
+			case 'Single':
+				var item = myFrame.a;
+				return item;
+			case 'Hold':
+				var item = myFrame.b;
+				return item;
+			case 'Walk':
+				var item = myFrame.a;
+				var remainingFrames = myFrame.b;
+				var _v1 = $elm$core$List$head(
+					$elm$core$List$reverse(remainingFrames));
+				if (_v1.$ === 'Nothing') {
+					return item;
+				} else {
+					var last = _v1.a;
+					var $temp$myFrame = last;
+					myFrame = $temp$myFrame;
+					continue lastFrame;
+				}
+			default:
+				var frames = myFrame.b;
+				var $temp$myFrame = frames;
+				myFrame = $temp$myFrame;
+				continue lastFrame;
+		}
+	}
+};
+var $mdgriffith$elm_animator$Animator$totalFrames = function (frames) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (frm, total) {
+				return total + $mdgriffith$elm_animator$Animator$frameSize(frm);
+			}),
+		0,
+		frames);
+};
+var $mdgriffith$elm_animator$Animator$getItemAtIndex = F4(
+	function (targetIndex, transitionFrame, currentIndex, cycleList) {
+		getItemAtIndex:
+		while (true) {
+			if (!cycleList.b) {
+				return $mdgriffith$elm_animator$Animator$lastFrame(transitionFrame);
+			} else {
+				var top = cycleList.a;
+				var remain = cycleList.b;
+				switch (top.$) {
+					case 'Single':
+						var item = top.a;
+						if (_Utils_eq(targetIndex, currentIndex)) {
+							return item;
+						} else {
+							var $temp$targetIndex = targetIndex,
+								$temp$transitionFrame = transitionFrame,
+								$temp$currentIndex = currentIndex + 1,
+								$temp$cycleList = remain;
+							targetIndex = $temp$targetIndex;
+							transitionFrame = $temp$transitionFrame;
+							currentIndex = $temp$currentIndex;
+							cycleList = $temp$cycleList;
+							continue getItemAtIndex;
+						}
+					case 'Hold':
+						var i = top.a;
+						var item = top.b;
+						if ((_Utils_cmp(currentIndex, targetIndex) < 1) && (_Utils_cmp(currentIndex + i, targetIndex) > -1)) {
+							return item;
+						} else {
+							var $temp$targetIndex = targetIndex,
+								$temp$transitionFrame = transitionFrame,
+								$temp$currentIndex = currentIndex + i,
+								$temp$cycleList = remain;
+							targetIndex = $temp$targetIndex;
+							transitionFrame = $temp$transitionFrame;
+							currentIndex = $temp$currentIndex;
+							cycleList = $temp$cycleList;
+							continue getItemAtIndex;
+						}
+					case 'Walk':
+						var item = top.a;
+						var allFrames = top.b;
+						var frameCount = $mdgriffith$elm_animator$Animator$totalFrames(allFrames);
+						if (_Utils_cmp(targetIndex, currentIndex + frameCount) < 0) {
+							var $temp$targetIndex = targetIndex,
+								$temp$transitionFrame = transitionFrame,
+								$temp$currentIndex = currentIndex,
+								$temp$cycleList = allFrames;
+							targetIndex = $temp$targetIndex;
+							transitionFrame = $temp$transitionFrame;
+							currentIndex = $temp$currentIndex;
+							cycleList = $temp$cycleList;
+							continue getItemAtIndex;
+						} else {
+							var $temp$targetIndex = targetIndex,
+								$temp$transitionFrame = transitionFrame,
+								$temp$currentIndex = currentIndex + frameCount,
+								$temp$cycleList = remain;
+							targetIndex = $temp$targetIndex;
+							transitionFrame = $temp$transitionFrame;
+							currentIndex = $temp$currentIndex;
+							cycleList = $temp$cycleList;
+							continue getItemAtIndex;
+						}
+					default:
+						var frames = top.b;
+						var frameCount = $mdgriffith$elm_animator$Animator$frameSize(frames);
+						if (_Utils_cmp(targetIndex, currentIndex + frameCount) < 0) {
+							var $temp$targetIndex = targetIndex,
+								$temp$transitionFrame = transitionFrame,
+								$temp$currentIndex = currentIndex,
+								$temp$cycleList = _List_fromArray(
+								[frames]);
+							targetIndex = $temp$targetIndex;
+							transitionFrame = $temp$transitionFrame;
+							currentIndex = $temp$currentIndex;
+							cycleList = $temp$cycleList;
+							continue getItemAtIndex;
+						} else {
+							var $temp$targetIndex = targetIndex,
+								$temp$transitionFrame = transitionFrame,
+								$temp$currentIndex = currentIndex + frameCount,
+								$temp$cycleList = remain;
+							targetIndex = $temp$targetIndex;
+							transitionFrame = $temp$transitionFrame;
+							currentIndex = $temp$currentIndex;
+							cycleList = $temp$cycleList;
+							continue getItemAtIndex;
+						}
+				}
+			}
+		}
+	});
+var $mdgriffith$elm_animator$Animator$wrapToUnit = function (x) {
+	return x - $elm$core$Basics$floor(x);
+};
+var $mdgriffith$elm_animator$Animator$restFrames = F2(
+	function (currentFrameSet, restingTimeMs) {
+		switch (currentFrameSet.$) {
+			case 'Single':
+				var item = currentFrameSet.a;
+				return item;
+			case 'Hold':
+				var i = currentFrameSet.a;
+				var item = currentFrameSet.b;
+				return item;
+			case 'Walk':
+				var start = currentFrameSet.a;
+				var sprites = currentFrameSet.b;
+				var index = $mdgriffith$elm_animator$Animator$totalFrames(sprites) - 1;
+				return A4(
+					$mdgriffith$elm_animator$Animator$getItemAtIndex,
+					index,
+					$mdgriffith$elm_animator$Internal$Timeline$Single(start),
+					0,
+					sprites);
+			default:
+				var _v1 = currentFrameSet.a;
+				var period = _v1.a;
+				var cycleFrameList = _v1.b;
+				var transitionFrames = currentFrameSet.b;
+				var len = $mdgriffith$elm_animator$Animator$totalFrames(cycleFrameList);
+				if (period.$ === 'Loop') {
+					var dur = period.a;
+					var iterationTimeMS = $ianmackenzie$elm_units$Duration$inMilliseconds(dur);
+					var progress = $mdgriffith$elm_animator$Animator$wrapToUnit(restingTimeMs / iterationTimeMS);
+					var targetIndex = $elm$core$Basics$floor(progress * len);
+					return A4($mdgriffith$elm_animator$Animator$getItemAtIndex, targetIndex, transitionFrames, 0, cycleFrameList);
+				} else {
+					var n = period.a;
+					var dur = period.b;
+					var iterationTimeMS = $ianmackenzie$elm_units$Duration$inMilliseconds(dur);
+					var iteration = $elm$core$Basics$floor(restingTimeMs / iterationTimeMS);
+					var progress = (_Utils_cmp(iteration, n) > -1) ? 1 : $mdgriffith$elm_animator$Animator$wrapToUnit(restingTimeMs / iterationTimeMS);
+					var targetIndex = $elm$core$Basics$floor(progress * len);
+					return A4($mdgriffith$elm_animator$Animator$getItemAtIndex, targetIndex, transitionFrames, 0, cycleFrameList);
+				}
+		}
+	});
+var $mdgriffith$elm_animator$Animator$stepFrames = F2(
+	function (currentFrameSet, progress) {
+		stepFrames:
+		while (true) {
+			switch (currentFrameSet.$) {
+				case 'Single':
+					var item = currentFrameSet.a;
+					return item;
+				case 'Hold':
+					var i = currentFrameSet.a;
+					var item = currentFrameSet.b;
+					return item;
+				case 'Walk':
+					var start = currentFrameSet.a;
+					var sprites = currentFrameSet.b;
+					var frameCount = $mdgriffith$elm_animator$Animator$totalFrames(sprites);
+					var index = $elm$core$Basics$floor(progress * frameCount) - 1;
+					return A4(
+						$mdgriffith$elm_animator$Animator$getItemAtIndex,
+						index,
+						$mdgriffith$elm_animator$Internal$Timeline$Single(start),
+						0,
+						sprites);
+				default:
+					var newFrameSet = currentFrameSet.b;
+					var $temp$currentFrameSet = newFrameSet,
+						$temp$progress = progress;
+					currentFrameSet = $temp$currentFrameSet;
+					progress = $temp$progress;
+					continue stepFrames;
+			}
+		}
+	});
+var $mdgriffith$elm_animator$Animator$step = F2(
+	function (timeline, lookup) {
+		var progress = $mdgriffith$elm_animator$Internal$Timeline$progress(timeline);
+		var currentFrameSet = lookup(
+			$mdgriffith$elm_animator$Animator$current(timeline));
+		return (progress === 1) ? A2(
+			$mdgriffith$elm_animator$Animator$restFrames,
+			currentFrameSet,
+			$mdgriffith$elm_animator$Internal$Timeline$dwellingTime(timeline)) : A2($mdgriffith$elm_animator$Animator$stepFrames, currentFrameSet, progress);
+	});
+var $author$project$Mario$animateMario = function (model) {
+	return A2(
+		$mdgriffith$elm_animator$Animator$step,
+		model.mario,
+		function (_v0) {
+			var action = _v0.a;
+			var direction = _v0.b;
+			var frame = function (mySprite) {
+				if (direction.$ === 'Left') {
+					return $mdgriffith$elm_animator$Animator$frame(mySprite);
+				} else {
+					return $mdgriffith$elm_animator$Animator$frame(
+						_Utils_update(
+							mySprite,
+							{flipX: true}));
+				}
+			};
+			switch (action.$) {
+				case 'Standing':
+					return frame($author$project$Mario$sprite.tail.stand);
+				case 'Ducking':
+					return frame($author$project$Mario$sprite.tail.duck);
+				case 'Jumping':
+					return frame($author$project$Mario$sprite.tail.jump);
+				case 'Walking':
+					return $mdgriffith$elm_animator$Animator$framesWith(
+						{
+							resting: A2(
+								$mdgriffith$elm_animator$Animator$cycle,
+								$mdgriffith$elm_animator$Animator$fps(15),
+								_List_fromArray(
+									[
+										frame($author$project$Mario$sprite.tail.step1),
+										frame($author$project$Mario$sprite.tail.step2),
+										frame($author$project$Mario$sprite.tail.stand)
+									])),
+							transition: frame($author$project$Mario$sprite.tail.stand)
+						});
+				default:
+					return $mdgriffith$elm_animator$Animator$framesWith(
+						{
+							resting: A2(
+								$mdgriffith$elm_animator$Animator$cycle,
+								$mdgriffith$elm_animator$Animator$fps(30),
+								_List_fromArray(
+									[
+										frame($author$project$Mario$sprite.tail.runStep1),
+										frame($author$project$Mario$sprite.tail.runStep2),
+										frame($author$project$Mario$sprite.tail.standArms)
+									])),
+							transition: frame($author$project$Mario$sprite.tail.standArms)
+						});
+			}
+		});
+};
+var $elm$html$Html$button = _VirtualDom_node('button');
+var $elm$json$Json$Encode$string = _Json_wrap;
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$div = _VirtualDom_node('div');
+var $elm$core$String$fromFloat = _String_fromNumber;
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$html$Html$hr = _VirtualDom_node('hr');
+var $elm$virtual_dom$VirtualDom$Normal = function (a) {
+	return {$: 'Normal', a: a};
+};
+var $elm$virtual_dom$VirtualDom$on = _VirtualDom_on;
+var $elm$html$Html$Events$on = F2(
+	function (event, decoder) {
+		return A2(
+			$elm$virtual_dom$VirtualDom$on,
+			event,
+			$elm$virtual_dom$VirtualDom$Normal(decoder));
+	});
+var $elm$html$Html$Events$onClick = function (msg) {
+	return A2(
+		$elm$html$Html$Events$on,
+		'click',
+		$elm$json$Json$Decode$succeed(msg));
+};
 var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
 var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$node = function (tag) {
@@ -9502,43 +9463,17 @@ var $elm$virtual_dom$VirtualDom$node = function (tag) {
 		_VirtualDom_noScript(tag));
 };
 var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
 var $author$project$LandingPage$stylesheet = A3(
 	$elm$html$Html$node,
 	'style',
 	_List_Nil,
 	_List_fromArray(
 		[
-			$elm$html$Html$text('@import url(\'https://fonts.googleapis.com/css?family=Roboto&display=swap\');\r\nbody, html {\r\n    margin: 0;\r\n    padding:0;\r\n    border:0;\r\n    display:block;\r\n    position: relative;\r\n    width: 100%;\r\n    height: 100%;\r\n    color: white;\r\n}\r\n.pixel-art {\r\n    image-rendering: pixelated;\r\n    image-rendering: -moz-crisp-edges;\r\n    image-rendering: crisp-edges;\r\n}\r\n#backgroundVid {\r\n  position: fixed;\r\n  right: 0;\r\n  bottom: 0;\r\n  min-width: 100%;\r\n  min-height: 100%;\r\n  z-index: -1;\r\n}\r\n')
+			$elm$html$Html$text('@import url(\'https://fonts.googleapis.com/css?family=Roboto&display=swap\');\r\nbody, html {\r\n    margin: 0;\r\n    padding:0;\r\n    border:0;\r\n    display:block;\r\n    position: relative;\r\n    width: 100%;\r\n    height: 100%;\r\n    color: white;\r\n}\r\n.pixel-art {\r\n    image-rendering: pixelated;\r\n    image-rendering: -moz-crisp-edges;\r\n    image-rendering: crisp-edges;\r\n}\r\n#backgroundVid {\r\n  position: fixed;\r\n  right: 0;\r\n  bottom: 0;\r\n  min-width: 100%;\r\n  min-height: 100%;\r\n  z-index: -1;\r\n}\r\nli {\r\n    list-style-type: none;\r\n}\r\n')
 		]));
-var $elm$html$Html$li = _VirtualDom_node('li');
-var $elm$html$Html$ul = _VirtualDom_node('ul');
-var $author$project$LandingPage$toListItems = F2(
-	function (label, children) {
-		if (!children.b) {
-			return A2(
-				$elm$html$Html$li,
-				_List_Nil,
-				_List_fromArray(
-					[label]));
-		} else {
-			return A2(
-				$elm$html$Html$li,
-				_List_Nil,
-				_List_fromArray(
-					[
-						label,
-						A2($elm$html$Html$ul, _List_Nil, children)
-					]));
-		}
-	});
-var $elm$core$Result$toMaybe = function (result) {
-	if (result.$ === 'Ok') {
-		var v = result.a;
-		return $elm$core$Maybe$Just(v);
-	} else {
-		return $elm$core$Maybe$Nothing;
-	}
-};
+var $elm$core$String$toLower = _String_toLower;
 var $elm$core$Debug$toString = _Debug_toString;
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$json$Json$Encode$float = _Json_wrap;
@@ -10310,21 +10245,22 @@ var $mdgriffith$elm_animator$Animator$Inline$opacity = F2(
 	function (timeline, lookup) {
 		return A4($mdgriffith$elm_animator$Animator$Inline$style, timeline, 'opacity', $elm$core$String$fromFloat, lookup);
 	});
-var $author$project$LandingPage$viewGuide = function (guideTimeline) {
+var $author$project$LandingPage$viewEvaler = function (evalerTimeline) {
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
 				A2(
 				$mdgriffith$elm_animator$Animator$Inline$opacity,
-				guideTimeline,
-				function (guide) {
-					return (guide === 'helloworld') ? $mdgriffith$elm_animator$Animator$at(1) : $mdgriffith$elm_animator$Animator$at(0);
+				evalerTimeline,
+				function (evaler) {
+					return (evaler === 'helloworld') ? $mdgriffith$elm_animator$Animator$at(1) : $mdgriffith$elm_animator$Animator$at(1);
 				})
 			]),
 		_List_fromArray(
 			[
-				$elm$html$Html$text('HFDS')
+				$elm$html$Html$text(
+				$mdgriffith$elm_animator$Animator$current(evalerTimeline))
 			]));
 };
 var $author$project$Mario$viewSprite = function (box) {
@@ -10370,6 +10306,1004 @@ var $author$project$Mario$viewSprite = function (box) {
 				_List_Nil)
 			]));
 };
+var $author$project$LandingPage$labelToHtml = function (l) {
+	return $elm$html$Html$text(
+		$elm$core$String$toLower(l));
+};
+var $zwilias$elm_rosetree$Tree$restructureHelp = F4(
+	function (fLabel, fTree, acc, stack) {
+		restructureHelp:
+		while (true) {
+			var _v0 = acc.todo;
+			if (!_v0.b) {
+				var node = A2(
+					fTree,
+					acc.label,
+					$elm$core$List$reverse(acc.done));
+				if (!stack.b) {
+					return node;
+				} else {
+					var top = stack.a;
+					var rest = stack.b;
+					var $temp$fLabel = fLabel,
+						$temp$fTree = fTree,
+						$temp$acc = _Utils_update(
+						top,
+						{
+							done: A2($elm$core$List$cons, node, top.done)
+						}),
+						$temp$stack = rest;
+					fLabel = $temp$fLabel;
+					fTree = $temp$fTree;
+					acc = $temp$acc;
+					stack = $temp$stack;
+					continue restructureHelp;
+				}
+			} else {
+				if (!_v0.a.b.b) {
+					var _v2 = _v0.a;
+					var l = _v2.a;
+					var rest = _v0.b;
+					var $temp$fLabel = fLabel,
+						$temp$fTree = fTree,
+						$temp$acc = _Utils_update(
+						acc,
+						{
+							done: A2(
+								$elm$core$List$cons,
+								A2(
+									fTree,
+									fLabel(l),
+									_List_Nil),
+								acc.done),
+							todo: rest
+						}),
+						$temp$stack = stack;
+					fLabel = $temp$fLabel;
+					fTree = $temp$fTree;
+					acc = $temp$acc;
+					stack = $temp$stack;
+					continue restructureHelp;
+				} else {
+					var _v3 = _v0.a;
+					var l = _v3.a;
+					var cs = _v3.b;
+					var rest = _v0.b;
+					var $temp$fLabel = fLabel,
+						$temp$fTree = fTree,
+						$temp$acc = {
+						done: _List_Nil,
+						label: fLabel(l),
+						todo: cs
+					},
+						$temp$stack = A2(
+						$elm$core$List$cons,
+						_Utils_update(
+							acc,
+							{todo: rest}),
+						stack);
+					fLabel = $temp$fLabel;
+					fTree = $temp$fTree;
+					acc = $temp$acc;
+					stack = $temp$stack;
+					continue restructureHelp;
+				}
+			}
+		}
+	});
+var $zwilias$elm_rosetree$Tree$restructure = F3(
+	function (convertLabel, convertTree, _v0) {
+		var l = _v0.a;
+		var c = _v0.b;
+		return A4(
+			$zwilias$elm_rosetree$Tree$restructureHelp,
+			convertLabel,
+			convertTree,
+			{
+				done: _List_Nil,
+				label: convertLabel(l),
+				todo: c
+			},
+			_List_Nil);
+	});
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $elm$html$Html$ul = _VirtualDom_node('ul');
+var $author$project$LandingPage$toListItems = F2(
+	function (label, children) {
+		if (!children.b) {
+			return A2(
+				$elm$html$Html$li,
+				_List_Nil,
+				_List_fromArray(
+					[label]));
+		} else {
+			return A2(
+				$elm$html$Html$li,
+				_List_Nil,
+				_List_fromArray(
+					[
+						label,
+						A2($elm$html$Html$ul, _List_Nil, children)
+					]));
+		}
+	});
+var $elm$core$Result$toMaybe = function (result) {
+	if (result.$ === 'Ok') {
+		var v = result.a;
+		return $elm$core$Maybe$Just(v);
+	} else {
+		return $elm$core$Maybe$Nothing;
+	}
+};
+var $author$project$LandingPage$viewText = function (model) {
+	return function (maybe) {
+		if (maybe.$ === 'Just') {
+			var r = maybe.a;
+			return function (root) {
+				return A2(
+					$elm$html$Html$ul,
+					_List_Nil,
+					_List_fromArray(
+						[root]));
+			}(
+				A3($zwilias$elm_rosetree$Tree$restructure, $author$project$LandingPage$labelToHtml, $author$project$LandingPage$toListItems, r));
+		} else {
+			return A2($elm$html$Html$ul, _List_Nil, _List_Nil);
+		}
+	}(
+		$elm$core$Result$toMaybe(
+			A3(
+				$jxxcarlson$elm_tree_builder$Tree$Build$fromString,
+				'?',
+				function ($) {
+					return $.content;
+				},
+				model.dslContent)));
+};
+var $jxxcarlson$elm_tree_builder$Tree$Svg$FullLabel = {$: 'FullLabel'};
+var $elm$svg$Svg$Attributes$height = _VirtualDom_attribute('height');
+var $elm$core$Result$map = F2(
+	function (func, ra) {
+		if (ra.$ === 'Ok') {
+			var a = ra.a;
+			return $elm$core$Result$Ok(
+				func(a));
+		} else {
+			var e = ra.a;
+			return $elm$core$Result$Err(e);
+		}
+	});
+var $elm$core$Basics$pi = _Basics_pi;
+var $elm$core$List$append = F2(
+	function (xs, ys) {
+		if (!ys.b) {
+			return xs;
+		} else {
+			return A3($elm$core$List$foldr, $elm$core$List$cons, ys, xs);
+		}
+	});
+var $elm$core$List$concat = function (lists) {
+	return A3($elm$core$List$foldr, $elm$core$List$append, _List_Nil, lists);
+};
+var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
+var $elm$svg$Svg$circle = $elm$svg$Svg$trustedNode('circle');
+var $elm$svg$Svg$Attributes$cx = _VirtualDom_attribute('cx');
+var $elm$svg$Svg$Attributes$cy = _VirtualDom_attribute('cy');
+var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var $elm$svg$Svg$Attributes$r = _VirtualDom_attribute('r');
+var $jxxcarlson$elm_tree_builder$Tree$Svg$svgCircle = F4(
+	function (x, y, rr, color) {
+		return A2(
+			$elm$svg$Svg$circle,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$cx(
+					$elm$core$String$fromFloat(x)),
+					$elm$svg$Svg$Attributes$cy(
+					$elm$core$String$fromFloat(y)),
+					$elm$svg$Svg$Attributes$r(
+					$elm$core$String$fromFloat(rr)),
+					$elm$svg$Svg$Attributes$fill(color)
+				]),
+			_List_Nil);
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Svg$renderNode = function (node) {
+	return A2(
+		$elm$svg$Svg$svg,
+		_List_Nil,
+		_List_fromArray(
+			[
+				A4($jxxcarlson$elm_tree_builder$Tree$Svg$svgCircle, node.x, node.y, node.r, node.color)
+			]));
+};
+var $elm$svg$Svg$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$svg$Svg$text_ = $elm$svg$Svg$trustedNode('text');
+var $elm$svg$Svg$Attributes$x = _VirtualDom_attribute('x');
+var $elm$svg$Svg$Attributes$y = _VirtualDom_attribute('y');
+var $jxxcarlson$elm_tree_builder$Tree$Svg$renderNodeWithLabel = F2(
+	function (labelStyle, node) {
+		var label = function () {
+			switch (labelStyle.$) {
+				case 'NoLabel':
+					return '';
+				case 'FullLabel':
+					return node.name;
+				default:
+					return A2(
+						$elm$core$Maybe$withDefault,
+						'',
+						$elm$core$List$head(
+							A2($elm$core$String$split, ' ', node.name)));
+			}
+		}();
+		return A2(
+			$elm$svg$Svg$svg,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A4($jxxcarlson$elm_tree_builder$Tree$Svg$svgCircle, node.x, node.y, node.r, node.color),
+					A2(
+					$elm$svg$Svg$text_,
+					_List_fromArray(
+						[
+							$elm$svg$Svg$Attributes$x(
+							$elm$core$String$fromFloat(node.x + 12)),
+							$elm$svg$Svg$Attributes$y(
+							$elm$core$String$fromFloat(node.y + 0)),
+							$elm$svg$Svg$Attributes$fill('gray')
+						]),
+					_List_fromArray(
+						[
+							$elm$svg$Svg$text(label)
+						]))
+				]));
+	});
+var $elm$svg$Svg$line = $elm$svg$Svg$trustedNode('line');
+var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var $elm$svg$Svg$Attributes$x1 = _VirtualDom_attribute('x1');
+var $elm$svg$Svg$Attributes$x2 = _VirtualDom_attribute('x2');
+var $elm$svg$Svg$Attributes$y1 = _VirtualDom_attribute('y1');
+var $elm$svg$Svg$Attributes$y2 = _VirtualDom_attribute('y2');
+var $jxxcarlson$elm_tree_builder$Tree$Svg$svgLine = F5(
+	function (x1_, y1_, x2_, y2_, color) {
+		return A2(
+			$elm$svg$Svg$line,
+			_List_fromArray(
+				[
+					$elm$svg$Svg$Attributes$x1(
+					$elm$core$String$fromFloat(x1_)),
+					$elm$svg$Svg$Attributes$y1(
+					$elm$core$String$fromFloat(y1_)),
+					$elm$svg$Svg$Attributes$x2(
+					$elm$core$String$fromFloat(x2_)),
+					$elm$svg$Svg$Attributes$y2(
+					$elm$core$String$fromFloat(y2_)),
+					$elm$svg$Svg$Attributes$stroke(color)
+				]),
+			_List_Nil);
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Svg$renderEdge = F2(
+	function (labelStyle, edge) {
+		return _List_fromArray(
+			[
+				A5($jxxcarlson$elm_tree_builder$Tree$Svg$svgLine, edge.from.x, edge.from.y, edge.to.x, edge.to.y, edge.color),
+				$jxxcarlson$elm_tree_builder$Tree$Svg$renderNode(edge.from),
+				A2($jxxcarlson$elm_tree_builder$Tree$Svg$renderNodeWithLabel, labelStyle, edge.to)
+			]);
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Svg$renderFirstEdge = F2(
+	function (labelStyle, edge) {
+		return _List_fromArray(
+			[
+				A5($jxxcarlson$elm_tree_builder$Tree$Svg$svgLine, edge.from.x, edge.from.y, edge.to.x, edge.to.y, edge.color),
+				A2($jxxcarlson$elm_tree_builder$Tree$Svg$renderNodeWithLabel, labelStyle, edge.from),
+				$jxxcarlson$elm_tree_builder$Tree$Svg$renderNode(edge.to)
+			]);
+	});
+var $elm$core$List$takeReverse = F3(
+	function (n, list, kept) {
+		takeReverse:
+		while (true) {
+			if (n <= 0) {
+				return kept;
+			} else {
+				if (!list.b) {
+					return kept;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs,
+						$temp$kept = A2($elm$core$List$cons, x, kept);
+					n = $temp$n;
+					list = $temp$list;
+					kept = $temp$kept;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var $elm$core$List$takeTailRec = F2(
+	function (n, list) {
+		return $elm$core$List$reverse(
+			A3($elm$core$List$takeReverse, n, list, _List_Nil));
+	});
+var $elm$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (n <= 0) {
+			return _List_Nil;
+		} else {
+			var _v0 = _Utils_Tuple2(n, list);
+			_v0$1:
+			while (true) {
+				_v0$5:
+				while (true) {
+					if (!_v0.b.b) {
+						return list;
+					} else {
+						if (_v0.b.b.b) {
+							switch (_v0.a) {
+								case 1:
+									break _v0$1;
+								case 2:
+									var _v2 = _v0.b;
+									var x = _v2.a;
+									var _v3 = _v2.b;
+									var y = _v3.a;
+									return _List_fromArray(
+										[x, y]);
+								case 3:
+									if (_v0.b.b.b.b) {
+										var _v4 = _v0.b;
+										var x = _v4.a;
+										var _v5 = _v4.b;
+										var y = _v5.a;
+										var _v6 = _v5.b;
+										var z = _v6.a;
+										return _List_fromArray(
+											[x, y, z]);
+									} else {
+										break _v0$5;
+									}
+								default:
+									if (_v0.b.b.b.b && _v0.b.b.b.b.b) {
+										var _v7 = _v0.b;
+										var x = _v7.a;
+										var _v8 = _v7.b;
+										var y = _v8.a;
+										var _v9 = _v8.b;
+										var z = _v9.a;
+										var _v10 = _v9.b;
+										var w = _v10.a;
+										var tl = _v10.b;
+										return (ctr > 1000) ? A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A2($elm$core$List$takeTailRec, n - 4, tl))))) : A2(
+											$elm$core$List$cons,
+											x,
+											A2(
+												$elm$core$List$cons,
+												y,
+												A2(
+													$elm$core$List$cons,
+													z,
+													A2(
+														$elm$core$List$cons,
+														w,
+														A3($elm$core$List$takeFast, ctr + 1, n - 4, tl)))));
+									} else {
+										break _v0$5;
+									}
+							}
+						} else {
+							if (_v0.a === 1) {
+								break _v0$1;
+							} else {
+								break _v0$5;
+							}
+						}
+					}
+				}
+				return list;
+			}
+			var _v1 = _v0.b;
+			var x = _v1.a;
+			return _List_fromArray(
+				[x]);
+		}
+	});
+var $elm$core$List$take = F2(
+	function (n, list) {
+		return A3($elm$core$List$takeFast, 0, n, list);
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Svg$render = F2(
+	function (labelStyle, graph) {
+		return $elm$core$List$concat(
+			_Utils_ap(
+				A2(
+					$elm$core$List$map,
+					$jxxcarlson$elm_tree_builder$Tree$Svg$renderFirstEdge(labelStyle),
+					A2($elm$core$List$take, 1, graph)),
+				A2(
+					$elm$core$List$map,
+					$jxxcarlson$elm_tree_builder$Tree$Svg$renderEdge(labelStyle),
+					graph)));
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Lib$edgesAux = function (state) {
+	edgesAux:
+	while (true) {
+		var _v0 = $elm$core$List$head(state.trees);
+		if (_v0.$ === 'Nothing') {
+			return state;
+		} else {
+			var tree = _v0.a;
+			var from = $zwilias$elm_rosetree$Tree$label(tree);
+			var children = $zwilias$elm_rosetree$Tree$children(tree);
+			var tos = A2($elm$core$List$map, $zwilias$elm_rosetree$Tree$label, children);
+			var newEdges = $elm$core$List$reverse(
+				A2(
+					$elm$core$List$map,
+					function (to) {
+						return _Utils_Tuple2(from, to);
+					},
+					tos));
+			var $temp$state = {
+				edges: _Utils_ap(newEdges, state.edges),
+				trees: _Utils_ap(
+					children,
+					A2($elm$core$List$drop, 1, state.trees))
+			};
+			state = $temp$state;
+			continue edgesAux;
+		}
+	}
+};
+var $jxxcarlson$elm_tree_builder$Tree$Lib$edges = function (tree) {
+	return $elm$core$List$reverse(
+		$jxxcarlson$elm_tree_builder$Tree$Lib$edgesAux(
+			{
+				edges: _List_Nil,
+				trees: _List_fromArray(
+					[tree])
+			}).edges);
+};
+var $zwilias$elm_rosetree$Tree$foldlHelp = F4(
+	function (f, acc, trees, nextSets) {
+		foldlHelp:
+		while (true) {
+			if (!trees.b) {
+				if (nextSets.b) {
+					var set = nextSets.a;
+					var sets = nextSets.b;
+					var $temp$f = f,
+						$temp$acc = acc,
+						$temp$trees = set,
+						$temp$nextSets = sets;
+					f = $temp$f;
+					acc = $temp$acc;
+					trees = $temp$trees;
+					nextSets = $temp$nextSets;
+					continue foldlHelp;
+				} else {
+					return acc;
+				}
+			} else {
+				if (!trees.a.b.b) {
+					var _v2 = trees.a;
+					var d = _v2.a;
+					var rest = trees.b;
+					var $temp$f = f,
+						$temp$acc = A2(f, d, acc),
+						$temp$trees = rest,
+						$temp$nextSets = nextSets;
+					f = $temp$f;
+					acc = $temp$acc;
+					trees = $temp$trees;
+					nextSets = $temp$nextSets;
+					continue foldlHelp;
+				} else {
+					var _v3 = trees.a;
+					var d = _v3.a;
+					var xs = _v3.b;
+					var rest = trees.b;
+					var $temp$f = f,
+						$temp$acc = A2(f, d, acc),
+						$temp$trees = xs,
+						$temp$nextSets = A2($elm$core$List$cons, rest, nextSets);
+					f = $temp$f;
+					acc = $temp$acc;
+					trees = $temp$trees;
+					nextSets = $temp$nextSets;
+					continue foldlHelp;
+				}
+			}
+		}
+	});
+var $zwilias$elm_rosetree$Tree$foldl = F3(
+	function (f, acc, t) {
+		return A4(
+			$zwilias$elm_rosetree$Tree$foldlHelp,
+			f,
+			acc,
+			_List_fromArray(
+				[t]),
+			_List_Nil);
+	});
+var $zwilias$elm_rosetree$Tree$foldr = F3(
+	function (f, acc, t) {
+		return A3(
+			$elm$core$List$foldl,
+			f,
+			acc,
+			A3($zwilias$elm_rosetree$Tree$foldl, $elm$core$List$cons, _List_Nil, t));
+	});
+var $zwilias$elm_rosetree$Tree$flatten = function (t) {
+	return A3($zwilias$elm_rosetree$Tree$foldr, $elm$core$List$cons, _List_Nil, t);
+};
+var $elm_community$list_extra$List$Extra$groupWhile = F2(
+	function (isSameGroup, items) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, acc) {
+					if (!acc.b) {
+						return _List_fromArray(
+							[
+								_Utils_Tuple2(x, _List_Nil)
+							]);
+					} else {
+						var _v1 = acc.a;
+						var y = _v1.a;
+						var restOfGroup = _v1.b;
+						var groups = acc.b;
+						return A2(isSameGroup, x, y) ? A2(
+							$elm$core$List$cons,
+							_Utils_Tuple2(
+								x,
+								A2($elm$core$List$cons, y, restOfGroup)),
+							groups) : A2(
+							$elm$core$List$cons,
+							_Utils_Tuple2(x, _List_Nil),
+							acc);
+					}
+				}),
+			_List_Nil,
+			items);
+	});
+var $zwilias$elm_rosetree$Tree$mapAccumulateHelp = F4(
+	function (f, state, acc, stack) {
+		mapAccumulateHelp:
+		while (true) {
+			var _v0 = acc.todo;
+			if (!_v0.b) {
+				var node = A2(
+					$zwilias$elm_rosetree$Tree$Tree,
+					acc.label,
+					$elm$core$List$reverse(acc.done));
+				if (!stack.b) {
+					return _Utils_Tuple2(state, node);
+				} else {
+					var top = stack.a;
+					var rest = stack.b;
+					var $temp$f = f,
+						$temp$state = state,
+						$temp$acc = _Utils_update(
+						top,
+						{
+							done: A2($elm$core$List$cons, node, top.done)
+						}),
+						$temp$stack = rest;
+					f = $temp$f;
+					state = $temp$state;
+					acc = $temp$acc;
+					stack = $temp$stack;
+					continue mapAccumulateHelp;
+				}
+			} else {
+				if (!_v0.a.b.b) {
+					var _v2 = _v0.a;
+					var d = _v2.a;
+					var rest = _v0.b;
+					var _v3 = A2(f, state, d);
+					var state_ = _v3.a;
+					var label_ = _v3.b;
+					var $temp$f = f,
+						$temp$state = state_,
+						$temp$acc = _Utils_update(
+						acc,
+						{
+							done: A2(
+								$elm$core$List$cons,
+								A2($zwilias$elm_rosetree$Tree$Tree, label_, _List_Nil),
+								acc.done),
+							todo: rest
+						}),
+						$temp$stack = stack;
+					f = $temp$f;
+					state = $temp$state;
+					acc = $temp$acc;
+					stack = $temp$stack;
+					continue mapAccumulateHelp;
+				} else {
+					var _v4 = _v0.a;
+					var d = _v4.a;
+					var cs = _v4.b;
+					var rest = _v0.b;
+					var _v5 = A2(f, state, d);
+					var state_ = _v5.a;
+					var label_ = _v5.b;
+					var $temp$f = f,
+						$temp$state = state_,
+						$temp$acc = {done: _List_Nil, label: label_, todo: cs},
+						$temp$stack = A2(
+						$elm$core$List$cons,
+						_Utils_update(
+							acc,
+							{todo: rest}),
+						stack);
+					f = $temp$f;
+					state = $temp$state;
+					acc = $temp$acc;
+					stack = $temp$stack;
+					continue mapAccumulateHelp;
+				}
+			}
+		}
+	});
+var $zwilias$elm_rosetree$Tree$mapAccumulate = F3(
+	function (f, s, _v0) {
+		var d = _v0.a;
+		var cs = _v0.b;
+		var _v1 = A2(f, s, d);
+		var s_ = _v1.a;
+		var d_ = _v1.b;
+		return A4(
+			$zwilias$elm_rosetree$Tree$mapAccumulateHelp,
+			f,
+			s_,
+			{done: _List_Nil, label: d_, todo: cs},
+			_List_Nil);
+	});
+var $zwilias$elm_rosetree$Tree$map = F2(
+	function (f, t) {
+		return A3(
+			$zwilias$elm_rosetree$Tree$mapAccumulate,
+			F2(
+				function (_v0, e) {
+					return _Utils_Tuple2(
+						_Utils_Tuple0,
+						f(e));
+				}),
+			_Utils_Tuple0,
+			t).b;
+	});
+var $jxxcarlson$htree$HTree$tagWithDepthHelp = F2(
+	function (k, t) {
+		var c = $zwilias$elm_rosetree$Tree$children(t);
+		return A2(
+			$zwilias$elm_rosetree$Tree$tree,
+			_Utils_Tuple2(
+				$zwilias$elm_rosetree$Tree$label(t),
+				k),
+			A2(
+				$elm$core$List$map,
+				function (t_) {
+					return A2($jxxcarlson$htree$HTree$tagWithDepthHelp, k + 1, t_);
+				},
+				c));
+	});
+var $jxxcarlson$htree$HTree$tagWithDepth = function (t) {
+	return A2($jxxcarlson$htree$HTree$tagWithDepthHelp, 0, t);
+};
+var $jxxcarlson$elm_tree_builder$Tree$Render$init = F3(
+	function (preferences, renderLabel, tree) {
+		var root = {
+			color: preferences.ballColor,
+			name: renderLabel(
+				$zwilias$elm_rosetree$Tree$label(tree)),
+			r: preferences.ballRadius,
+			x: 0,
+			y: 0
+		};
+		var origin = {color: preferences.ballColor, name: root.name, r: preferences.ballRadius, x: 0, y: -preferences.initialEdgeLength};
+		var edges = A2(
+			$elm$core$List$map,
+			function (_v0) {
+				var a = _v0.a;
+				var b = _v0.b;
+				return _Utils_Tuple2(
+					renderLabel(a),
+					renderLabel(b));
+			},
+			$jxxcarlson$elm_tree_builder$Tree$Lib$edges(tree));
+		var edgeGroups = A2(
+			$elm_community$list_extra$List$Extra$groupWhile,
+			F2(
+				function (a, b) {
+					return _Utils_eq(a.a, b.a);
+				}),
+			edges);
+		var depths = $elm$core$Dict$fromList(
+			$zwilias$elm_rosetree$Tree$flatten(
+				$jxxcarlson$htree$HTree$tagWithDepth(
+					A2($zwilias$elm_rosetree$Tree$map, renderLabel, tree))));
+		return {
+			depths: depths,
+			edgeDict: $elm$core$Dict$fromList(
+				_List_fromArray(
+					[
+						_Utils_Tuple2(
+						root.name,
+						{color: 'gray', from: origin, to: root})
+					])),
+			graph: _List_Nil,
+			groups: edgeGroups,
+			preferences: preferences
+		};
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Render$loop = F2(
+	function (s, f) {
+		loop:
+		while (true) {
+			var _v0 = f(s);
+			if (_v0.$ === 'Loop') {
+				var s_ = _v0.a;
+				var $temp$s = s_,
+					$temp$f = f;
+				s = $temp$s;
+				f = $temp$f;
+				continue loop;
+			} else {
+				var b = _v0.a;
+				return b;
+			}
+		}
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Render$Done = function (a) {
+	return {$: 'Done', a: a};
+};
+var $jxxcarlson$elm_tree_builder$Tree$Render$Loop = function (a) {
+	return {$: 'Loop', a: a};
+};
+var $elm$core$Dict$get = F2(
+	function (targetKey, dict) {
+		get:
+		while (true) {
+			if (dict.$ === 'RBEmpty_elm_builtin') {
+				return $elm$core$Maybe$Nothing;
+			} else {
+				var key = dict.b;
+				var value = dict.c;
+				var left = dict.d;
+				var right = dict.e;
+				var _v1 = A2($elm$core$Basics$compare, targetKey, key);
+				switch (_v1.$) {
+					case 'LT':
+						var $temp$targetKey = targetKey,
+							$temp$dict = left;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+					case 'EQ':
+						return $elm$core$Maybe$Just(value);
+					default:
+						var $temp$targetKey = targetKey,
+							$temp$dict = right;
+						targetKey = $temp$targetKey;
+						dict = $temp$dict;
+						continue get;
+				}
+			}
+		}
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Render$displaceNode = F2(
+	function (vector, node) {
+		return _Utils_update(
+			node,
+			{x: node.x + vector.x, y: node.y + vector.y});
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Render$displaceEdge = F2(
+	function (vector, edge) {
+		return _Utils_update(
+			edge,
+			{
+				from: A2($jxxcarlson$elm_tree_builder$Tree$Render$displaceNode, vector, edge.from),
+				to: A2($jxxcarlson$elm_tree_builder$Tree$Render$displaceNode, vector, edge.to)
+			});
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Render$edgeToVector = function (edge) {
+	return {x: edge.to.x - edge.from.x, y: edge.to.y - edge.from.y};
+};
+var $jxxcarlson$elm_tree_builder$Tree$Render$renameEndPoint = F2(
+	function (name, edge) {
+		var to = edge.to;
+		return _Utils_update(
+			edge,
+			{
+				to: _Utils_update(
+					to,
+					{name: name})
+			});
+	});
+var $elm$core$Basics$cos = _Basics_cos;
+var $elm$core$Basics$sin = _Basics_sin;
+var $jxxcarlson$elm_tree_builder$Tree$Render$rotateAndRescaleEdge = F3(
+	function (scaleFacgtor, theta_, edge) {
+		var to = edge.to;
+		var si = $elm$core$Basics$sin(theta_);
+		var dy = edge.to.y - edge.from.y;
+		var dx = edge.to.x - edge.from.x;
+		var co = $elm$core$Basics$cos(theta_);
+		var xx = edge.from.x + (scaleFacgtor * ((co * dx) - (si * dy)));
+		var yy = edge.from.y + (scaleFacgtor * ((si * dx) + (co * dy)));
+		return _Utils_update(
+			edge,
+			{
+				to: _Utils_update(
+					to,
+					{x: xx, y: yy})
+			});
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Render$theta = F3(
+	function (halfAngle, i, n) {
+		return (n < 2) ? 0 : ((-halfAngle) + (((2 * i) * halfAngle) / (n - 1)));
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Render$satellite = F5(
+	function (preferences, i, n, name, edge) {
+		return A2(
+			$jxxcarlson$elm_tree_builder$Tree$Render$renameEndPoint,
+			name,
+			A3(
+				$jxxcarlson$elm_tree_builder$Tree$Render$rotateAndRescaleEdge,
+				preferences.scaleFactor,
+				A3($jxxcarlson$elm_tree_builder$Tree$Render$theta, preferences.halfAngle, i, n),
+				edge));
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Render$groupToEdges = F3(
+	function (preferences, rootEdge, edgesAsLabelPairs) {
+		var n = $elm$core$List$length(edgesAsLabelPairs);
+		var endPoints = $elm$core$List$reverse(
+			A2($elm$core$List$map, $elm$core$Tuple$second, edgesAsLabelPairs));
+		var dr = $jxxcarlson$elm_tree_builder$Tree$Render$edgeToVector(rootEdge);
+		var start = A2($jxxcarlson$elm_tree_builder$Tree$Render$displaceEdge, dr, rootEdge);
+		var newEdges = A2(
+			$elm$core$List$indexedMap,
+			F2(
+				function (i, na) {
+					return A5($jxxcarlson$elm_tree_builder$Tree$Render$satellite, preferences, i, n, na, start);
+				}),
+			endPoints);
+		return newEdges;
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Render$nextStep = function (state) {
+	var _v0 = $elm$core$List$head(state.groups);
+	if (_v0.$ === 'Nothing') {
+		return $jxxcarlson$elm_tree_builder$Tree$Render$Done(state.graph);
+	} else {
+		var _v1 = _v0.a;
+		var _v2 = _v1.a;
+		var a = _v2.a;
+		var b = _v2.b;
+		var rest = _v1.b;
+		var _v3 = A2($elm$core$Dict$get, a, state.edgeDict);
+		if (_v3.$ === 'Nothing') {
+			return $jxxcarlson$elm_tree_builder$Tree$Render$Done(state.graph);
+		} else {
+			var edge = _v3.a;
+			var namePairs = A2(
+				$elm$core$List$cons,
+				_Utils_Tuple2(a, b),
+				rest);
+			var newEdges = A3($jxxcarlson$elm_tree_builder$Tree$Render$groupToEdges, state.preferences, edge, namePairs);
+			var newDict = A3(
+				$elm$core$List$foldl,
+				F2(
+					function (e, runningDict) {
+						return A3($elm$core$Dict$insert, e.to.name, e, runningDict);
+					}),
+				state.edgeDict,
+				newEdges);
+			var info = A2(
+				$elm$core$List$map,
+				function (_v4) {
+					var name = _v4.a;
+					var e = _v4.b;
+					return _Utils_Tuple3(name, e.from.name, e.to.name);
+				},
+				$elm$core$Dict$toList(newDict));
+			return $jxxcarlson$elm_tree_builder$Tree$Render$Loop(
+				_Utils_update(
+					state,
+					{
+						edgeDict: newDict,
+						graph: _Utils_ap(state.graph, newEdges),
+						groups: A2($elm$core$List$drop, 1, state.groups)
+					}));
+		}
+	}
+};
+var $jxxcarlson$elm_tree_builder$Tree$Render$toGraph = F3(
+	function (preferences, labelToString, tree) {
+		return A2(
+			$jxxcarlson$elm_tree_builder$Tree$Render$loop,
+			A3($jxxcarlson$elm_tree_builder$Tree$Render$init, preferences, labelToString, tree),
+			$jxxcarlson$elm_tree_builder$Tree$Render$nextStep);
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Svg$transformNode = F6(
+	function (dx, dy, sx, sy, sr, node) {
+		return _Utils_update(
+			node,
+			{r: sr * node.r, x: (sx * node.x) + dx, y: (sy * node.y) + dy});
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Svg$transformEdge = F6(
+	function (dx, dy, sx, sy, sr, edge) {
+		return _Utils_update(
+			edge,
+			{
+				from: A6($jxxcarlson$elm_tree_builder$Tree$Svg$transformNode, dx, dy, sx, sy, sr, edge.from),
+				to: A6($jxxcarlson$elm_tree_builder$Tree$Svg$transformNode, dx, dy, sx, sy, sr, edge.to)
+			});
+	});
+var $jxxcarlson$elm_tree_builder$Tree$Svg$transform = F6(
+	function (dx, dy, sx, sy, sr, graph) {
+		return A2(
+			$elm$core$List$map,
+			A5($jxxcarlson$elm_tree_builder$Tree$Svg$transformEdge, dx, dy, sx, sy, sr),
+			graph);
+	});
+var $elm$svg$Svg$Attributes$width = _VirtualDom_attribute('width');
+var $elm$core$Result$withDefault = F2(
+	function (def, result) {
+		if (result.$ === 'Ok') {
+			var a = result.a;
+			return a;
+		} else {
+			return def;
+		}
+	});
+var $author$project$LandingPage$viewTree = function (model) {
+	var tree = A3(
+		$jxxcarlson$elm_tree_builder$Tree$Build$fromString,
+		'?',
+		function ($) {
+			return $.content;
+		},
+		model.dslContent);
+	var graph = A2(
+		$elm$core$Result$withDefault,
+		_List_Nil,
+		A2(
+			$elm$core$Result$map,
+			A2(
+				$jxxcarlson$elm_tree_builder$Tree$Render$toGraph,
+				{ballColor: 'white', ballRadius: 3, halfAngle: 0.25 * $elm$core$Basics$pi, initialEdgeLength: 2, scaleFactor: 1},
+				$elm$core$Basics$identity),
+			tree));
+	return A2(
+		$elm$svg$Svg$svg,
+		_List_fromArray(
+			[
+				$elm$svg$Svg$Attributes$width('800'),
+				$elm$svg$Svg$Attributes$height('800')
+			]),
+		_Utils_ap(
+			_List_Nil,
+			A2(
+				$jxxcarlson$elm_tree_builder$Tree$Svg$render,
+				$jxxcarlson$elm_tree_builder$Tree$Svg$FullLabel,
+				A6($jxxcarlson$elm_tree_builder$Tree$Svg$transform, 280, 100, 60, 60, 0.5, graph))));
+};
 var $author$project$LandingPage$view = function (model) {
 	return {
 		body: _List_fromArray(
@@ -10414,7 +11348,17 @@ var $author$project$LandingPage$view = function (model) {
 							[
 								$elm$html$Html$text(
 								$elm$core$String$toLower(
-									$elm$core$Debug$toString(model.dslEditor)))
+									$elm$core$Debug$toString(model.evaler)))
+							])),
+						A2(
+						$elm$html$Html$div,
+						_List_fromArray(
+							[
+								A2($elm$html$Html$Attributes$style, 'float', 'right')
+							]),
+						_List_fromArray(
+							[
+								$author$project$LandingPage$viewTree(model)
 							])),
 						A2(
 						$elm$html$Html$div,
@@ -10442,30 +11386,37 @@ var $author$project$LandingPage$view = function (model) {
 									[
 										$elm$html$Html$text('ben tyler - software developer')
 									])),
-								$author$project$LandingPage$viewGuide(model.guide),
-								function (maybe) {
-								if (maybe.$ === 'Just') {
-									var r = maybe.a;
-									return function (root) {
-										return A2(
-											$elm$html$Html$ul,
-											_List_Nil,
-											_List_fromArray(
-												[root]));
-									}(
-										A3($zwilias$elm_rosetree$Tree$restructure, $author$project$LandingPage$labelToHtml, $author$project$LandingPage$toListItems, r));
-								} else {
-									return A2($elm$html$Html$ul, _List_Nil, _List_Nil);
-								}
-							}(
-								$elm$core$Result$toMaybe(
-									A3(
-										$jxxcarlson$elm_tree_builder$Tree$Build$fromString,
-										'?',
-										function ($) {
-											return $.content;
-										},
-										model.dslContent)))
+								A2(
+								$elm$html$Html$div,
+								_List_fromArray(
+									[
+										A2($elm$html$Html$Attributes$style, 'border-style', 'solid'),
+										A2($elm$html$Html$Attributes$style, 'padding', '5px')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$h3,
+										_List_Nil,
+										_List_fromArray(
+											[
+												$elm$html$Html$text(' ducklang {{{ ctr = Rat Func, enter = duck obj }}}')
+											])),
+										A2($elm$html$Html$hr, _List_Nil, _List_Nil),
+										$author$project$LandingPage$viewText(model),
+										A2(
+										$elm$html$Html$button,
+										_List_fromArray(
+											[
+												$elm$html$Html$Events$onClick($author$project$LandingPage$Eval)
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('>>>')
+											])),
+										A2($elm$html$Html$hr, _List_Nil, _List_Nil),
+										$author$project$LandingPage$viewEvaler(model.evaler)
+									]))
 							])),
 						A2(
 						$elm$html$Html$div,

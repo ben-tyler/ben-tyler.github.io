@@ -11,13 +11,20 @@ import Html.Attributes as Attr
 import Json.Decode as Decode
 import Json.Encode
 import Keyboard exposing (Key(..))
-import Keyboard.Arrows
+import Keyboard.Arrows exposing (Arrows)
 import Main exposing (viewGuid)
 import Mario exposing (..)
+import Svg
+import Svg.Attributes
 import Task
 import Time
 import Tree exposing (Tree)
 import Tree.Build as Build
+import Tree.Render
+import Tree.Svg
+import Tree.Zipper
+import LineChart.Events exposing (Event)
+import Html.Events
 
 
 {-|
@@ -42,7 +49,7 @@ type alias Model =
     , window : Window
     , gamepad : GamePad
     , mario : Animator.Timeline Mario
-    , guide : Animator.Timeline String
+    , evaler : Animator.Timeline String
     , pressedKeys : List Key
     , dslContent : String
     , dslEditor : DslEditor
@@ -92,6 +99,7 @@ type Msg
     | Released Button
     | WindowSize Int Int
     | KeyMsg Keyboard.Msg
+    | Eval 
 
 
 main =
@@ -145,7 +153,7 @@ init =
         , duck = NotPressed
         }
     , mario = Animator.init (Mario Standing Right)
-    , guide = Animator.init "some guide"
+    , evaler = Animator.init "some guide"
     , pressedKeys = []
     , dslContent = ""
     , dslEditor =
@@ -179,8 +187,12 @@ wordDelete str =
         |> String.concat
 
 
-newLine content level =
-    content ++ "\n" ++ String.repeat (level * 4) """ \t"""
+duckValue content level =
+    content ++ "\n" ++ String.repeat level """    """ ++ "🦆"
+
+
+arrowFunc content level =
+    content ++ "\n" ++ String.repeat level """    """ ++ "🔀"
 
 
 monkeyFunction content level =
@@ -192,15 +204,18 @@ monkeyFunction content level =
             String.repeat (level - 1) """    """
 
         lambdaSignature =
-            "🙈🙉🙊"
+            "🐀"
     in
     content
         ++ "\n"
         ++ funcIndentation
         ++ lambdaSignature
-        ++ "\n"
-        ++ indentation
-        ++ ""
+
+
+
+--    ++ "\n"
+--    ++ indentation
+--    ++ ""
 
 
 handleDsl keyMsg model =
@@ -210,8 +225,15 @@ handleDsl keyMsg model =
                 (\key result ->
                     case key of
                         Control ->
-                            { result | level = result.level + 2 } -- indents too levels, one for function, one for content
+                            { result | level = result.level + 2 }
 
+                        Keyboard.ArrowUp ->
+                            { result | level = result.level - 2 }
+
+                        Keyboard.ArrowDown ->
+                            { result | level = result.level + 2 }
+
+                        -- indents too levels, one for function, one for content
                         _ ->
                             result
                 )
@@ -226,7 +248,7 @@ handleDsl keyMsg model =
                             content ++ """ \t"""
 
                         Keyboard.Enter ->
-                            newLine content editorState.level
+                            duckValue content editorState.level
 
                         Keyboard.Backspace ->
                             content
@@ -235,6 +257,8 @@ handleDsl keyMsg model =
                         Character c ->
                             content ++ c
 
+                        --Shift ->
+                        --    arrowFunc content editorState.level
                         Control ->
                             monkeyFunction content editorState.level
 
@@ -306,6 +330,32 @@ update msg model =
             , Cmd.none
             )
 
+        Eval -> 
+            ( {model | evaler = 
+                model.evaler
+                    |> Animator.go Animator.slowly (evalRunner model)}
+            , Cmd.none
+            )
+
+
+evalRunner model = 
+    let 
+        tree =
+            Build.fromString "?" .content model.dslContent
+    in
+    case tree of 
+        Result.Ok r ->
+            r
+            |> Tree.Zipper.fromTree
+            |> Tree.Zipper.label
+
+        Result.Err m -> ""
+
+    --(Build.fromString "?" .content model.dslContent)
+    --|> Result.withDefault (Tree.tree "!!!")
+    --|> Tree.Zipper.fromTree
+    --|> Tree.Zipper.label
+
 
 {-| -}
 subscriptions : Model -> Sub Msg
@@ -327,7 +377,7 @@ animator =
         -- we tell the animator how to get the checked timeline using .checked
         -- and we tell the animator how to update that timeline with updateChecked
         |> Animator.watching .mario (\mario m -> { m | mario = mario })
-        |> Animator.watching .guide (\guide m -> { m | guide = guide })
+        |> Animator.watching .evaler (\evaler m -> { m | evaler = evaler })
 
 
 viewBackgroundVideo =
@@ -341,18 +391,18 @@ viewBackgroundVideo =
         [ Html.source [ Attr.src "vid.mp4", Attr.type_ "video/mp4" ] [] ]
 
 
-viewGuide : Animator.Timeline String -> Html Msg
-viewGuide guideTimeline =
+viewEvaler : Animator.Timeline String -> Html Msg
+viewEvaler evalerTimeline =
     Html.div
-        [ Animator.Inline.opacity guideTimeline <|
-            \guide ->
-                if guide == "helloworld" then
+        [ Animator.Inline.opacity evalerTimeline <|
+            \evaler ->
+                if evaler == "helloworld" then
                     Animator.at 1
 
                 else
-                    Animator.at 0
+                    Animator.at 1
         ]
-        [ Html.text "HFDS" ]
+        [ Html.text <| Animator.current evalerTimeline]
 
 
 labelToHtml : String -> Html msg
@@ -365,17 +415,47 @@ toListItems label children =
     case children of
         [] ->
             Html.li
-                [ 
-                ]
+                []
                 [ label ]
 
         _ ->
             Html.li
-                [ 
-                ]
+                []
                 [ label
                 , Html.ul [] children
                 ]
+
+
+viewTree model =
+    let
+        tree =
+            Build.fromString "?" .content model.dslContent
+
+        graph =
+            Result.map
+                (Tree.Render.toGraph
+                    { halfAngle = 0.25 * pi
+                    , initialEdgeLength = 2
+                    , scaleFactor = 1
+                    , ballRadius = 3
+                    , ballColor = "white"
+                    }
+                    identity
+                )
+                tree
+                |> Result.withDefault []
+    in
+    Svg.svg
+        [ Svg.Attributes.width "800"
+        , Svg.Attributes.height "800"
+
+        --, Svg.Attributes.viewBox ("0 0 " ++ w ++ " " ++ h)
+        --   , Svg.Attributes.viewBox "0 0 100% 100%"
+        --  , Svg.Attributes.fill "white"
+        ]
+        ([]
+            ++ Tree.Svg.render Tree.Svg.FullLabel (Tree.Svg.transform 280 100 60 60 0.5 graph)
+        )
 
 
 view : Model -> Browser.Document Msg
@@ -398,7 +478,11 @@ view model =
                 , Attr.style "right" (String.fromFloat 100 ++ "px")
                 , Attr.style "width" "300px"
                 ]
-                [ Html.text <| String.toLower <| Debug.toString model.dslEditor ]
+                [ Html.text <| String.toLower <| Debug.toString model.evaler ]
+            , Html.div
+                [ Attr.style "float" "right"
+                ]
+                [ viewTree model ]
             , Html.div
                 [ Attr.style "position" "absolute"
                 , Attr.style "top" "80px"
@@ -408,27 +492,18 @@ view model =
                 ]
                 [ Html.h1 [] [ Html.text "welcome" ]
                 , Html.div [] [ Html.text "ben tyler - software developer" ]
-                , viewGuide model.guide
-                , Build.fromString "?" .content model.dslContent
-                    |> Result.toMaybe
-                    |> (\maybe ->
-                            case maybe of
-                                Just r ->
-                                    r
-                                        |> Tree.restructure labelToHtml toListItems
-                                        |> (\root ->
-                                                Html.ul
-                                                    [-- Attr.style "border-style" "solid"
-                                                  --  , Attr.style "padding" "4%"
-                                                    ]
-                                                    [ --Html.text "dsl context"
-                                                     root
-                                                    ]
-                                           )
+                , Html.div 
+                    [ Attr.style "border-style" "solid" 
+                    , Attr.style "padding" "5px"
+                    ] 
+                    [ Html.h3 [] [Html.text " ducklang {{{ ctr = Rat Func, enter = duck obj }}}"]
+                    , Html.hr [] []
+                    , viewText model 
+                    , Html.button [ Html.Events.onClick Eval] [Html.text ">>>"]
+                    , Html.hr [] [] 
+                    , viewEvaler model.evaler
+                    ]
 
-                                Nothing ->
-                                    Html.ul [] []
-                       )
                 --, Html.div []
                 --    [ Html.text <|
                 --        String.toLower <|
@@ -456,6 +531,29 @@ view model =
             ]
         ]
     }
+
+
+viewText model =
+    Build.fromString "?" .content model.dslContent
+        |> Result.toMaybe
+        |> (\maybe ->
+                case maybe of
+                    Just r ->
+                        r
+                            |> Tree.restructure labelToHtml toListItems
+                            |> (\root ->
+                                    Html.ul
+                                        [-- Attr.style "border-style" "solid"
+                                         --  , Attr.style "padding" "4%"
+                                        ]
+                                        [ --Html.text "dsl context"
+                                          root
+                                        ]
+                               )
+
+                    Nothing ->
+                        Html.ul [] []
+           )
 
 
 isHeld : Pressed -> Bool
@@ -616,6 +714,9 @@ body, html {
   min-width: 100%;
   min-height: 100%;
   z-index: -1;
+}
+li {
+    list-style-type: none;
 }
 """
         ]
