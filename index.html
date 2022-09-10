@@ -4387,6 +4387,43 @@ function _Browser_load(url)
 
 
 
+var _Bitwise_and = F2(function(a, b)
+{
+	return a & b;
+});
+
+var _Bitwise_or = F2(function(a, b)
+{
+	return a | b;
+});
+
+var _Bitwise_xor = F2(function(a, b)
+{
+	return a ^ b;
+});
+
+function _Bitwise_complement(a)
+{
+	return ~a;
+};
+
+var _Bitwise_shiftLeftBy = F2(function(offset, a)
+{
+	return a << offset;
+});
+
+var _Bitwise_shiftRightBy = F2(function(offset, a)
+{
+	return a >> offset;
+});
+
+var _Bitwise_shiftRightZfBy = F2(function(offset, a)
+{
+	return a >>> offset;
+});
+
+
+
 
 // STRINGS
 
@@ -5373,7 +5410,8 @@ var $mdgriffith$elm_animator$Animator$init = function (first) {
 		});
 };
 var $author$project$LandingPage$init = {
-	dslContent: '"\r\nthis\r\n    is the kind\r\n       of\r\n    structure\r\n       we\r\n       want    \r\n',
+	dslContent: '',
+	dslEditor: {level: 0, word: 0},
 	gamepad: {duck: $author$project$Mario$NotPressed, jump: $author$project$Mario$NotPressed, left: $author$project$Mario$NotPressed, right: $author$project$Mario$NotPressed, run: $author$project$Mario$NotPressed},
 	guide: $mdgriffith$elm_animator$Animator$init('some guide'),
 	mario: $mdgriffith$elm_animator$Animator$init(
@@ -6950,64 +6988,30 @@ var $author$project$LandingPage$gravity = F2(
 				vy: (mario.y > 0) ? (mario.vy - (dt / 4)) : 0
 			});
 	});
-var $author$project$Mario$HeldFor = function (a) {
-	return {$: 'HeldFor', a: a};
-};
-var $author$project$Mario$hold = F2(
-	function (dt, pressed) {
-		switch (pressed.$) {
-			case 'NotPressed':
-				return $author$project$Mario$NotPressed;
-			case 'StartPressed':
-				return $author$project$Mario$HeldFor(dt);
-			default:
-				var existingDt = pressed.a;
-				return $author$project$Mario$HeldFor(existingDt + dt);
-		}
+var $elm$core$Bitwise$and = _Bitwise_and;
+var $elm$core$Bitwise$shiftRightBy = _Bitwise_shiftRightBy;
+var $elm$core$String$repeatHelp = F3(
+	function (n, chunk, result) {
+		return (n <= 0) ? result : A3(
+			$elm$core$String$repeatHelp,
+			n >> 1,
+			_Utils_ap(chunk, chunk),
+			(!(n & 1)) ? result : _Utils_ap(result, chunk));
 	});
-var $author$project$Mario$holdButtonsOnGamepad = F2(
-	function (dt, gamepad) {
-		return {
-			duck: A2($author$project$Mario$hold, dt, gamepad.duck),
-			jump: A2($author$project$Mario$hold, dt, gamepad.jump),
-			left: A2($author$project$Mario$hold, dt, gamepad.left),
-			right: A2($author$project$Mario$hold, dt, gamepad.right),
-			run: A2($author$project$Mario$hold, dt, gamepad.run)
-		};
+var $elm$core$String$repeat = F2(
+	function (n, chunk) {
+		return A3($elm$core$String$repeatHelp, n, chunk, '');
 	});
-var $author$project$LandingPage$holdButtons = F2(
-	function (dt, model) {
-		var gamepad = model.gamepad;
-		return _Utils_update(
-			model,
-			{
-				gamepad: A2($author$project$Mario$holdButtonsOnGamepad, dt, gamepad)
-			});
+var $author$project$LandingPage$monkeyFunction = F2(
+	function (content, level) {
+		var lambdaSignature = '🙈🙉🙊';
+		var indentation = A2($elm$core$String$repeat, level, '    ');
+		var funcIndentation = A2($elm$core$String$repeat, level - 1, '    ');
+		return content + ('\n' + (funcIndentation + (lambdaSignature + ('\n' + (indentation + '')))));
 	});
-var $author$project$LandingPage$jump = F2(
-	function (pad, mario) {
-		return (_Utils_eq(pad.jump, $author$project$Mario$StartPressed) && (!mario.vy)) ? _Utils_update(
-			mario,
-			{vy: 6.0}) : mario;
-	});
-var $elm$core$Platform$Cmd$batch = _Platform_batch;
-var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$LandingPage$physics = F2(
-	function (dt, mario) {
-		return _Utils_update(
-			mario,
-			{
-				x: A2(
-					$elm$core$Basics$max,
-					0,
-					A2($elm$core$Basics$min, mario.window.width - 40, mario.x + (dt * mario.vx))),
-				y: A2($elm$core$Basics$max, 0, mario.y + (dt * mario.vy))
-			});
-	});
-var $mdgriffith$elm_animator$Animator$update = F3(
-	function (newTime, _v0, model) {
-		var updateModel = _v0.b;
-		return A2(updateModel, newTime, model);
+var $author$project$LandingPage$newLine = F2(
+	function (content, level) {
+		return content + ('\n' + A2($elm$core$String$repeat, level * 4, ' \t'));
 	});
 var $ohanhi$keyboard$Keyboard$Backspace = {$: 'Backspace'};
 var $ohanhi$keyboard$Keyboard$Clear = {$: 'Clear'};
@@ -7453,43 +7457,143 @@ var $ohanhi$keyboard$Keyboard$updateWithParser = F3(
 		}
 	});
 var $ohanhi$keyboard$Keyboard$update = $ohanhi$keyboard$Keyboard$updateWithParser($ohanhi$keyboard$Keyboard$anyKeyUpper);
-var $elm$core$String$reverse = _String_reverse;
-var $author$project$LandingPage$updateDslContent = F2(
+var $elm$core$String$concat = function (strings) {
+	return A2($elm$core$String$join, '', strings);
+};
+var $elm$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (n <= 0) {
+				return list;
+			} else {
+				if (!list.b) {
+					return list;
+				} else {
+					var x = list.a;
+					var xs = list.b;
+					var $temp$n = n - 1,
+						$temp$list = xs;
+					n = $temp$n;
+					list = $temp$list;
+					continue drop;
+				}
+			}
+		}
+	});
+var $elm$core$String$words = _String_words;
+var $author$project$LandingPage$wordDelete = function (str) {
+	return $elm$core$String$concat(
+		$elm$core$List$reverse(
+			A2(
+				$elm$core$List$drop,
+				1,
+				$elm$core$List$reverse(
+					$elm$core$String$words(str)))));
+};
+var $author$project$LandingPage$handleDsl = F2(
 	function (keyMsg, model) {
-		return A3(
+		var parseContent = function (content) {
+			return content;
+		};
+		var editorState = A3(
+			$elm$core$List$foldl,
+			F2(
+				function (key, result) {
+					if (key.$ === 'Control') {
+						return _Utils_update(
+							result,
+							{level: result.level + 2});
+					} else {
+						return result;
+					}
+				}),
+			model.dslEditor,
+			A2($ohanhi$keyboard$Keyboard$update, keyMsg, _List_Nil));
+		var contentString = A3(
 			$elm$core$List$foldl,
 			F2(
 				function (key, content) {
 					switch (key.$) {
 						case 'Spacebar':
-							return content + '\u0020';
+							return content + ' \t';
 						case 'Enter':
-							return content + '\n';
+							return A2($author$project$LandingPage$newLine, content, editorState.level);
 						case 'Backspace':
-							return $elm$core$String$reverse(
-								function (unconsd) {
-									if (unconsd.$ === 'Just') {
-										var _v2 = unconsd.a;
-										var x = _v2.a;
-										var xs = _v2.b;
-										return xs;
-									} else {
-										return '';
-									}
-								}(
-									$elm$core$String$uncons(
-										$elm$core$String$reverse(content))));
+							return $author$project$LandingPage$wordDelete(content);
 						case 'Character':
 							var c = key.a;
 							return _Utils_ap(content, c);
 						case 'Control':
-							return content + '\n\t\uD83D\uDE48\uD83D\uDE49\uD83D\uDE4A';
+							return A2($author$project$LandingPage$monkeyFunction, content, editorState.level);
 						default:
 							return content;
 					}
 				}),
 			model.dslContent,
 			A2($ohanhi$keyboard$Keyboard$update, keyMsg, _List_Nil));
+		return _Utils_update(
+			model,
+			{dslContent: contentString, dslEditor: editorState});
+	});
+var $author$project$Mario$HeldFor = function (a) {
+	return {$: 'HeldFor', a: a};
+};
+var $author$project$Mario$hold = F2(
+	function (dt, pressed) {
+		switch (pressed.$) {
+			case 'NotPressed':
+				return $author$project$Mario$NotPressed;
+			case 'StartPressed':
+				return $author$project$Mario$HeldFor(dt);
+			default:
+				var existingDt = pressed.a;
+				return $author$project$Mario$HeldFor(existingDt + dt);
+		}
+	});
+var $author$project$Mario$holdButtonsOnGamepad = F2(
+	function (dt, gamepad) {
+		return {
+			duck: A2($author$project$Mario$hold, dt, gamepad.duck),
+			jump: A2($author$project$Mario$hold, dt, gamepad.jump),
+			left: A2($author$project$Mario$hold, dt, gamepad.left),
+			right: A2($author$project$Mario$hold, dt, gamepad.right),
+			run: A2($author$project$Mario$hold, dt, gamepad.run)
+		};
+	});
+var $author$project$LandingPage$holdButtons = F2(
+	function (dt, model) {
+		var gamepad = model.gamepad;
+		return _Utils_update(
+			model,
+			{
+				gamepad: A2($author$project$Mario$holdButtonsOnGamepad, dt, gamepad)
+			});
+	});
+var $author$project$LandingPage$jump = F2(
+	function (pad, mario) {
+		return (_Utils_eq(pad.jump, $author$project$Mario$StartPressed) && (!mario.vy)) ? _Utils_update(
+			mario,
+			{vy: 6.0}) : mario;
+	});
+var $elm$core$Platform$Cmd$batch = _Platform_batch;
+var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
+var $author$project$LandingPage$physics = F2(
+	function (dt, mario) {
+		return _Utils_update(
+			mario,
+			{
+				x: A2(
+					$elm$core$Basics$max,
+					0,
+					A2($elm$core$Basics$min, mario.window.width - 40, mario.x + (dt * mario.vx))),
+				y: A2($elm$core$Basics$max, 0, mario.y + (dt * mario.vy))
+			});
+	});
+var $mdgriffith$elm_animator$Animator$update = F3(
+	function (newTime, _v0, model) {
+		var updateModel = _v0.b;
+		return A2(updateModel, newTime, model);
 	});
 var $author$project$Mario$Ducking = {$: 'Ducking'};
 var $author$project$Mario$Jumping = {$: 'Jumping'};
@@ -8162,12 +8266,14 @@ var $author$project$LandingPage$update = F2(
 			default:
 				var keyMsg = msg.a;
 				return _Utils_Tuple2(
-					_Utils_update(
-						model,
-						{
-							dslContent: A2($author$project$LandingPage$updateDslContent, keyMsg, model),
-							pressedKeys: A2($ohanhi$keyboard$Keyboard$update, keyMsg, model.pressedKeys)
-						}),
+					function (m) {
+						return _Utils_update(
+							m,
+							{
+								pressedKeys: A2($ohanhi$keyboard$Keyboard$update, keyMsg, m.pressedKeys)
+							});
+					}(
+						A2($author$project$LandingPage$handleDsl, keyMsg, model)),
 					$elm$core$Platform$Cmd$none);
 		}
 	});
@@ -8622,27 +8728,6 @@ var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$core$String$fromFloat = _String_fromNumber;
 var $jxxcarlson$elm_tree_builder$Tree$Build$EmptyBlocks = {$: 'EmptyBlocks'};
-var $elm$core$List$drop = F2(
-	function (n, list) {
-		drop:
-		while (true) {
-			if (n <= 0) {
-				return list;
-			} else {
-				if (!list.b) {
-					return list;
-				} else {
-					var x = list.a;
-					var xs = list.b;
-					var $temp$n = n - 1,
-						$temp$list = xs;
-					n = $temp$n;
-					list = $temp$list;
-					continue drop;
-				}
-			}
-		}
-	});
 var $zwilias$elm_rosetree$Tree$Zipper$Zipper = function (a) {
 	return {$: 'Zipper', a: a};
 };
@@ -9425,26 +9510,24 @@ var $author$project$LandingPage$stylesheet = A3(
 		[
 			$elm$html$Html$text('@import url(\'https://fonts.googleapis.com/css?family=Roboto&display=swap\');\r\nbody, html {\r\n    margin: 0;\r\n    padding:0;\r\n    border:0;\r\n    display:block;\r\n    position: relative;\r\n    width: 100%;\r\n    height: 100%;\r\n    color: white;\r\n}\r\n.pixel-art {\r\n    image-rendering: pixelated;\r\n    image-rendering: -moz-crisp-edges;\r\n    image-rendering: crisp-edges;\r\n}\r\n#backgroundVid {\r\n  position: fixed;\r\n  right: 0;\r\n  bottom: 0;\r\n  min-width: 100%;\r\n  min-height: 100%;\r\n  z-index: -1;\r\n}\r\n')
 		]));
+var $elm$html$Html$li = _VirtualDom_node('li');
+var $elm$html$Html$ul = _VirtualDom_node('ul');
 var $author$project$LandingPage$toListItems = F2(
 	function (label, children) {
 		if (!children.b) {
 			return A2(
-				$elm$html$Html$div,
+				$elm$html$Html$li,
 				_List_Nil,
 				_List_fromArray(
 					[label]));
 		} else {
 			return A2(
-				$elm$html$Html$div,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'border-style', 'solid'),
-						A2($elm$html$Html$Attributes$style, 'padding', '4%')
-					]),
+				$elm$html$Html$li,
+				_List_Nil,
 				_List_fromArray(
 					[
 						label,
-						A2($elm$html$Html$div, _List_Nil, children)
+						A2($elm$html$Html$ul, _List_Nil, children)
 					]));
 		}
 	});
@@ -10331,7 +10414,7 @@ var $author$project$LandingPage$view = function (model) {
 							[
 								$elm$html$Html$text(
 								$elm$core$String$toLower(
-									$elm$core$Debug$toString(model.mario)))
+									$elm$core$Debug$toString(model.dslEditor)))
 							])),
 						A2(
 						$elm$html$Html$div,
@@ -10365,14 +10448,14 @@ var $author$project$LandingPage$view = function (model) {
 									var r = maybe.a;
 									return function (root) {
 										return A2(
-											$elm$html$Html$div,
+											$elm$html$Html$ul,
 											_List_Nil,
 											_List_fromArray(
 												[root]));
 									}(
 										A3($zwilias$elm_rosetree$Tree$restructure, $author$project$LandingPage$labelToHtml, $author$project$LandingPage$toListItems, r));
 								} else {
-									return A2($elm$html$Html$div, _List_Nil, _List_Nil);
+									return A2($elm$html$Html$ul, _List_Nil, _List_Nil);
 								}
 							}(
 								$elm$core$Result$toMaybe(
@@ -10382,32 +10465,7 @@ var $author$project$LandingPage$view = function (model) {
 										function ($) {
 											return $.content;
 										},
-										model.dslContent))),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text(
-										$elm$core$String$toLower(
-											$elm$core$Debug$toString(
-												A3(
-													$jxxcarlson$elm_tree_builder$Tree$Build$fromString,
-													'?',
-													function ($) {
-														return $.content;
-													},
-													model.dslContent))))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_Nil,
-								_List_fromArray(
-									[
-										$elm$html$Html$text(
-										$elm$core$String$toLower(
-											$elm$core$Debug$toString(model.dslContent)))
-									]))
+										model.dslContent)))
 							])),
 						A2(
 						$elm$html$Html$div,

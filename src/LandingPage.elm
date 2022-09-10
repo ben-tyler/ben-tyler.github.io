@@ -45,6 +45,13 @@ type alias Model =
     , guide : Animator.Timeline String
     , pressedKeys : List Key
     , dslContent : String
+    , dslEditor : DslEditor
+    }
+
+
+type alias DslEditor =
+    { level : Int -- number of indentations
+    , word : Int -- current editing word
     }
 
 
@@ -113,6 +120,16 @@ main =
         }
 
 
+test =
+    """
+this
+    is the kind
+       of
+    structure
+       we
+       want    """
+
+
 init : Model
 init =
     { x = 0
@@ -130,52 +147,110 @@ init =
     , mario = Animator.init (Mario Standing Right)
     , guide = Animator.init "some guide"
     , pressedKeys = []
-    , dslContent = """"
-this
-    is the kind
-       of
-    structure
-       we
-       want    
-"""
+    , dslContent = ""
+    , dslEditor =
+        { level = 0
+        , word = 0
+        }
     }
 
 
-updateDslContent keyMsg model =
-    List.foldl
-        (\key content ->
-            case key of
-                Spacebar ->
-                    content ++ "\u{0020}"
+letterDelete str =
+    str
+        |> String.reverse
+        |> String.uncons
+        |> (\unconsd ->
+                case unconsd of
+                    Just ( x, xs ) ->
+                        xs
 
-                Keyboard.Enter ->
-                    content ++ "\n"
+                    _ ->
+                        ""
+           )
+        |> String.reverse
 
-                Keyboard.Backspace ->
-                    content
-                        |> String.reverse
-                        |> String.uncons
-                        |> (\unconsd ->
-                                case unconsd of
-                                    Just ( x, xs ) ->
-                                        xs
 
-                                    _ ->
-                                        ""
-                           )
-                        |> String.reverse
+wordDelete str =
+    str
+        |> String.words
+        |> List.reverse
+        |> List.drop 1
+        |> List.reverse
+        |> String.concat
 
-                Character c ->
-                    content ++ c
 
-                Control -> 
-                    content ++ "\n\t\u{1F648}\u{1F649}\u{1F64A}"
+newLine content level =
+    content ++ "\n" ++ String.repeat (level * 4) """ \t"""
 
-                _ ->
-                    content
-        )
-        model.dslContent
-        (Keyboard.update keyMsg [])
+
+monkeyFunction content level =
+    let
+        indentation =
+            String.repeat level """    """
+
+        funcIndentation =
+            String.repeat (level - 1) """    """
+
+        lambdaSignature =
+            "🙈🙉🙊"
+    in
+    content
+        ++ "\n"
+        ++ funcIndentation
+        ++ lambdaSignature
+        ++ "\n"
+        ++ indentation
+        ++ ""
+
+
+handleDsl keyMsg model =
+    let
+        editorState =
+            List.foldl
+                (\key result ->
+                    case key of
+                        Control ->
+                            { result | level = result.level + 2 } -- indents too levels, one for function, one for content
+
+                        _ ->
+                            result
+                )
+                model.dslEditor
+                (Keyboard.update keyMsg [])
+
+        contentString =
+            List.foldl
+                (\key content ->
+                    case key of
+                        Spacebar ->
+                            content ++ """ \t"""
+
+                        Keyboard.Enter ->
+                            newLine content editorState.level
+
+                        Keyboard.Backspace ->
+                            content
+                                |> wordDelete
+
+                        Character c ->
+                            content ++ c
+
+                        Control ->
+                            monkeyFunction content editorState.level
+
+                        _ ->
+                            content
+                )
+                model.dslContent
+                (Keyboard.update keyMsg [])
+
+        parseContent content =
+            content
+    in
+    { model
+        | dslContent = contentString
+        , dslEditor = editorState
+    }
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -225,10 +300,9 @@ update msg model =
             )
 
         KeyMsg keyMsg ->
-            ( { model
-                | pressedKeys = Keyboard.update keyMsg model.pressedKeys
-                , dslContent = updateDslContent keyMsg model
-              }
+            ( model
+                |> handleDsl keyMsg
+                |> (\m -> { m | pressedKeys = Keyboard.update keyMsg m.pressedKeys })
             , Cmd.none
             )
 
@@ -290,14 +364,17 @@ toListItems : Html msg -> List (Html msg) -> Html msg
 toListItems label children =
     case children of
         [] ->
-            Html.div [] [ label ]
+            Html.li
+                [ 
+                ]
+                [ label ]
 
         _ ->
-            Html.div 
-                [ Attr.style "border-style" "solid" 
-                , Attr.style "padding" "4%"]
+            Html.li
+                [ 
+                ]
                 [ label
-                , Html.div [] children
+                , Html.ul [] children
                 ]
 
 
@@ -321,7 +398,7 @@ view model =
                 , Attr.style "right" (String.fromFloat 100 ++ "px")
                 , Attr.style "width" "300px"
                 ]
-                [ Html.text <| String.toLower <| Debug.toString model.mario ]
+                [ Html.text <| String.toLower <| Debug.toString model.dslEditor ]
             , Html.div
                 [ Attr.style "position" "absolute"
                 , Attr.style "top" "80px"
@@ -339,23 +416,31 @@ view model =
                                 Just r ->
                                     r
                                         |> Tree.restructure labelToHtml toListItems
-                                        |> (\root -> Html.div [] [ root ])
+                                        |> (\root ->
+                                                Html.ul
+                                                    [-- Attr.style "border-style" "solid"
+                                                  --  , Attr.style "padding" "4%"
+                                                    ]
+                                                    [ --Html.text "dsl context"
+                                                     root
+                                                    ]
+                                           )
 
                                 Nothing ->
-                                    Html.div [] []
+                                    Html.ul [] []
                        )
-                , Html.div []
-                    [ Html.text <|
-                        String.toLower <|
-                            Debug.toString <|
-                                Build.fromString "?" .content model.dslContent
-                    ]
-                , Html.div []
-                    [ Html.text <|
-                        String.toLower <|
-                            Debug.toString <|
-                                model.dslContent
-                    ]
+                --, Html.div []
+                --    [ Html.text <|
+                --        String.toLower <|
+                --            Debug.toString <|
+                --                Build.fromString "?" .content model.dslContent
+                --    ]
+                --, Html.div []
+                --    [ Html.text <|
+                --        String.toLower <|
+                --            Debug.toString <|
+                --                model.dslContent
+                --    ]
                 ]
             , Html.div
                 [ Attr.class "positioner"
