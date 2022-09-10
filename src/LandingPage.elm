@@ -130,7 +130,14 @@ init =
     , mario = Animator.init (Mario Standing Right)
     , guide = Animator.init "some guide"
     , pressedKeys = []
-    , dslContent = ""
+    , dslContent = """"
+this
+    is the kind
+       of
+    structure
+       we
+       want    
+"""
     }
 
 
@@ -139,10 +146,10 @@ updateDslContent keyMsg model =
         (\key content ->
             case key of
                 Spacebar ->
-                    content ++ " "
+                    content ++ "\u{0020}"
 
                 Keyboard.Enter ->
-                    content ++ "\n----"
+                    content ++ "\n"
 
                 Keyboard.Backspace ->
                     content
@@ -160,6 +167,9 @@ updateDslContent keyMsg model =
 
                 Character c ->
                     content ++ c
+
+                Control -> 
+                    content ++ "\n\t\u{1F648}\u{1F649}\u{1F64A}"
 
                 _ ->
                     content
@@ -283,7 +293,9 @@ toListItems label children =
             Html.div [] [ label ]
 
         _ ->
-            Html.div [ Attr.style "padding" "5%" ]
+            Html.div 
+                [ Attr.style "border-style" "solid" 
+                , Attr.style "padding" "4%"]
                 [ label
                 , Html.div [] children
                 ]

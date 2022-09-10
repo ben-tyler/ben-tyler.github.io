@@ -5373,7 +5373,7 @@ var $mdgriffith$elm_animator$Animator$init = function (first) {
 		});
 };
 var $author$project$LandingPage$init = {
-	dslContent: '',
+	dslContent: '"\r\nthis\r\n    is the kind\r\n       of\r\n    structure\r\n       we\r\n       want    \r\n',
 	gamepad: {duck: $author$project$Mario$NotPressed, jump: $author$project$Mario$NotPressed, left: $author$project$Mario$NotPressed, right: $author$project$Mario$NotPressed, run: $author$project$Mario$NotPressed},
 	guide: $mdgriffith$elm_animator$Animator$init('some guide'),
 	mario: $mdgriffith$elm_animator$Animator$init(
@@ -7462,9 +7462,9 @@ var $author$project$LandingPage$updateDslContent = F2(
 				function (key, content) {
 					switch (key.$) {
 						case 'Spacebar':
-							return content + ' ';
+							return content + '\u0020';
 						case 'Enter':
-							return content + '\n----';
+							return content + '\n';
 						case 'Backspace':
 							return $elm$core$String$reverse(
 								function (unconsd) {
@@ -7482,6 +7482,8 @@ var $author$project$LandingPage$updateDslContent = F2(
 						case 'Character':
 							var c = key.a;
 							return _Utils_ap(content, c);
+						case 'Control':
+							return content + '\n\t\uD83D\uDE48\uD83D\uDE49\uD83D\uDE4A';
 						default:
 							return content;
 					}
@@ -9436,7 +9438,8 @@ var $author$project$LandingPage$toListItems = F2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						A2($elm$html$Html$Attributes$style, 'padding', '5%')
+						A2($elm$html$Html$Attributes$style, 'border-style', 'solid'),
+						A2($elm$html$Html$Attributes$style, 'padding', '4%')
 					]),
 				_List_fromArray(
 					[
