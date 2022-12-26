@@ -1,0 +1,8 @@
+{
+  "root": ".",
+  "https_only": true,
+  "routes": {
+    "/**": "yawellness.html"
+  }
+}
+  
